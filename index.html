@@ -1,1398 +1,523 @@
-
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="theme-color" content="#B91C2C" />
-  <title>PANA SPORT — Qatar Football Booking</title>
+  <meta name="theme-color" content="#8A1538" />
+  <title>PANA SPORT — Doha Pickup Football</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background-color: #111827; margin: 0; padding: 0; }
+    * { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: #0F172A; margin: 0; padding: 0; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-    .animate-sheet { animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+    @keyframes slideUp { from { transform: translateY(100%); opacity: 0.6; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-sheet { animation: slideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1); }
+    .animate-fade { animation: fadeIn 0.22s ease-out; }
   </style>
 </head>
-<body class="flex justify-center min-h-screen bg-gray-900">
+<body class="flex justify-center min-h-screen bg-slate-950">
 
-  <!-- Mobile App Shell (430px max width on desktop, full screen on iPhone/Android) -->
-  <div id="app" class="w-full max-w-[430px] min-h-screen bg-[#F8FAFC] text-gray-900 relative shadow-2xl flex flex-col overflow-x-hidden"></div>
-
-  <!-- Toast Banner -->
-  <div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] hidden max-w-[390px] w-[92%] bg-gray-900 text-white px-4 py-3 rounded-2xl shadow-xl text-xs font-bold flex items-center justify-between border border-gray-700">
-    <span id="toast-msg"></span>
-  </div>
+<div id="app" class="w-full max-w-[430px] min-h-screen bg-[#F7F7F9] text-slate-900 relative overflow-x-hidden shadow-2xl flex flex-col"></div>
 
 <script>
-const STORAGE_KEY = 'panasport_qatar_html_v1';
+// ==========================================
+// 1. MANAGER EMAIL CONFIGURATION
+// ==========================================
+const OWNER_EMAIL = "creatbrook@gmail.com";
 
-const PITCH_IMAGES = [
-  "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1518605368461-1ee7e33f28d4?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1551958219-acbc608c6377?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=900&q=80"
-];
+// ==========================================
+// 2. AUTHENTICATED PITCH & PLAYER PHOTOGRAPHY
+// ==========================================
+const PHOTOS = {
+  splashHero: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=900&q=85",
+  promoBanner: "https://images.unsplash.com/photo-1518605368461-1ee7e33f28c4?auto=format&fit=crop&w=900&q=85",
+  pitchNight1: "https://images.unsplash.com/photo-1529900748604-07564a03e7a6?auto=format&fit=crop&w=900&q=85",
+  pitchNight2: "https://images.unsplash.com/photo-1459865264687-595d652de67e?auto=format&fit=crop&w=900&q=85",
+  pitchNight3: "https://images.unsplash.com/photo-1551958219-acbc608c6377?auto=format&fit=crop&w=900&q=85",
+  defaultAvatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=85"
+};
 
-const DEFAULT_STATE = {
-  lang: 'en',
-  user: null, // null = Login screen | { role: 'player'|'owner', name, phone, position }
-  activeTab: 'games',
-  dateFilter: 'all',
-  formatFilter: 'all',
-  settings: {
-    fawranNumber: '5512 8890',
-    fawranName: 'PANA SPORT QATAR',
-    whatsappNumber: '97455128890',
-    promoSixForFive: true,
-    allowCash: true
+// ==========================================
+// 3. INITIAL APP DATA (QATAR PICKUP FOCUS)
+// ==========================================
+const DEFAULT_DATA = {
+  organizer: {
+    name: "PANA SPORT QATAR",
+    fawranAlias: "PANASPORT",
+    fawranNumber: "+974 5512 8890",
+    bankName: "QNB (Fawran Instant)"
   },
   matches: [
     {
-      id: 'm1',
-      title: 'Doha Night 6v6 — Floodlit Turf',
-      venue: 'Al Waab Arena • Pitch 1',
-      mapUrl: 'https://maps.google.com/?q=Al+Waab+Doha+Qatar',
-      dateLabel: 'Tonight',
-      time: '20:30',
-      duration: 90,
-      format: '6v6',
-      price: 45,
-      capacity: 12,
-      filmed: true,
-      promo6for5: true,
-      allowCash: true,
-      videoUrl: '',
-      img: PITCH_IMAGES[0]
+      id: "m1",
+      title: "8v8 FLOODLIT PICKUP",
+      venue: "Al Sadd Sports Complex, Doha",
+      area: "Al Sadd",
+      dateLabel: "Tonight • 20:30",
+      duration: "90 min",
+      priceQAR: 35,
+      spotsTotal: 16,
+      spotsTaken: 13,
+      recorded: true,
+      level: "Competitive",
+      image: PHOTOS.pitchNight1,
+      players: [
+        { name: "Tariq Al-Mannai", pos: "MID", rating: 88, status: "Confirmed", bib: "Red" },
+        { name: "Yousef K.", pos: "FWD", rating: 86, status: "Confirmed", bib: "White" },
+        { name: "Hamad Al-Thani", pos: "DEF", rating: 85, status: "Confirmed", bib: "Red" },
+        { name: "Omar N.", pos: "GK", rating: 89, status: "Confirmed", bib: "White" },
+        { name: "Khalid M.", pos: "MID", rating: 82, status: "Confirmed", bib: "Red" },
+        { name: "Faisal R.", pos: "DEF", rating: 80, status: "Confirmed", bib: "White" }
+      ],
+      waitlist: ["Bader S."]
     },
     {
-      id: 'm2',
-      title: 'Lusail Marina 7v7 Championship',
-      venue: 'Lusail Sports Hub • Pitch A',
-      mapUrl: 'https://maps.google.com/?q=Lusail+Qatar',
-      dateLabel: 'Tomorrow',
-      time: '21:00',
-      duration: 90,
-      format: '7v7',
-      price: 50,
-      capacity: 14,
-      filmed: true,
-      promo6for5: true,
-      allowCash: true,
-      videoUrl: '',
-      img: PITCH_IMAGES[1]
+      id: "m2",
+      title: "7v7 OPEN TURF NIGHT",
+      venue: "Aspire Zone Pitch 4, Al Waab",
+      area: "Al Waab",
+      dateLabel: "Tomorrow • 19:00",
+      duration: "60 min",
+      priceQAR: 30,
+      spotsTotal: 14,
+      spotsTaken: 10,
+      recorded: true,
+      level: "All Levels",
+      image: PHOTOS.pitchNight2,
+      players: [
+        { name: "Nasser A.", pos: "FWD", rating: 87, status: "Confirmed", bib: "Red" },
+        { name: "Sami H.", pos: "MID", rating: 84, status: "Confirmed", bib: "White" }
+      ],
+      waitlist: []
     },
     {
-      id: 'm3',
-      title: 'Aspire Zone Express 6v6',
-      venue: 'Al Rayyan Turf • Court 3',
-      mapUrl: 'https://maps.google.com/?q=Aspire+Zone+Doha',
-      dateLabel: 'This Week',
-      time: '19:30',
-      duration: 90,
-      format: '6v6',
-      price: 40,
-      capacity: 12,
-      filmed: false,
-      promo6for5: true,
-      allowCash: false,
-      videoUrl: '',
-      img: PITCH_IMAGES[2]
-    },
-    {
-      id: 'm4',
-      title: 'Katara Hills Late Night 6v6',
-      venue: 'Katara Pitch 2 • West Bay',
-      mapUrl: 'https://maps.google.com/?q=Katara+Doha',
-      dateLabel: 'Completed',
-      time: '22:00',
-      duration: 90,
-      format: '6v6',
-      price: 45,
-      capacity: 12,
-      filmed: true,
-      promo6for5: true,
-      allowCash: true,
-      videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-      img: PITCH_IMAGES[3]
+      id: "m3",
+      title: "9v9 LUSAIL STADIUM TURF",
+      venue: "Lusail Marina Fields, Doha",
+      area: "Lusail",
+      dateLabel: "Sun, 15 Nov • 21:00",
+      duration: "90 min",
+      priceQAR: 40,
+      spotsTotal: 18,
+      spotsTaken: 18,
+      recorded: false,
+      level: "High Tempo",
+      image: PHOTOS.pitchNight3,
+      players: [
+        { name: "Rashid K.", pos: "DEF", rating: 88, status: "Confirmed", bib: "Red" }
+      ],
+      waitlist: ["Zaid M.", "Ali H."]
     }
   ],
   bookings: [
     {
-      id: 'PS-8410',
-      matchId: 'm1',
-      playerName: 'Tariq Al-Kuwari',
-      playerPhone: '+974 5541 2290',
-      position: 'CM',
-      spots: 1,
-      teamName: '',
-      amount: 45,
-      method: 'Fawran',
-      status: 'confirmed', // 'under_review' | 'confirmed' | 'cash_pending' | 'rejected'
-      receiptPreview: 'FAWRAN-TXN-#99281.jpg',
-      createdAt: '10 mins ago'
-    },
-    {
-      id: 'PS-8412',
-      matchId: 'm1',
-      playerName: 'Youssef Mansour',
-      playerPhone: '+974 6610 4412',
-      position: 'RW',
-      spots: 6,
-      teamName: 'Al Sadd Lions',
-      amount: 225,
-      method: 'Fawran',
-      status: 'under_review',
-      receiptPreview: 'QNB-FAWRAN-225QAR.png',
-      createdAt: 'Just now'
-    },
-    {
-      id: 'PS-8415',
-      matchId: 'm2',
-      playerName: 'Hamad Al-Thani',
-      playerPhone: '+974 3388 1204',
-      position: 'CB',
-      spots: 1,
-      teamName: '',
-      amount: 50,
-      method: 'Cash',
-      status: 'cash_pending',
-      receiptPreview: '',
-      createdAt: '1 hour ago'
-    },
-    {
-      id: 'PS-8390',
-      matchId: 'm4',
-      playerName: 'Tariq Al-Kuwari',
-      playerPhone: '+974 5541 2290',
-      position: 'CM',
-      spots: 1,
-      teamName: '',
-      amount: 45,
-      method: 'Fawran',
-      status: 'confirmed',
-      receiptPreview: 'FAWRAN-8390.jpg',
-      createdAt: '2 days ago'
+      id: "BK-9041",
+      matchId: "m1",
+      matchTitle: "8v8 FLOODLIT PICKUP",
+      playerName: "Jassim Al-Kuwari",
+      phone: "+974 6641 2209",
+      groupSize: 1,
+      totalQAR: 35,
+      method: "Fawran Transfer",
+      status: "Pending Verification",
+      timestamp: "4 mins ago",
+      receiptAttached: true
     }
-  ],
-  waitlist: [
-    { matchId: 'm1', playerName: 'Omar Nasser', phone: '+974 7712 0091' }
-  ],
-  notifications: [
-    { id: 'n1', role: 'owner', text: 'New Fawran receipt (225 QAR) from Youssef Mansour for Doha Night 6v6.', time: 'Just now', unread: true },
-    { id: 'n2', role: 'player', text: 'Your pass #PS-8410 for Doha Night 6v6 is CONFIRMED!', time: '10m ago', unread: true },
-    { id: 'n3', role: 'player', text: '4K Match Video is now ready for Katara Hills Late Night 6v6.', time: '1d ago', unread: false }
-  ],
-  modal: null // { type: 'book'|'create_game'|'edit_video'|'squad_sheet', matchId?, bookingMode?, spots?, payMethod?, receiptFile?, teamName?, squadSheetText? }
+  ]
 };
 
-let state = loadState();
+// ==========================================
+// 4. STATE MANAGEMENT & ROLE DETECTION
+// ==========================================
+let state = {
+  screen: "splash", // splash | auth | otp | app | owner
+  authMode: "phone", // phone | email
+  authInput: "",
+  isOwnerSession: false,
+  otpDigits: ["7", "4", "9", "2"],
+  activeTab: "home", // home | stats | squad
+  bookingSheetMatch: null,
+  groupSize: 1,
+  payMethod: "fawran",
+  receiptUploaded: false,
+  receiptFileName: "",
+  showAccountMenu: false,
+  showEditProfile: false,
+  toast: null,
+  user: {
+    name: "Tariq Al-Kuwari",
+    phone: "+974 5589 4321",
+    email: "",
+    position: "Midfielder",
+    age: 26,
+    nationality: "Qatar",
+    flag: "🇶🇦",
+    debut: "NOV, 2026",
+    avatar: PHOTOS.defaultAvatar,
+    walletQAR: 70.00,
+    stats: {
+      played: 14,
+      won: 9,
+      lost: 5,
+      motm: 3,
+      goals: 11
+    }
+  },
+  data: JSON.parse(localStorage.getItem("panasport_v3_data")) || DEFAULT_DATA
+};
 
-function loadState() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) return { ...DEFAULT_STATE, ...JSON.parse(saved), modal: null };
-  } catch (e) {}
-  return JSON.parse(JSON.stringify(DEFAULT_STATE));
-}
-
-function saveState() {
-  try {
-    const toSave = { ...state, modal: null };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
-  } catch (e) {}
+function saveData() {
+  localStorage.setItem("panasport_v3_data", JSON.stringify(state.data));
 }
 
 function showToast(msg) {
-  const el = document.getElementById('toast');
-  document.getElementById('toast-msg').textContent = msg;
-  el.classList.remove('hidden');
-  clearTimeout(window._toastTimer);
-  window._toastTimer = setTimeout(() => el.classList.add('hidden'), 3200);
-}
-
-function copyText(txt, label) {
-  if (navigator.clipboard) navigator.clipboard.writeText(txt);
-  showToast(`Copied ${label}: ${txt}`);
-}
-
-function getTakenSpots(matchId) {
-  return state.bookings
-    .filter(b => b.matchId === matchId && b.status !== 'rejected' && b.status !== 'cancelled')
-    .reduce((sum, b) => sum + Number(b.spots || 1), 0);
-}
-
-// --- AUTH ACTIONS ---
-function loginAsPlayerDemo() {
-  state.user = {
-    role: 'player',
-    name: 'Tariq Al-Kuwari',
-    phone: '+974 5541 2290',
-    position: 'CM',
-    ovr: 86,
-    goals: 14,
-    assists: 19
-  };
-  state.activeTab = 'games';
-  saveState();
+  state.toast = msg;
   render();
-  showToast('Welcome back, Tariq!');
+  setTimeout(() => {
+    state.toast = null;
+    render();
+  }, 2800);
 }
 
-function loginAsOwnerDemo() {
-  state.user = {
-    role: 'owner',
-    name: 'PANA Owner',
-    phone: '+974 ' + state.settings.fawranNumber
-  };
-  state.activeTab = 'manage';
-  saveState();
+function isManagerEmail(email) {
+  const clean = (email || "").trim().toLowerCase();
+  const target = (OWNER_EMAIL || "").trim().toLowerCase();
+  return clean.length > 0 && clean === target;
+}
+
+// ==========================================
+// 5. ACTIONS
+// ==========================================
+function goScreen(s) {
+  state.screen = s;
+  window.scrollTo(0, 0);
   render();
-  showToast('Owner Mode Unlocked');
 }
 
-function handleRegisterSubmit(e) {
-  e.preventDefault();
-  const name = document.getElementById('reg-name').value.trim() || 'Doha Baller';
-  const phone = document.getElementById('reg-phone').value.trim() || '5500 1122';
-  const pos = document.getElementById('reg-pos').value || 'ST';
-  if (phone.replace(/\s+/g, '').includes('55128890')) {
-    loginAsOwnerDemo();
+function handleAuthContinue() {
+  const val = state.authInput.trim();
+  if (!val) {
+    showToast(state.authMode === "phone" ? "Please enter your Qatar phone number" : "Please enter your email address");
     return;
   }
-  state.user = {
-    role: 'player',
-    name,
-    phone: '+974 ' + phone,
-    position: pos,
-    ovr: 82,
-    goals: 0,
-    assists: 0
-  };
-  state.activeTab = 'games';
-  saveState();
-  render();
-  showToast(`Welcome to PANA SPORT, ${name}!`);
-}
 
-function logout() {
-  state.user = null;
-  state.modal = null;
-  saveState();
-  render();
-}
-
-function toggleLang() {
-  state.lang = state.lang === 'en' ? 'ar' : 'en';
-  document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
-  saveState();
-  render();
-}
-
-function resetDemoData() {
-  localStorage.removeItem(STORAGE_KEY);
-  state = JSON.parse(JSON.stringify(DEFAULT_STATE));
-  render();
-  showToast('Demo data reset to fresh state');
-}
-
-// --- PLAYER BOOKING ACTIONS ---
-function openBookingModal(matchId) {
-  const m = state.matches.find(x => x.id === matchId);
-  if (!m) return;
-  state.modal = {
-    type: 'book',
-    matchId,
-    spots: 1,
-    teamName: '',
-    payMethod: 'Fawran',
-    receiptName: ''
-  };
-  render();
-}
-
-function setBookingSpots(n) {
-  const m = state.matches.find(x => x.id === state.modal.matchId);
-  const avail = Math.max(1, m.capacity - getTakenSpots(m.id));
-  state.modal.spots = Math.min(n, avail);
-  render();
-}
-
-function attachTestReceipt() {
-  state.modal.receiptName = `FAWRAN_RECEIPT_${Math.floor(1000 + Math.random() * 9000)}.jpg`;
-  render();
-  showToast('Test Fawran receipt attached!');
-}
-
-function handleFileUpload(input) {
-  if (input.files && input.files[0]) {
-    state.modal.receiptName = input.files[0].name;
-    render();
-    showToast('Receipt screenshot attached!');
+  if (state.authMode === "phone") {
+    state.user.phone = "+974 " + val.replace(/^\+974\s*/, "");
+    state.isOwnerSession = false;
+  } else {
+    state.user.email = val;
+    state.isOwnerSession = isManagerEmail(val);
+    if (!state.isOwnerSession) {
+      const prefix = val.split("@")[0];
+      state.user.name = prefix.charAt(0).toUpperCase() + prefix.slice(1);
+    }
   }
+  goScreen("otp");
+}
+
+function verifyOtpAndEnter() {
+  if (state.isOwnerSession) {
+    goScreen("owner");
+    showToast("Manager Verified — Welcome to PANA SPORT Admin!");
+  } else {
+    goScreen("app");
+    showToast("Welcome to PANA SPORT Doha!");
+  }
+}
+
+function openBooking(matchId) {
+  const m = state.data.matches.find(x => x.id === matchId);
+  if (!m) return;
+  state.bookingSheetMatch = m;
+  state.groupSize = 1;
+  state.payMethod = "fawran";
+  state.receiptUploaded = false;
+  state.receiptFileName = "";
+  render();
+}
+
+function setGroupSize(sz) {
+  state.groupSize = sz;
+  render();
+}
+
+function calcTotal(price, size) {
+  const payable = size === 6 ? 5 : size;
+  return payable * price;
+}
+
+function handleReceiptPick(e) {
+  const file = e.target.files[0];
+  if (file) {
+    state.receiptUploaded = true;
+    state.receiptFileName = file.name;
+    render();
+  }
+}
+
+function handleAvatarPick(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    state.user.avatar = ev.target.result;
+    render();
+    showToast("Player photo updated!");
+  };
+  reader.readAsDataURL(file);
 }
 
 function submitBooking() {
-  const m = state.matches.find(x => x.id === state.modal.matchId);
-  const avail = m.capacity - getTakenSpots(m.id);
-  const spots = state.modal.spots;
-  if (spots > avail) {
-    showToast('Not enough spots remaining!');
+  const m = state.bookingSheetMatch;
+  if (!m) return;
+  const isFull = m.spotsTaken >= m.spotsTotal;
+  if (isFull) {
+    m.waitlist.push(state.user.name);
+    saveData();
+    state.bookingSheetMatch = null;
+    showToast("Added to priority waitlist!");
     return;
   }
-  if (state.modal.payMethod === 'Fawran' && !state.modal.receiptName) {
-    showToast('Please attach your Fawran transfer receipt first');
+  if (state.payMethod === "fawran" && !state.receiptUploaded) {
+    showToast("Please upload your Fawran receipt screenshot first");
     return;
   }
 
-  const promoApplied = m.promo6for5 && spots === 6;
-  const totalQAR = promoApplied ? m.price * 5 : m.price * spots;
-  const bookingId = 'PS-' + Math.floor(8500 + Math.random() * 1400);
-
-  const newBooking = {
-    id: bookingId,
+  const total = calcTotal(m.priceQAR, state.groupSize);
+  const newBk = {
+    id: "BK-" + Math.floor(1000 + Math.random() * 9000),
     matchId: m.id,
-    playerName: state.user.name,
-    playerPhone: state.user.phone,
-    position: state.user.position || 'CM',
-    spots,
-    teamName: spots === 6 ? (document.getElementById('team-name-input')?.value.trim() || `${state.user.name.split(' ')[0]}'s Squad`) : '',
-    amount: totalQAR,
-    method: state.modal.payMethod,
-    status: state.modal.payMethod === 'Fawran' ? 'under_review' : 'cash_pending',
-    receiptPreview: state.modal.receiptName || '',
-    createdAt: 'Just now'
+    matchTitle: m.title,
+    playerName: state.user.name + (state.groupSize > 1 ? ` (+${state.groupSize - 1} Friends)` : ""),
+    phone: state.user.phone,
+    groupSize: state.groupSize,
+    totalQAR: total,
+    method: state.payMethod === "fawran" ? "Fawran Transfer" : "Cash at Pitch",
+    status: state.payMethod === "fawran" ? "Pending Verification" : "Confirmed (Cash)",
+    timestamp: "Just now",
+    receiptAttached: state.receiptUploaded
   };
 
-  state.bookings.unshift(newBooking);
-  state.notifications.unshift({
-    id: 'n' + Date.now(),
-    role: 'owner',
-    text: state.modal.payMethod === 'Fawran'
-      ? `INSTANT ALERT: ${state.user.name} uploaded a ${totalQAR} QAR Fawran receipt for ${m.title}!`
-      : `Cash booking (${totalQAR} QAR) by ${state.user.name} for ${m.title}.`,
-    time: 'Just now',
-    unread: true
-  });
-  state.notifications.unshift({
-    id: 'np' + Date.now(),
-    role: 'player',
-    text: `Booking ${bookingId} submitted! Owner notified to approve your ${totalQAR} QAR receipt.`,
-    time: 'Just now',
-    unread: true
+  state.data.bookings.unshift(newBk);
+  m.spotsTaken = Math.min(m.spotsTotal, m.spotsTaken + state.groupSize);
+  m.players.push({
+    name: state.user.name,
+    pos: state.user.position.slice(0, 3).toUpperCase(),
+    rating: 86,
+    status: newBk.status,
+    bib: m.players.length % 2 === 0 ? "Red" : "White"
   });
 
-  state.modal = null;
-  state.activeTab = 'passes';
-  saveState();
-  render();
-  showToast(newBooking.status === 'under_review'
-    ? 'Receipt sent! Owner notified for instant approval.'
-    : 'Spot reserved! Pay cash at the pitch.');
+  saveData();
+  state.bookingSheetMatch = null;
+  showToast(state.payMethod === "fawran" ? "Receipt sent to organizer!" : "Spot reserved! Pay cash at pitch.");
 }
 
-function joinWaitlist(matchId) {
-  const exists = state.waitlist.some(w => w.matchId === matchId && w.playerName === state.user.name);
-  if (exists) {
-    showToast('You are already on the priority waitlist');
-    return;
+function approveBooking(id) {
+  const bk = state.data.bookings.find(b => b.id === id);
+  if (bk) {
+    bk.status = "Approved & Paid";
+    saveData();
+    showToast(`Approved ${bk.playerName}`);
   }
-  state.waitlist.push({ matchId, playerName: state.user.name, phone: state.user.phone });
-  saveState();
-  render();
-  showToast('Added to Priority Waitlist! You will be alerted if a spot opens.');
 }
 
-function cancelPlayerBooking(bookingId) {
-  const b = state.bookings.find(x => x.id === bookingId);
-  if (!b) return;
-  b.status = 'cancelled';
-  state.notifications.unshift({
-    id: 'nc' + Date.now(),
-    role: 'owner',
-    text: `${b.playerName} cancelled booking ${b.id}. Spot reopened.`,
-    time: 'Just now',
-    unread: true
-  });
-  saveState();
-  render();
-  showToast('Booking cancelled & spot released');
+function rejectBooking(id) {
+  const idx = state.data.bookings.findIndex(b => b.id === id);
+  if (idx > -1) {
+    const bk = state.data.bookings[idx];
+    const m = state.data.matches.find(x => x.id === bk.matchId);
+    if (m) m.spotsTaken = Math.max(0, m.spotsTaken - bk.groupSize);
+    state.data.bookings.splice(idx, 1);
+    saveData();
+    showToast("Booking declined & spot reopened");
+  }
 }
 
-// --- OWNER ACTIONS ---
-function approveBooking(bookingId) {
-  const b = state.bookings.find(x => x.id === bookingId);
-  if (!b) return;
-  b.status = 'confirmed';
-  const m = state.matches.find(x => x.id === b.matchId);
-  state.notifications.unshift({
-    id: 'na' + Date.now(),
-    role: 'player',
-    text: `APPROVED! Your pass ${b.id} for ${m ? m.title : 'Match'} is confirmed.`,
-    time: 'Just now',
-    unread: true
-  });
-  saveState();
-  render();
-  showToast(`Approved ${b.playerName} (${b.amount} QAR)`);
-}
-
-function rejectBooking(bookingId) {
-  const b = state.bookings.find(x => x.id === bookingId);
-  if (!b) return;
-  b.status = 'rejected';
-  state.notifications.unshift({
-    id: 'nr' + Date.now(),
-    role: 'player',
-    text: `Receipt for ${b.id} was declined. Please check Fawran transfer & re-upload.`,
-    time: 'Just now',
-    unread: true
-  });
-  saveState();
-  render();
-  showToast(`Declined booking ${b.id}`);
-}
-
-function openCreateGameModal() {
-  state.modal = { type: 'create_game', price: 45, capacity: 12 };
-  render();
-}
-
-function createNewGame(e) {
-  e.preventDefault();
-  const title = document.getElementById('ng-title').value.trim();
-  const venue = document.getElementById('ng-venue').value.trim();
-  const dateLabel = document.getElementById('ng-date').value;
-  const time = document.getElementById('ng-time').value;
-  const format = document.getElementById('ng-format').value;
-  const price = Number(document.getElementById('ng-price').value) || 45;
-  const capacity = Number(document.getElementById('ng-cap').value) || 12;
-  const filmed = document.getElementById('ng-filmed').checked;
-  const promo6for5 = document.getElementById('ng-promo').checked;
-  const allowCash = document.getElementById('ng-cash').checked;
-
-  state.matches.unshift({
-    id: 'm' + Date.now(),
-    title,
-    venue,
-    mapUrl: `https://maps.google.com/?q=${encodeURIComponent(venue + ' Doha Qatar')}`,
-    dateLabel,
-    time,
-    duration: 90,
-    format,
-    price,
-    capacity,
-    filmed,
-    promo6for5,
-    allowCash,
-    videoUrl: '',
-    img: PITCH_IMAGES[state.matches.length % PITCH_IMAGES.length]
-  });
-
-  state.modal = null;
-  saveState();
-  render();
-  showToast('New game published to all players!');
-}
-
-function cloneGame(matchId) {
-  const m = state.matches.find(x => x.id === matchId);
+function autoBalanceBibs(matchId) {
+  const m = state.data.matches.find(x => x.id === matchId);
   if (!m) return;
-  state.matches.unshift({
-    ...m,
-    id: 'm' + Date.now(),
-    dateLabel: 'Next Week',
-    videoUrl: ''
+  const sorted = [...m.players].sort((a, b) => b.rating - a.rating);
+  sorted.forEach((p, idx) => {
+    p.bib = (idx % 4 === 0 || idx % 4 === 3) ? "Red" : "White";
   });
-  saveState();
-  render();
-  showToast(`Cloned "${m.title}" for Next Week`);
+  m.players = sorted;
+  saveData();
+  showToast("Teams balanced by rating (Red vs White)!");
 }
 
-function saveFawranSettings(e) {
+function generateWhatsAppLineup(matchId) {
+  const m = state.data.matches.find(x => x.id === matchId) || state.data.matches[0];
+  const reds = m.players.filter(p => p.bib === "Red").map((p, i) => `${i + 1}. ${p.name}`).join("\n") || "1. Open Spot";
+  const whites = m.players.filter(p => p.bib === "White").map((p, i) => `${i + 1}. ${p.name}`).join("\n") || "1. Open Spot";
+  return `⚽ *PANA SPORT QATAR — MATCH LINEUP*\n🏟️ *${m.title}*\n📍 ${m.venue}\n🕒 ${m.dateLabel} | 💰 ${m.priceQAR} QAR\n\n🔴 *TEAM MAROON / RED*\n${reds}\n\n⚪ *TEAM WHITE*\n${whites}\n\n📲 Book remaining spots: https://yoyojaye.github.io/Panasport/`;
+}
+
+function copyWhatsAppText(matchId) {
+  const txt = generateWhatsAppLineup(matchId);
+  navigator.clipboard?.writeText(txt);
+  showToast("WhatsApp lineup copied to clipboard!");
+}
+
+function saveProfileChanges(e) {
   e.preventDefault();
-  state.settings.fawranNumber = document.getElementById('set-fawran').value.trim();
-  state.settings.fawranName = document.getElementById('set-fname').value.trim();
-  state.settings.whatsappNumber = document.getElementById('set-wa').value.trim();
-  saveState();
-  render();
-  showToast('Fawran & WhatsApp settings updated!');
+  const form = e.target;
+  state.user.name = form.fullname.value.trim() || state.user.name;
+  state.user.position = form.position.value;
+  state.user.age = parseInt(form.age.value) || 25;
+  state.user.nationality = form.nationality.value;
+  const flags = { "Qatar": "🇶🇦", "Egypt": "🇪🇬", "Jordan": "🇯🇴", "Morocco": "🇲🇦", "Ethiopia": "🇪🇹", "India": "🇮🇳", "UK": "🇬🇧", "Brazil": "🇧🇷" };
+  state.user.flag = flags[state.user.nationality] || "🇶🇦";
+  state.showEditProfile = false;
+  showToast("Player card saved!");
 }
 
-function openVideoModal(matchId) {
-  const m = state.matches.find(x => x.id === matchId);
-  state.modal = { type: 'edit_video', matchId, videoUrl: m.videoUrl || '' };
-  render();
-}
-
-function saveMatchVideo(e) {
-  e.preventDefault();
-  const m = state.matches.find(x => x.id === state.modal.matchId);
-  m.videoUrl = document.getElementById('vid-url').value.trim();
-  m.filmed = true;
-  state.modal = null;
-  saveState();
-  render();
-  showToast('4K Video link shared with match players!');
-}
-
-function generateBibsAndWhatsApp(matchId) {
-  const m = state.matches.find(x => x.id === matchId);
-  const confirmed = state.bookings.filter(b => b.matchId === matchId && (b.status === 'confirmed' || b.status === 'cash_pending'));
-  let roster = [];
-  confirmed.forEach(b => {
-    for (let i = 0; i < b.spots; i++) {
-      roster.push(i === 0 ? `${b.playerName} (${b.position})` : `${b.teamName || b.playerName} +${i}`);
-    }
-  });
-  const red = roster.filter((_, idx) => idx % 2 === 0);
-  const white = roster.filter((_, idx) => idx % 2 === 1);
-
-  const sheet = `⚽ *PANA SPORT — MATCHDAY LINEUP*\n📍 ${m.title} (${m.venue})\n⏰ ${m.dateLabel} @ ${m.time} (${m.format})\n\n🔴 *RED BIBS (${red.length}):*\n${red.map((p, i) => `${i + 1}. ${p}`).join('\n') || 'Waiting for players'}\n\n⚪ *WHITE BIBS (${white.length}):*\n${white.map((p, i) => `${i + 1}. ${p}`).join('\n') || 'Waiting for players'}\n\n📲 Book spots on PANA SPORT`;
-
-  state.modal = { type: 'squad_sheet', title: m.title, red, white, sheet };
-  render();
-}
-
-// --- RENDER ENGINE ---
-function render() {
-  const app = document.getElementById('app');
-  if (!state.user) {
-    app.innerHTML = renderLoginScreen();
-    return;
-  }
-  if (state.user.role === 'owner') {
-    app.innerHTML = renderOwnerApp() + renderModal();
-    return;
-  }
-  app.innerHTML = renderPlayerApp() + renderModal();
-}
-
-function renderLoginScreen() {
+// ==========================================
+// 6. VIEWS
+// ==========================================
+function renderSplash() {
   return `
-    <div class="min-h-screen flex flex-col justify-between bg-gradient-to-b from-[#111827] via-[#1F2937] to-[#111827] text-white p-6">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2.5">
-          <div class="w-10 h-10 rounded-2xl bg-[#B91C2C] flex items-center justify-center font-black text-lg shadow-lg">PS</div>
-          <div>
-            <div class="font-black tracking-tight text-lg leading-none">PANA SPORT</div>
-            <div class="text-[10px] text-red-400 font-bold tracking-widest uppercase mt-0.5">Qatar Football</div>
-          </div>
+    <div class="relative min-h-screen w-full flex flex-col justify-between overflow-hidden bg-slate-950 text-white">
+      <img src="${PHOTOS.splashHero}" alt="Doha Night Football" class="absolute inset-0 w-full h-full object-cover object-center scale-105 brightness-90" />
+      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/20"></div>
+
+      <!-- Top Brand Pill -->
+      <div class="relative z-10 flex items-center justify-between px-6 pt-12">
+        <div class="flex items-center gap-2.5 bg-black/40 backdrop-blur-md border border-white/15 px-3.5 py-2 rounded-full">
+          <div class="w-7 h-7 rounded-full bg-[#8A1538] flex items-center justify-center font-extrabold text-xs tracking-tighter text-white shadow">PS</div>
+          <span class="text-xs font-extrabold tracking-widest uppercase">PANA SPORT</span>
         </div>
-        <button onclick="toggleLang()" class="px-3 py-1.5 rounded-full bg-white/10 text-xs font-bold hover:bg-white/20">
-          ${state.lang === 'en' ? 'العربية' : 'EN'}
+      </div>
+
+      <!-- Bottom Hero Copy & Continue CTA -->
+      <div class="relative z-10 px-6 pb-10 pt-20 animate-fade">
+        <div class="inline-flex items-center gap-2 bg-[#8A1538] text-white text-[11px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-md mb-4 shadow-lg">
+          <span>🇶🇦 DOHA PICKUP FOOTBALL</span>
+        </div>
+
+        <h1 class="text-[34px] leading-[1.06] font-extrabold tracking-tight uppercase mb-3 drop-shadow">
+          SHOW UP, PLAY,<br/>AND LET US<br/>HANDLE THE<br/>DETAILS
+        </h1>
+
+        <p class="text-sm text-slate-200/90 font-medium mb-7 max-w-[320px]">
+          Instant pickup match slots, verified Fawran payments, and balanced Doha squads.
+        </p>
+
+        <button onclick="goScreen('auth')" class="w-full py-4 rounded-2xl bg-[#8A1538] hover:bg-[#70102D] active:scale-[0.99] transition text-white font-extrabold text-base tracking-wide shadow-xl shadow-[#8A1538]/40">
+          Continue
         </button>
-      </div>
-
-      <div class="my-6">
-        <div class="relative rounded-3xl overflow-hidden h-44 mb-5 border border-white/10 shadow-2xl">
-          <img src="${PITCH_IMAGES[0]}" class="w-full h-full object-cover" alt="Doha Night Football">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent flex flex-col justify-end p-4">
-            <span class="inline-block w-fit px-2.5 py-0.5 rounded-full bg-[#B91C2C] text-[10px] font-extrabold uppercase tracking-wider mb-1.5">Doha • Al Rayyan • Lusail</span>
-            <h1 class="text-xl font-black leading-tight">Book Night Pickup Games in Seconds.</h1>
-          </div>
-        </div>
-
-        <!-- Quick Demo Access Pills -->
-        <div class="bg-white/5 border border-white/10 rounded-2xl p-3.5 mb-5">
-          <div class="text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-2.5">1-Tap Instant Demo Access</div>
-          <div class="grid grid-cols-2 gap-2.5">
-            <button onclick="loginAsPlayerDemo()" class="py-3 px-3 rounded-xl bg-white text-gray-900 font-extrabold text-xs flex items-center justify-center gap-1.5 shadow active:scale-95 transition">
-              <span>⚽</span> Player App
-            </button>
-            <button onclick="loginAsOwnerDemo()" class="py-3 px-3 rounded-xl bg-[#B91C2C] text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow active:scale-95 transition">
-              <span>👑</span> Owner Login
-            </button>
-          </div>
-        </div>
-
-        <!-- Real Player Sign-Up Form -->
-        <form onsubmit="handleRegisterSubmit(event)" class="bg-white text-gray-900 rounded-3xl p-5 shadow-xl space-y-3">
-          <div class="font-black text-base">Create Player Account</div>
-          <div>
-            <label class="text-[11px] font-bold text-gray-500 uppercase">Full Name</label>
-            <input id="reg-name" type="text" required placeholder="e.g. Khalid Al-Marri" class="w-full mt-1 px-3.5 py-2.5 rounded-xl bg-gray-100 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#B91C2C]" />
-          </div>
-          <div class="grid grid-cols-3 gap-2">
-            <div class="col-span-2">
-              <label class="text-[11px] font-bold text-gray-500 uppercase">Qatar Mobile (+974)</label>
-              <input id="reg-phone" type="tel" required placeholder="5512 3456" class="w-full mt-1 px-3.5 py-2.5 rounded-xl bg-gray-100 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#B91C2C]" />
-            </div>
-            <div>
-              <label class="text-[11px] font-bold text-gray-500 uppercase">Position</label>
-              <select id="reg-pos" class="w-full mt-1 px-2.5 py-2.5 rounded-xl bg-gray-100 text-sm font-bold focus:outline-none">
-                <option>ST</option><option>RW</option><option>LW</option><option selected>CM</option><option>CB</option><option>GK</option>
-              </select>
-            </div>
-          </div>
-          <button type="submit" class="w-full py-3.5 rounded-xl bg-[#B91C2C] text-white font-extrabold text-sm shadow-lg active:scale-98 transition">
-            Join PANA SPORT →
-          </button>
-        </form>
-      </div>
-
-      <div class="text-center text-[11px] text-gray-400">
-        Fawran Instant Transfer • 6 Players Pay for 5 • 4K Filmed Games
       </div>
     </div>
   `;
 }
 
-// ================= PLAYER APP =================
-function renderPlayerApp() {
-  const unreadCount = state.notifications.filter(n => n.role === 'player' && n.unread).length;
-
-  let bodyHTML = '';
-  if (state.activeTab === 'games') bodyHTML = renderPlayerGames();
-  else if (state.activeTab === 'passes') bodyHTML = renderPlayerPasses();
-  else if (state.activeTab === 'alerts') bodyHTML = renderAlerts('player');
-  else if (state.activeTab === 'card') bodyHTML = renderPlayerCard();
-
+function renderAuth() {
+  const isPhone = state.authMode === "phone";
   return `
-    <!-- Top Header -->
-    <header class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-gray-100 px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-2.5">
-        <div class="w-9 h-9 rounded-xl bg-[#B91C2C] text-white flex items-center justify-center font-black text-sm shadow-sm">PS</div>
-        <div>
-          <div class="font-black text-sm tracking-tight leading-none">PANA SPORT</div>
-          <div class="text-[10px] font-bold text-gray-400 mt-0.5">Doha, Qatar • QAR</div>
-        </div>
-      </div>
-      <div class="flex items-center gap-2">
-        <button onclick="toggleLang()" class="px-2.5 py-1 rounded-lg bg-gray-100 text-[11px] font-extrabold text-gray-700">
-          ${state.lang === 'en' ? 'عربي' : 'EN'}
-        </button>
-        <button onclick="logout()" title="Switch Account / Sign Out" class="px-2.5 py-1 rounded-lg bg-gray-900 text-white text-[11px] font-bold">
-          Exit
-        </button>
-      </div>
-    </header>
-
-    <main class="flex-1 pb-24">
-      ${bodyHTML}
-    </main>
-
-    <!-- Bottom Mobile Nav -->
-    <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-gray-200 px-3 py-2 flex justify-around items-center z-40">
-      ${navBtn('games', '⚽', 'Games')}
-      ${navBtn('passes', '🎟️', 'My Passes')}
-      ${navBtn('alerts', '🔔', 'Alerts', unreadCount)}
-      ${navBtn('card', '🪪', 'My Card')}
-    </nav>
-  `;
-}
-
-function navBtn(tab, icon, label, badge = 0) {
-  const active = state.activeTab === tab;
-  return `
-    <button onclick="state.activeTab='${tab}'; render()" class="relative flex flex-col items-center justify-center py-1 px-3 rounded-xl transition ${active ? 'text-[#B91C2C] bg-red-50' : 'text-gray-400 hover:text-gray-700'}">
-      <span class="text-lg leading-none">${icon}</span>
-      <span class="text-[10px] font-extrabold mt-1">${label}</span>
-      ${badge > 0 ? `<span class="absolute top-0.5 right-2 w-4 h-4 rounded-full bg-[#B91C2C] text-white text-[9px] font-black flex items-center justify-center">${badge}</span>` : ''}
-    </button>
-  `;
-}
-
-function renderPlayerGames() {
-  const openMatches = state.matches.filter(m => {
-    if (m.dateLabel === 'Completed') return false;
-    if (state.dateFilter !== 'all' && m.dateLabel !== state.dateFilter) return false;
-    if (state.formatFilter !== 'all' && m.format !== state.formatFilter) return false;
-    return true;
-  });
-
-  const aiPick = state.matches.find(m => m.dateLabel !== 'Completed' && getTakenSpots(m.id) < m.capacity);
-
-  return `
-    <div class="p-4 space-y-4">
-      <!-- Greeting & AI Matchmaker Banner -->
-      <div class="bg-gradient-to-r from-[#111827] to-[#1F2937] text-white rounded-3xl p-4 shadow-lg">
-        <div class="flex items-center justify-between mb-2">
-          <div>
-            <div class="text-[11px] text-gray-400 font-bold">Welcome back,</div>
-            <div class="text-base font-black">${state.user.name} <span class="text-xs px-2 py-0.5 rounded-md bg-[#B91C2C] ml-1">${state.user.position}</span></div>
-          </div>
-          <div class="text-right">
-            <div class="text-[10px] text-emerald-400 font-extrabold uppercase">Fawran Ready</div>
-            <div class="text-xs font-bold text-gray-300">6 Pay for 5 Active</div>
-          </div>
-        </div>
-        ${aiPick ? `
-          <div class="mt-3 pt-3 border-t border-white/10 flex items-center justify-between gap-2">
-            <div class="text-xs">
-              <span class="text-amber-400 font-black">✨ AI Pick:</span>
-              <span class="text-gray-200 font-semibold">${aiPick.title} (${aiPick.time})</span>
-            </div>
-            <button onclick="openBookingModal('${aiPick.id}')" class="shrink-0 px-3 py-1.5 rounded-xl bg-[#B91C2C] text-white text-[11px] font-extrabold">
-              Book
-            </button>
-          </div>
-        ` : ''}
-      </div>
-
-      <!-- Date Filter Chips -->
-      <div class="flex gap-2 overflow-x-auto no-scrollbar">
-        ${['all', 'Tonight', 'Tomorrow', 'This Week'].map(d => `
-          <button onclick="state.dateFilter='${d}'; render()" class="shrink-0 px-3.5 py-1.5 rounded-full text-xs font-extrabold transition ${state.dateFilter === d ? 'bg-[#B91C2C] text-white shadow-sm' : 'bg-white text-gray-600 border border-gray-200'}">
-            ${d === 'all' ? 'All Dates' : d}
-          </button>
-        `).join('')}
-      </div>
-
-      <!-- Format Filter Pills -->
-      <div class="flex gap-2 overflow-x-auto no-scrollbar">
-        ${['all', '6v6', '7v7', '8v8'].map(f => `
-          <button onclick="state.formatFilter='${f}'; render()" class="shrink-0 px-3 py-1 rounded-lg text-[11px] font-extrabold transition ${state.formatFilter === f ? 'bg-gray-900 text-white' : 'bg-gray-200/70 text-gray-600'}">
-            ${f === 'all' ? 'All Formats' : f}
-          </button>
-        `).join('')}
-      </div>
-
-      <!-- Match Cards -->
-      <div class="space-y-4">
-        ${openMatches.length === 0 ? `
-          <div class="bg-white rounded-3xl p-8 text-center border border-gray-100">
-            <div class="text-3xl mb-2">🏟️</div>
-            <div class="font-black text-sm">No games match this filter</div>
-            <button onclick="state.dateFilter='all'; state.formatFilter='all'; render()" class="mt-3 px-4 py-2 rounded-xl bg-[#B91C2C] text-white text-xs font-bold">Show All Games</button>
-          </div>
-        ` : openMatches.map(m => renderMatchCard(m)).join('')}
-      </div>
-    </div>
-  `;
-}
-
-function renderMatchCard(m) {
-  const taken = getTakenSpots(m.id);
-  const left = Math.max(0, m.capacity - taken);
-  const pct = Math.min(100, Math.round((taken / m.capacity) * 100));
-  const isFull = left === 0;
-
-  return `
-    <div class="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100">
-      <div class="relative h-40">
-        <img src="${m.img}" class="w-full h-full object-cover" alt="${m.title}">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent"></div>
-        <div class="absolute top-3 left-3 flex gap-1.5">
-          <span class="px-2.5 py-1 rounded-lg bg-black/75 text-white text-[10px] font-black">${m.format}</span>
-          ${m.filmed ? `<span class="px-2.5 py-1 rounded-lg bg-[#B91C2C] text-white text-[10px] font-black">🎥 4K FILMED</span>` : ''}
-          ${m.promo6for5 ? `<span class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white text-[10px] font-black">6 PAY FOR 5</span>` : ''}
-        </div>
-        <div class="absolute top-3 right-3 px-2.5 py-1 rounded-xl bg-white text-gray-900 font-black text-xs shadow">
-          ${m.price} QAR
-        </div>
-        <div class="absolute bottom-3 left-3.5 right-3.5 text-white">
-          <div class="font-black text-base leading-tight">${m.title}</div>
-          <div class="text-[11px] text-gray-200 font-medium mt-0.5">📍 ${m.venue} • ${m.dateLabel} ${m.time}</div>
-        </div>
-      </div>
-
-      <div class="p-4">
-        <div class="flex items-center justify-between text-xs font-bold mb-1.5">
-          <span class="${isFull ? 'text-red-600' : left <= 3 ? 'text-amber-600' : 'text-emerald-600'}">
-            ${isFull ? '🔴 Fully Booked' : left <= 3 ? `🔥 Almost Full (${left} left)` : `🟢 ${left} Spots Available`}
-          </span>
-          <span class="text-gray-500">${taken}/${m.capacity} Players</span>
-        </div>
-        <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden mb-3.5">
-          <div class="h-full ${isFull ? 'bg-red-600' : 'bg-[#B91C2C]'} rounded-full" style="width:${pct}%"></div>
-        </div>
-
-        <div class="flex gap-2">
-          <a href="${m.mapUrl}" target="_blank" class="px-3.5 py-2.5 rounded-xl bg-gray-100 text-gray-700 text-xs font-extrabold flex items-center justify-center">
-            📍 Map
-          </a>
-          ${isFull ? `
-            <button onclick="joinWaitlist('${m.id}')" class="flex-1 py-2.5 rounded-xl bg-gray-900 text-white text-xs font-extrabold">
-              Join Waitlist
-            </button>
-          ` : `
-            <button onclick="openBookingModal('${m.id}')" class="flex-1 py-2.5 rounded-xl bg-[#B91C2C] text-white text-xs font-extrabold shadow-sm active:scale-98 transition">
-              Book Spot (${m.price} QAR) →
-            </button>
-          `}
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function renderPlayerPasses() {
-  const myBookings = state.bookings.filter(b => b.playerName === state.user.name);
-  return `
-    <div class="p-4 space-y-4">
-      <div class="flex items-center justify-between">
-        <h2 class="font-black text-lg">My Match Passes</h2>
-        <span class="text-xs font-bold text-gray-400">${myBookings.length} Total</span>
-      </div>
-
-      ${myBookings.length === 0 ? `
-        <div class="bg-white rounded-3xl p-8 text-center border border-gray-100">
-          <div class="text-3xl mb-2">🎟️</div>
-          <div class="font-black text-sm">No bookings yet</div>
-          <p class="text-xs text-gray-500 mt-1">Pick a game in Doha and pay via Fawran to get your pitch pass.</p>
-          <button onclick="state.activeTab='games'; render()" class="mt-4 px-5 py-2.5 rounded-xl bg-[#B91C2C] text-white text-xs font-extrabold">Browse Games</button>
-        </div>
-      ` : myBookings.map(b => {
-        const m = state.matches.find(x => x.id === b.matchId) || {};
-        const statusStyles = {
-          confirmed: 'bg-emerald-100 text-emerald-800',
-          under_review: 'bg-amber-100 text-amber-800',
-          cash_pending: 'bg-blue-100 text-blue-800',
-          rejected: 'bg-red-100 text-red-800',
-          cancelled: 'bg-gray-100 text-gray-500'
-        };
-        const statusLabels = {
-          confirmed: '✅ CONFIRMED PASS',
-          under_review: '⏳ RECEIPT UNDER REVIEW',
-          cash_pending: '💵 PAY CASH AT PITCH',
-          rejected: '❌ RECEIPT DECLINED',
-          cancelled: 'CANCELLED'
-        };
-        return `
-          <div class="bg-white rounded-3xl p-4 shadow-sm border border-gray-100 space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-[11px] font-black text-gray-400">${b.id}</span>
-              <span class="px-2.5 py-1 rounded-full text-[10px] font-black ${statusStyles[b.status]}">${statusLabels[b.status]}</span>
-            </div>
-            <div>
-              <div class="font-black text-base">${m.title || 'Match'}</div>
-              <div class="text-xs text-gray-500 font-semibold mt-0.5">📍 ${m.venue} • ${m.dateLabel} ${m.time}</div>
-            </div>
-            <div class="bg-gray-50 rounded-2xl p-3 flex items-center justify-between text-xs">
-              <div>
-                <div class="text-gray-400 font-bold">Spots Reserved</div>
-                <div class="font-black text-gray-900">${b.spots} Player${b.spots > 1 ? 's' : ''} ${b.teamName ? `(${b.teamName})` : ''}</div>
-              </div>
-              <div class="text-right">
-                <div class="text-gray-400 font-bold">${b.method}</div>
-                <div class="font-black text-[#B91C2C]">${b.amount} QAR</div>
-              </div>
-            </div>
-
-            ${m.videoUrl && b.status === 'confirmed' ? `
-              <a href="${m.videoUrl}" target="_blank" class="block w-full py-2.5 rounded-xl bg-gray-900 text-white text-center text-xs font-extrabold">
-                🎥 Watch 4K Match Recording
-              </a>
-            ` : ''}
-
-            ${(b.status === 'under_review' || b.status === 'cash_pending') ? `
-              <button onclick="cancelPlayerBooking('${b.id}')" class="w-full py-2 rounded-xl border border-gray-200 text-gray-500 text-xs font-bold">
-                Cancel Booking
-              </button>
-            ` : ''}
-          </div>
-        `;
-      }).join('')}
-    </div>
-  `;
-}
-
-function renderPlayerCard() {
-  const played = state.bookings.filter(b => b.playerName === state.user.name && b.status === 'confirmed').length;
-  return `
-    <div class="p-4 space-y-4">
-      <div class="bg-gradient-to-br from-[#B91C2C] via-[#991B1B] to-[#111827] text-white rounded-3xl p-5 shadow-xl relative overflow-hidden">
-        <div class="flex justify-between items-start">
-          <div>
-            <div class="text-4xl font-black leading-none">${state.user.ovr || 85}</div>
-            <div class="text-xs font-black tracking-widest uppercase mt-1 text-red-200">${state.user.position || 'CM'}</div>
-            <div class="text-xs font-bold mt-2 bg-white/15 px-2.5 py-0.5 rounded-full w-fit">🇶🇦 QATAR</div>
-          </div>
-          <div class="w-16 h-16 rounded-2xl bg-white/15 border border-white/25 flex items-center justify-center text-2xl font-black">
-            ${state.user.name.slice(0,2).toUpperCase()}
-          </div>
-        </div>
-        <div class="mt-5 pt-4 border-t border-white/15">
-          <div class="text-xl font-black tracking-tight">${state.user.name}</div>
-          <div class="text-xs text-red-200 font-semibold">${state.user.phone}</div>
-        </div>
-        <div class="grid grid-cols-3 gap-2 mt-4 bg-black/25 rounded-2xl p-3 text-center">
-          <div><div class="text-base font-black">${played}</div><div class="text-[10px] text-gray-300 uppercase font-bold">Matches</div></div>
-          <div><div class="text-base font-black">${state.user.goals || 12}</div><div class="text-[10px] text-gray-300 uppercase font-bold">Goals</div></div>
-          <div><div class="text-base font-black">100%</div><div class="text-[10px] text-gray-300 uppercase font-bold">Show-Up</div></div>
-        </div>
-      </div>
-
-      <button onclick="resetDemoData()" class="w-full py-3 rounded-2xl bg-white border border-gray-200 text-xs font-extrabold text-gray-600">
-        🔄 Reset Demo Data
-      </button>
-    </div>
-  `;
-}
-
-// ================= OWNER COMMAND CENTER =================
-function renderOwnerApp() {
-  const pendingCount = state.bookings.filter(b => b.status === 'under_review').length;
-  let bodyHTML = '';
-  if (state.activeTab === 'manage') bodyHTML = renderOwnerManage();
-  else if (state.activeTab === 'games') bodyHTML = renderOwnerGames();
-  else if (state.activeTab === 'players') bodyHTML = renderOwnerPlayers();
-  else if (state.activeTab === 'settings') bodyHTML = renderOwnerSettings();
-
-  return `
-    <header class="sticky top-0 z-30 bg-[#111827] text-white px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-2.5">
-        <div class="w-9 h-9 rounded-xl bg-[#B91C2C] flex items-center justify-center font-black text-sm">👑</div>
-        <div>
-          <div class="font-black text-sm leading-none">OWNER CONTROL</div>
-          <div class="text-[10px] text-emerald-400 font-bold mt-0.5">PANA SPORT QATAR</div>
-        </div>
-      </div>
-      <div class="flex items-center gap-2">
-        <button onclick="loginAsPlayerDemo()" class="px-2.5 py-1.5 rounded-lg bg-white/10 text-[11px] font-bold">
-          Preview Player
-        </button>
-        <button onclick="logout()" class="px-2.5 py-1.5 rounded-lg bg-[#B91C2C] text-[11px] font-bold">
-          Exit
-        </button>
-      </div>
-    </header>
-
-    <main class="flex-1 pb-24">
-      ${bodyHTML}
-    </main>
-
-    <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-gray-200 px-3 py-2 flex justify-around items-center z-40">
-      ${navBtn('manage', '💳', 'Manage', pendingCount)}
-      ${navBtn('games', '🏟️', 'Games')}
-      ${navBtn('players', '👕', 'Lineups')}
-      ${navBtn('settings', '⚙️', 'Fawran')}
-    </nav>
-  `;
-}
-
-function renderOwnerManage() {
-  const pending = state.bookings.filter(b => b.status === 'under_review');
-  const confirmedRev = state.bookings.filter(b => b.status === 'confirmed').reduce((s, b) => s + Number(b.amount), 0);
-  const cashPending = state.bookings.filter(b => b.status === 'cash_pending').reduce((s, b) => s + Number(b.amount), 0);
-
-  return `
-    <div class="p-4 space-y-4">
-      <!-- Revenue Summary Cards -->
-      <div class="grid grid-cols-3 gap-2.5">
-        <div class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm">
-          <div class="text-[10px] font-bold text-gray-400 uppercase">Collected</div>
-          <div class="text-base font-black text-emerald-600 mt-0.5">${confirmedRev} QAR</div>
-        </div>
-        <div class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm">
-          <div class="text-[10px] font-bold text-gray-400 uppercase">To Approve</div>
-          <div class="text-base font-black text-[#B91C2C] mt-0.5">${pending.length}</div>
-        </div>
-        <div class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm">
-          <div class="text-[10px] font-bold text-gray-400 uppercase">Cash Pitch</div>
-          <div class="text-base font-black text-gray-900 mt-0.5">${cashPending} QAR</div>
-        </div>
-      </div>
-
-      <!-- Instant Fawran Receipt Queue -->
+    <div class="min-h-screen bg-[#F7F7F9] flex flex-col justify-between px-6 pt-12 pb-8 animate-fade">
       <div>
-        <div class="flex items-center justify-between mb-2.5">
-          <h2 class="font-black text-base">Fawran Receipts (${pending.length})</h2>
-          <span class="text-[11px] font-bold text-gray-400">Check balance & approve</span>
+        <button onclick="goScreen('splash')" class="w-11 h-11 rounded-full bg-white shadow-sm border border-slate-200/80 flex items-center justify-center text-slate-800 active:scale-95">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+
+        <div class="text-center mt-8 mb-8">
+          <div class="w-12 h-12 rounded-2xl bg-[#8A1538] text-white font-extrabold text-base flex items-center justify-center mx-auto mb-4 shadow-md">PS</div>
+          <h1 class="text-[28px] leading-tight font-extrabold tracking-tight text-slate-900 uppercase">
+            LET'S GET<br/>STARTED NOW!
+          </h1>
         </div>
 
-        ${pending.length === 0 ? `
-          <div class="bg-white rounded-3xl p-6 text-center border border-gray-100">
-            <div class="text-2xl mb-1">✅</div>
-            <div class="font-extrabold text-sm">All receipts reviewed!</div>
-            <div class="text-xs text-gray-400 mt-0.5">New player Fawran uploads will appear here instantly.</div>
-          </div>
-        ` : pending.map(b => {
-          const m = state.matches.find(x => x.id === b.matchId) || {};
-          return `
-            <div class="bg-white rounded-3xl p-4 shadow-sm border-2 border-amber-300 space-y-3 mb-3">
-              <div class="flex items-center justify-between">
-                <span class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-black">NEW RECEIPT • ${b.createdAt}</span>
-                <span class="font-black text-base text-[#B91C2C]">+${b.amount} QAR</span>
-              </div>
-              <div>
-                <div class="font-black text-sm">${b.playerName} (${b.spots} Spot${b.spots > 1 ? 's' : ''})</div>
-                <div class="text-xs text-gray-500 font-semibold">${b.playerPhone} • ${m.title || 'Game'}</div>
-              </div>
-              <div class="bg-gray-100 rounded-xl p-2.5 flex items-center justify-between text-xs font-bold">
-                <span>📎 ${b.receiptPreview || 'Fawran_Transfer.jpg'}</span>
-                <span class="text-emerald-700">Ref: ${b.id}</span>
-              </div>
-              <div class="grid grid-cols-2 gap-2.5">
-                <button onclick="rejectBooking('${b.id}')" class="py-2.5 rounded-xl bg-gray-100 text-gray-700 font-extrabold text-xs">
-                  Decline
-                </button>
-                <button onclick="approveBooking('${b.id}')" class="py-2.5 rounded-xl bg-emerald-600 text-white font-extrabold text-xs shadow">
-                  ✅ Approve & Allow
-                </button>
-              </div>
-            </div>
-          `;
-        }).join('')}
-      </div>
+        <!-- Tabs -->
+        <div class="flex justify-center gap-8 border-b border-slate-200 mb-6">
+          <button onclick="state.authMode='phone'; state.authInput=''; render();" class="pb-3 text-xs font-extrabold tracking-wider uppercase transition ${isPhone ? 'text-[#8A1538] border-b-2 border-[#8A1538]' : 'text-slate-400'}">
+            PHONE NUMBER
+          </button>
+          <button onclick="state.authMode='email'; state.authInput=''; render();" class="pb-3 text-xs font-extrabold tracking-wider uppercase transition ${!isPhone ? 'text-[#8A1538] border-b-2 border-[#8A1538]' : 'text-slate-400'}">
+            EMAIL
+          </button>
+        </div>
 
-      <!-- Recent Activity Feed -->
+        <!-- Input Row -->
+        ${isPhone ? `
+          <div class="flex items-center gap-3">
+            <div class="h-14 px-4 rounded-2xl bg-white border border-slate-200/90 shadow-sm flex items-center gap-2 shrink-0">
+              <span class="text-xl">🇶🇦</span>
+              <span class="text-sm font-extrabold text-slate-800">+974</span>
+            </div>
+            <input
+              type="tel"
+              value="${state.authInput}"
+              oninput="state.authInput=this.value"
+              placeholder="Enter your phone number"
+              class="w-full h-14 px-4 rounded-2xl bg-white border border-slate-200/90 shadow-sm text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#8A1538]"
+            />
+          </div>
+        ` : `
+          <input
+            type="email"
+            value="${state.authInput}"
+            oninput="state.authInput=this.value"
+            placeholder="Enter your email address"
+            class="w-full h-14 px-4 rounded-2xl bg-white border border-slate-200/90 shadow-sm text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#8A1538]"
+          />
+        `}
+
+        <p class="text-center text-xs text-slate-500 mt-4 leading-relaxed px-4">
+          We will send you a one-time code via ${isPhone ? 'SMS' : 'email'} to verify your account
+        </p>
+
+        <button onclick="handleAuthContinue()" class="w-full mt-7 py-4 rounded-2xl bg-[#8A1538] hover:bg-[#70102D] active:scale-[0.99] transition text-white font-extrabold text-base shadow-lg shadow-[#8A1538]/25">
+          Continue
+        </button>
+
+        <p class="text-center text-[11px] text-slate-500 mt-4">
+          By clicking continue you agree to our <span class="text-[#8A1538] font-bold">Terms & Conditions</span>
+        </p>
+      </div>
+    </div>
+  `;
+}
+
+function renderOtp() {
+  return `
+    <div class="min-h-screen bg-[#F7F7F9] flex flex-col justify-between px-6 pt-12 pb-8 animate-fade">
       <div>
-        <h3 class="font-black text-sm text-gray-500 uppercase tracking-wider mb-2">All Bookings</h3>
-        <div class="space-y-2">
-          ${state.bookings.map(b => {
-            const m = state.matches.find(x => x.id === b.matchId) || {};
-            return `
-              <div class="bg-white rounded-2xl p-3 border border-gray-100 flex items-center justify-between text-xs">
-                <div>
-                  <div class="font-extrabold">${b.playerName} <span class="text-gray-400">(${b.spots}x)</span></div>
-                  <div class="text-[11px] text-gray-400">${m.title || ''} • ${b.method}</div>
-                </div>
-                <div class="text-right">
-                  <div class="font-black">${b.amount} QAR</div>
-                  <div class="text-[10px] font-extrabold uppercase ${b.status === 'confirmed' ? 'text-emerald-600' : b.status === 'under_review' ? 'text-amber-600' : 'text-gray-400'}">${b.status.replace('_', ' ')}</div>
-                </div>
-              </div>
-            `;
-          }).join('')}
-        </div>
-      </div>
-    </div>
-  `;
-}
+        <button onclick="goScreen('auth')" class="w-11 h-11 rounded-full bg-white shadow-sm border border-slate-200/80 flex items-center justify-center text-slate-800">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        </button>
 
-function renderOwnerGames() {
-  return `
-    <div class="p-4 space-y-4">
-      <div class="flex items-center justify-between">
-        <h2 class="font-black text-lg">Your Games (${state.matches.length})</h2>
-        <button onclick="openCreateGameModal()" class="px-4 py-2 rounded-xl bg-[#B91C2C] text-white text-xs font-extrabold shadow">
-          + New Game
+        <div class="text-center mt-8 mb-8">
+          <h1 class="text-[26px] font-extrabold tracking-tight text-slate-900 uppercase">VERIFY CODE</h1>
+          <p class="text-xs text-slate-500 mt-2">
+            Sent to <span class="font-bold text-slate-800">${state.authMode === 'phone' ? state.user.phone : state.authInput}</span>
+          </p>
+        </div>
+
+        <div class="grid grid-cols-4 gap-3 max-w-[280px] mx-auto mb-6">
+          ${state.otpDigits.map((d, i) => `
+            <input type="text" maxlength="1" value="${d}" oninput="state.otpDigits[${i}]=this.value"
+              class="h-16 rounded-2xl bg-white border-2 border-[#8A1538]/30 focus:border-[#8A1538] text-center text-2xl font-extrabold text-slate-900 shadow-sm focus:outline-none" />
+          `).join("")}
+        </div>
+
+        <button onclick="verifyOtpAndEnter()" class="w-full py-4 rounded-2xl bg-[#8A1538] text-white font-extrabold text-base shadow-lg shadow-[#8A1538]/25 active:scale-[0.99]">
+          Verify & Continue
         </button>
       </div>
-
-      ${state.matches.map(m => {
-        const taken = getTakenSpots(m.id);
-        const fullRev = m.price * m.capacity;
-        return `
-          <div class="bg-white rounded-3xl p-4 shadow-sm border border-gray-100 space-y-3">
-            <div class="flex justify-between items-start">
-              <div>
-                <div class="font-black text-base">${m.title}</div>
-                <div class="text-xs text-gray-500 font-semibold">📍 ${m.venue} • ${m.dateLabel} ${m.time}</div>
-              </div>
-              <span class="px-2.5 py-1 rounded-lg bg-gray-900 text-white text-xs font-black">${m.price} QAR</span>
-            </div>
-
-            <div class="grid grid-cols-3 gap-2 bg-gray-50 rounded-2xl p-2.5 text-center text-xs">
-              <div><div class="font-black">${taken}/${m.capacity}</div><div class="text-[10px] text-gray-400 font-bold">Booked</div></div>
-              <div><div class="font-black text-emerald-600">${fullRev} QAR</div><div class="text-[10px] text-gray-400 font-bold">Max Pot</div></div>
-              <div><div class="font-black">${m.format}</div><div class="text-[10px] text-gray-400 font-bold">${m.filmed ? '4K Filmed' : 'Standard'}</div></div>
-            </div>
-
-            <div class="grid grid-cols-3 gap-2">
-              <button onclick="generateBibsAndWhatsApp('${m.id}')" class="py-2 rounded-xl bg-gray-900 text-white text-[11px] font-extrabold">
-                👕 Bibs & WA
-              </button>
-              <button onclick="openVideoModal('${m.id}')" class="py-2 rounded-xl bg-red-50 text-[#B91C2C] text-[11px] font-extrabold">
-                🎥 Video Link
-              </button>
-              <button onclick="cloneGame('${m.id}')" class="py-2 rounded-xl bg-gray-100 text-gray-700 text-[11px] font-extrabold">
-                📋 Clone
-              </button>
-            </div>
-          </div>
-        `;
-      }).join('')}
     </div>
   `;
 }
 
-function renderOwnerPlayers() {
+function renderHomeTab() {
   return `
-    <div class="p-4 space-y-4">
-      <h2 class="font-black text-lg">Match Lineups & Cash</h2>
-      ${state.matches.filter(m => m.dateLabel !== 'Completed').map(m => {
-        const list = state.bookings.filter(b => b.matchId === m.id && b.status !== 'rejected' && b.status !== 'cancelled');
-        return `
-          <div class="bg-white rounded-3xl p-4 border border-gray-100 shadow-sm space-y-3">
-            <div class="flex items-center justify-between">
-              <div class="font-black text-sm">${m.title}</div>
-              <button onclick="generateBibsAndWhatsApp('${m.id}')" class="px-3 py-1.5 rounded-xl bg-[#B91C2C] text-white text-[11px] font-extrabold">
-                Auto-Split Bibs
-              </button>
-            </div>
-            ${list.length === 0 ? `<div class="text-xs text-gray-400">No players registered yet.</div>` : list.map(b => `
-              <div class="flex items-center justify-between py-2 border-t border-gray-100 text-xs">
-                <div>
-                  <span class="font-extrabold">${b.playerName}</span>
-                  <span class="text-gray-400">(${b.spots}x • ${b.method})</span>
-                </div>
-                ${b.status === 'cash_pending' ? `
-                  <button onclick="approveBooking('${b.id}')" class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white text-[10px] font-extrabold">
-                    Collect ${b.amount} QAR
-                  </button>
-                ` : `<span class="text-[10px] font-black uppercase ${b.status === 'confirmed' ? 'text-emerald-600' : 'text-amber-600'}">${b.status.replace('_', ' ')}</span>`}
-              </div>
-            `).join('')}
-          </div>
-        `;
-      }).join('')}
-    </div>
-  `;
-}
-
-function renderOwnerSettings() {
-  return `
-    <div class="p-4 space-y-4">
-      <h2 class="font-black text-lg">Fawran & Payment Setup</h2>
-      <form onsubmit="saveFawranSettings(event)" class="bg-white rounded-3xl p-5 border border-gray-100 shadow-sm space-y-3.5">
-        <div>
-          <label class="text-[11px] font-bold text-gray-500 uppercase">Your Fawran Mobile Number</label>
-          <input id="set-fawran" type="text" value="${state.settings.fawranNumber}" class="w-full mt-1 px-3.5 py-2.5 rounded-xl bg-gray-100 text-sm font-black" />
-        </div>
-        <div>
-          <label class="text-[11px] font-bold text-gray-500 uppercase">Fawran Account Name</label>
-          <input id="set-fname" type="text" value="${state.settings.fawranName}" class="w-full mt-1 px-3.5 py-2.5 rounded-xl bg-gray-100 text-sm font-bold" />
-        </div>
-        <div>
-          <label class="text-[11px] font-bold text-gray-500 uppercase">WhatsApp Support Number</label>
-          <input id="set-wa" type="text" value="${state.settings.whatsappNumber}" class="w-full mt-1 px-3.5 py-2.5 rounded-xl bg-gray-100 text-sm font-bold" />
-        </div>
-        <button type="submit" class="w-full py-3.5 rounded-xl bg-[#B91C2C] text-white font-extrabold text-sm">
-          Save Fawran Details
-        </button>
-      </form>
-    </div>
-  `;
-}
-
-function renderAlerts(role) {
-  const list = state.notifications.filter(n => n.role === role);
-  list.forEach(n => n.unread = false);
-  saveState();
-  return `
-    <div class="p-4 space-y-3">
-      <h2 class="font-black text-lg">Notifications</h2>
-      ${list.map(n => `
-        <div class="bg-white rounded-2xl p-3.5 border border-gray-100 shadow-sm text-xs">
-          <div class="font-bold text-gray-900">${n.text}</div>
-          <div class="text-[10px] text-gray-400 font-bold mt-1">${n.time}</div>
-        </div>
-      `).join('')}
-    </div>
-  `;
-}
-
-// ================= MODALS =================
-function renderModal() {
-  if (!state.modal) return '';
-
-  if (state.modal.type === 'book') {
-    const m = state.matches.find(x => x.id === state.modal.matchId);
-    const avail = Math.max(1, m.capacity - getTakenSpots(m.id));
-    const spots = state.modal.spots;
-    const isPromo = m.promo6for5 && spots === 6;
-    const total = isPromo ? m.price * 5 : m.price * spots;
-    const waText = encodeURIComponent(`Salam PANA SPORT! I booked ${spots} spot(s) for ${m.title} (${total} QAR via Fawran). Player: ${state.user.name}`);
-
-    return `
-      <div class="fixed inset-0 z-50 bg-black/70 flex items-end justify-center" onclick="if(event.target===this){state.modal=null;render();}">
-        <div class="w-full max-w-[430px] bg-white rounded-t-3xl p-5 animate-sheet max-h-[92vh] overflow-y-auto space-y-4">
-          <div class="flex items-center justify-between">
-            <div>
-              <div class="text-[10px] font-black text-[#B91C2C] uppercase">Instant Booking</div>
-              <div class="font-black text-base">${m.title}</div>
-            </div>
-            <button onclick="state.modal=null; render()" class="w-8 h-8 rounded-full bg-gray-100 font-black text-sm">✕</button>
-          </div>
-
-          <!-- Step 1: Spots / Team -->
+    <div class="px-5 pt-10 pb-28 animate-fade">
+      <!-- Top Header -->
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="state.activeTab='stats'; render();">
+          <img src="${state.user.avatar}" alt="Player" class="w-12 h-12 rounded-full object-cover border-2 border-[#8A1538] shadow-sm" />
           <div>
-            <div class="text-xs font-extrabold text-gray-600 mb-2">1. Select Spots (${avail} left)</div>
-            <div class="grid grid-cols-3 gap-2">
-              <button onclick="setBookingSpots(1)" class="py-2.5 rounded-xl border text-xs font-extrabold ${spots === 1 ? 'border-[#B91C2C] bg-red-50 text-[#B91C2C]' : 'border-gray-200'}">
-                Solo (1)
-              </button>
-              <button onclick="setBookingSpots(2)" ${avail < 2 ? 'disabled' : ''} class="py-2.5 rounded-xl border text-xs font-extrabold ${spots > 1 && spots < 6 ? 'border-[#B91C2C] bg-red-50 text-[#B91C2C]' : 'border-gray-200 disabled:opacity-40'}">
-                Duo (2)
-              </button>
-              <button onclick="setBookingSpots(6)" ${avail < 6 ? 'disabled' : ''} class="py-2.5 rounded-xl border text-xs font-extrabold ${spots === 6 ? 'border-emerald-600 bg-emerald-50 text-emerald-700' : 'border-gray-200 disabled:opacity-40'}">
-                6 Squad (Pay 5!)
-              </button>
-            </div>
-            ${spots === 6 ? `
-              <input id="team-name-input" type="text" placeholder="Enter Squad Name (e.g. Doha Kings)" class="w-full mt-2.5 px-3.5 py-2.5 rounded-xl bg-gray-100 text-xs font-bold" />
-            ` : ''}
-          </div>
-
-          <!-- Step 2: Payment Method -->
-          <div>
-            <div class="text-xs font-extrabold text-gray-600 mb-2">2. Payment Method</div>
-            <div class="grid grid-cols-2 gap-2">
-              <button onclick="state.modal.payMethod='Fawran'; render()" class="py-2.5 rounded-xl border text-xs font-extrabold ${state.modal.payMethod === 'Fawran' ? 'border-[#B91C2C] bg-red-50 text-[#B91C2C]' : 'border-gray-200'}">
-                ⚡ Fawran Transfer
-              </button>
-              ${m.allowCash ? `
-                <button onclick="state.modal.payMethod='Cash'; render()" class="py-2.5 rounded-xl border text-xs font-extrabold ${state.modal.payMethod === 'Cash' ? 'border-gray-900 bg-gray-900 text-white' : 'border-gray-200'}">
-                  💵 Cash at Pitch
-                </button>
-              ` : ''}
-            </div>
-          </div>
-
-          <!-- Fawran Box -->
-          ${state.modal.payMethod === 'Fawran' ? `
-            <div class="bg-gray-900 text-white rounded-2xl p-4 space-y-3">
-              <div class="flex items-center justify-between">
-                <div>
-                  <div class="text-[10px] text-gray-400 font-bold uppercase">Send Fawran To</div>
-                  <div class="text-lg font-black tracking-wide">${state.settings.fawranNumber}</div>
-                  <div class="text-[11px] text-emerald-400 font-bold">${state.settings.fawranName}</div>
-                </div>
-                <button onclick="copyText('${state.settings.fawranNumber}', 'Fawran Number')" class="px-3 py-2 rounded-xl bg-white/15 text-xs font-extrabold">
-                  Copy #
-                </button>
-              </div>
-
-              <div class="pt-2.5 border-t border-white/10 space-y-2">
-                <div class="text-[11px] font-bold text-gray-300">Attach Fawran Receipt Screenshot:</div>
-                ${state.modal.receiptName ? `
-                  <div class="px-3 py-2 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-extrabold flex justify-between items-center">
-                    <span>✅ ${state.modal.receiptName}</span>
-                    <button onclick="state.modal.receiptName=''; render()" class="text-white underline text-[10px]">Change</button>
-                  </div>
-                ` : `
-                  <div class="grid grid-cols-2 gap-2">
-                    <label class="py-2.5 px-3 rounded-xl bg-white text-gray-900 text-center text-xs font-extrabold cursor-pointer">
-                      📷 Upload Photo
-                      <input type="file" accept="image/*" onchange="handleFileUpload(this)" class="hidden" />
-                    </label>
-                    <button type="button" onclick="attachTestReceipt()" class="py-2.5 px-3 rounded-xl bg-[#B91C2C] text-white text-xs font-extrabold">
-                      ⚡ Test Receipt
-                    </button>
-                  </div>
-                `}
-              </div>
-            </div>
-          ` : ''}
-
-          <!-- Price Summary & Submit -->
-          <div class="bg-gray-50 rounded-2xl p-3.5 flex items-center justify-between">
-            <div>
-              <div class="text-[11px] font-bold text-gray-500">Total Amount Due</div>
-              ${isPromo ? `<div class="text-[10px] font-black text-emerald-600">🎉 6 Players Pay for 5 Applied (-${m.price} QAR)</div>` : ''}
-            </div>
-            <div class="text-xl font-black text-gray-900">${total} QAR</div>
-          </div>
-
-          <button onclick="submitBooking()" class="w-full py-3.5 rounded-2xl bg-[#B91C2C] text-white font-extrabold text-sm shadow-lg">
-            ${state.modal.payMethod === 'Fawran' ? 'Submit Receipt & Book →' : 'Confirm Cash Spot →'}
-          </button>
-
-          <a href="https://wa.me/${state.settings.whatsappNumber}?text=${waText}" target="_blank" class="block text-center text-xs font-extrabold text-emerald-700">
-            💬 Need help? Message Owner on WhatsApp
-          </a>
-        </div>
-      </div>
-    `;
-  }
-
-  if (state.modal.type === 'create_game') {
-    return `
-      <div class="fixed inset-0 z-50 bg-black/70 flex items-end justify-center" onclick="if(event.target===this){state.modal=null;render();}">
-        <form onsubmit="createNewGame(event)" class="w-full max-w-[430px] bg-white rounded-t-3xl p-5 animate-sheet max-h-[92vh] overflow-y-auto space-y-3">
-          <div class="flex items-center justify-between">
-            <div class="font-black text-base">Create New Game</div>
-            <button type="button" onclick="state.modal=null; render()" class="w-8 h-8 rounded-full bg-gray-100 font-black text-sm">✕</button>
-          </div>
-
-          <div>
-            <label class="text-[11px] font-bold text-gray-500 uppercase">Game Title</label>
-            <input id="ng-title" required value="Doha Floodlit 6v6" class="w-full mt-1 px-3.5 py-2.5 rounded-xl bg-gray-100 text-xs font-bold" />
-          </div>
-          <div>
-            <label class="text-[11px] font-bold text-gray-500 uppercase">Pitch / Venue</label>
-            <input id="ng-venue" required value="Al Waab Arena • Pitch 2" class="w-full mt-1 px-3.5 py-2.5 rounded-xl bg-gray-100 text-xs font-bold" />
-          </div>
-          <div class="grid grid-cols-3 gap-2">
-            <div>
-              <label class="text-[11px] font-bold text-gray-500 uppercase">Day</label>
-              <select id="ng-date" class="w-full mt-1 px-2.5 py-2.5 rounded-xl bg-gray-100 text-xs font-bold">
-                <option>Tonight</option><option>Tomorrow</option><option>This Week</option>
-              </select>
-            </div>
-            <div>
-              <label class="text-[11px] font-bold text-gray-500 uppercase">Time</label>
-              <input id="ng-time" type="time" value="21:00" class="w-full mt-1 px-2.5 py-2.5 rounded-xl bg-gray-100 text-xs font-bold" />
-            </div>
-            <div>
-              <label class="text-[11px] font-bold text-gray-500 uppercase">Format</label>
-              <select id="ng-format" class="w-full mt-1 px-2.5 py-2.5 rounded-xl bg-gray-100 text-xs font-bold">
-                <option>6v6</option><option>7v7</option><option>8v8</option><option>9v9</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-2">
-            <div>
-              <label class="text-[11px] font-bold text-gray-500 uppercase">Price / Player (QAR)</label>
-              <input id="ng-price" type="number" value="45" oninput="document.getElementById('rev-est').textContent = (this.value * document.getElementById('ng-cap').value) + ' QAR'" class="w-full mt-1 px-3.5 py-2.5 rounded-xl bg-gray-100 text-xs font-black" />
-            </div>
-            <div>
-              <label class="text-[11px] font-bold text-gray-500 uppercase">Total Spots</label>
-              <input id="ng-cap" type="number" value="12" oninput="document.getElementById('rev-est').textContent = (this.value * document.getElementById('ng-price').value) + ' QAR'" class="w-full mt-1 px-3.5 py-2.5 rounded-xl bg-gray-100 text-xs font-black" />
-            </div>
-          </div>
-
-          <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-3 flex justify-between items-center text-xs">
-            <span class="font-bold text-emerald-900">Full Game Revenue:</span>
-            <span id="rev-est" class="font-black text-emerald-700 text-sm">540 QAR</span>
-          </div>
-
-          <div class="flex flex-wrap gap-3 text-xs font-bold pt-1">
-            <label class="flex items-center gap-1.5"><input id="ng-promo" type="checkbox" checked /> 6 Pay for 5</label>
-            <label class="flex items-center gap-1.5"><input id="ng-cash" type="checkbox" checked /> Allow Cash</label>
-            <label class="flex items-center gap-1.5"><input id="ng-filmed" type="checkbox" checked /> 4K Filmed</label>
-          </div>
-
-          <button type="submit" class="w-full py-3.5 rounded-2xl bg-[#B91C2C] text-white font-extrabold text-sm shadow-lg">
-            Publish Game Now →
-          </button>
-        </form>
-      </div>
-    `;
-  }
-
-  if (state.modal.type === 'edit_video') {
-    return `
-      <div class="fixed inset-0 z-50 bg-black/70 flex items-end justify-center" onclick="if(event.target===this){state.modal=null;render();}">
-        <form onsubmit="saveMatchVideo(event)" class="w-full max-w-[430px] bg-white rounded-t-3xl p-5 animate-sheet space-y-3">
-          <div class="font-black text-base">🎥 Attach 4K Match Video Link</div>
-          <input id="vid-url" type="url" required placeholder="https://youtube.com/..." value="${state.modal.videoUrl}" class="w-full px-3.5 py-3 rounded-xl bg-gray-100 text-xs font-bold" />
-          <button type="submit" class="w-full py-3 rounded-xl bg-[#B91C2C] text-white font-extrabold text-xs">Save & Notify Players</button>
-        </form>
-      </div>
-    `;
-  }
-
-  if (state.modal.type === 'squad_sheet') {
-    return `
-      <div class="fixed inset-0 z-50 bg-black/70 flex items-end justify-center" onclick="if(event.target===this){state.modal=null;render();}">
-        <div class="w-full max-w-[430px] bg-white rounded-t-3xl p-5 animate-sheet space-y-3">
-          <div class="flex items-center justify-between">
-            <div class="font-black text-base">👕 Red vs White Bibs</div>
-            <button onclick="state.modal=null; render()" class="w-8 h-8 rounded-full bg-gray-100 font-black text-sm">✕</button>
-          </div>
-          <pre class="bg-gray-100 rounded-2xl p-3 text-[11px] font-mono whitespace-pre-wrap max-h-60 overflow-y-auto">${state.modal.sheet}</pre>
-          <button onclick="copyText(state.modal.sheet, 'WhatsApp Lineup')" class="w-full py-3.5 rounded-xl bg-emerald-600 text-white font-extrabold text-xs">
-            📋 Copy Lineup for WhatsApp
-          </button>
-        </div>
-      </div>
-    `;
-  }
-
-  return '';
-}
-
-render();
-</script>
-</body>
-</html>
-
+            <p class="text-[11px] font-bold uppercase tra
