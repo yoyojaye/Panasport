@@ -3,227 +3,194 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <meta name="theme-color" content="#090D16" />
-  <title>PANA SPORT — Doha Night Football</title>
+  <title>PANA SPORT — Doha Pickup Football</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    *{font-family:'Plus Jakarta Sans',sans-serif;-webkit-tap-highlight-color:transparent}
-    h1,h2,h3,.disp{font-family:'Space Grotesk',sans-serif}
-    body{background:#05070C;margin:0}
-    .no-sb::-webkit-scrollbar{display:none}
-    .pitch-bg{background:repeating-linear-gradient(0deg,#065f46 0px,#065f46 28px,#047857 28px,#047857 56px)}
-    @keyframes up{from{transform:translateY(100%)}to{transform:translateY(0)}}
-    @keyframes fd{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-    .anim-up{animation:up .25s ease-out}.anim-fd{animation:fd .2s ease-out}
+    *{font-family:system-ui,-apple-system,sans-serif;-webkit-tap-highlight-color:transparent}
+    body{background:#090D16;margin:0;color:#fff}
+    .pitch{background:repeating-linear-gradient(0deg,#065f46 0,#065f46 26px,#047857 26px,#047857 52px)}
   </style>
 </head>
-<body class="flex justify-center min-h-screen bg-[#05070C]">
-<div id="app" class="w-full max-w-[430px] min-h-screen bg-[#0B0F1A] text-white relative overflow-x-hidden shadow-2xl flex flex-col"></div>
+<body class="flex justify-center min-h-screen">
+<div id="app" class="w-full max-w-[430px] min-h-screen bg-[#0D1322] relative overflow-x-hidden shadow-2xl flex flex-col"></div>
 
 <script>
-const OWNER_EMAIL = "creatbrook@gmail.com";
-const P = {
-  hero: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=900&q=80",
-  m1: "https://images.unsplash.com/photo-1529900748604-07564a03e7a6?auto=format&fit=crop&w=900&q=80",
-  m2: "https://images.unsplash.com/photo-1459865264687-595d652de67e?auto=format&fit=crop&w=900&q=80",
-  m3: "https://images.unsplash.com/photo-1551958219-acbc608c6377?auto=format&fit=crop&w=900&q=80",
-  av: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=80"
+const OWNER="creatbrook@gmail.com";
+const IMG={
+  hero:"https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80",
+  p1:"https://images.unsplash.com/photo-1529900748604-07564a03e7a6?auto=format&fit=crop&w=800&q=80",
+  p2:"https://images.unsplash.com/photo-1459865264687-595d652de67e?auto=format&fit=crop&w=800&q=80",
+  av:"https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80"
 };
-
-const INIT = {
-  alias: "PANASPORT", num: "+974 5512 8890",
-  matches: [
-    { id:"m1", day:"FRI 13", title:"8V8 FLOODLIT CLASH", venue:"Al Sadd Sports Complex", area:"Al Sadd", time:"20:30", dur:"90m", price:35, total:16, taken:13, rec:true, tag:"HOT", img:P.m1,
-      players:[{name:"Tariq M.",pos:"MID",rt:88,bib:"Red",x:50,y:46},{name:"Hamad T.",pos:"DEF",rt:85,bib:"Red",x:28,y:72},{name:"Khalid A.",pos:"FWD",rt:87,bib:"Red",x:72,y:68},{name:"Yousef K.",pos:"FWD",rt:86,bib:"White",x:50,y:24},{name:"Omar N.",pos:"GK",rt:89,bib:"White",x:50,y:10},{name:"Faisal R.",pos:"DEF",rt:83,bib:"White",x:26,y:34}] },
-    { id:"m2", day:"SAT 14", title:"7V7 ASPIRE TURF NIGHT", venue:"Aspire Zone Pitch 4", area:"Al Waab", time:"19:00", dur:"60m", price:30, total:14, taken:10, rec:true, tag:"OPEN", img:P.m2,
-      players:[{name:"Nasser A.",pos:"FWD",rt:87,bib:"Red",x:45,y:55},{name:"Sami H.",pos:"MID",rt:84,bib:"White",x:55,y:30}] },
-    { id:"m3", day:"SUN 15", title:"9V9 LUSAIL ARENA", venue:"Lusail Marina Fields", area:"Lusail", time:"21:00", dur:"90m", price:40, total:18, taken:18, rec:false, tag:"FULL", img:P.m3,
-      players:[{name:"Rashid K.",pos:"DEF",rt:88,bib:"Red",x:50,y:60}] }
+const DB0={
+  alias:"PANASPORT",num:"+974 5512 8890",
+  matches:[
+    {id:"m1",day:"FRI 13",title:"8V8 FLOODLIT CLASH",venue:"Al Sadd Complex, Doha",area:"Al Sadd",time:"20:30",price:35,tot:16,tak:13,img:IMG.p1,
+      pl:[{n:"Tariq M.",p:"MID",r:88,b:"Red",x:50,y:48},{n:"Hamad T.",p:"DEF",r:85,b:"Red",x:28,y:72},{n:"Khalid A.",p:"FWD",r:87,b:"Red",x:72,y:68},{n:"Yousef K.",p:"FWD",r:86,b:"White",x:50,y:24},{n:"Omar N.",p:"GK",r:89,b:"White",x:50,y:10}]},
+    {id:"m2",day:"SAT 14",title:"7V7 ASPIRE TURF NIGHT",venue:"Aspire Zone Pitch 4",area:"Al Waab",time:"19:00",price:30,tot:14,tak:10,img:IMG.p2,
+      pl:[{n:"Nasser A.",p:"FWD",r:87,b:"Red",x:45,y:55},{n:"Sami H.",p:"MID",r:84,b:"White",x:55,y:30}]}
   ],
-  leaders: [
-    { name:"Omar N.", pts:142, goals:14, motm:5, flag:"🇶🇦" },
-    { name:"Tariq Al-Mannai", pts:128, goals:11, motm:3, flag:"🇶🇦" },
-    { name:"Yousef K.", pts:115, goals:12, motm:2, flag:"🇯🇴" },
-    { name:"Hamad Al-Thani", pts:104, goals:6, motm:2, flag:"🇶🇦" }
-  ],
-  bookings: [{ id:"BK-9041", mid:"m1", mTitle:"8V8 FLOODLIT CLASH", player:"Jassim Al-Kuwari", size:1, qar:35, method:"Fawran Transfer", status:"Pending Verification" }]
+  rank:[{n:"Omar N.",pts:142,g:14,f:"🇶🇦"},{n:"Tariq Al-Mannai",pts:128,g:11,f:"🇶🇦"},{n:"Yousef K.",pts:115,g:12,f:"🇯🇴"}],
+  bks:[{id:"BK-9041",mid:"m1",mt:"8V8 FLOODLIT CLASH",pl:"Jassim Al-Kuwari",sz:1,qar:35,m:"Fawran",st:"Pending"}]
 };
+let S={scr:"splash",md:"phone",inp:"",own:false,tab:"matches",day:"ALL",vot:null,bk:null,sz:1,pay:"fawran",ok:false,fn:"",ed:false,nm:false,msg:null,
+  u:{n:"Tariq Al-Mannai",ph:"+974 5589 4321",p:"MID",age:26,nat:"Qatar",fl:"🇶🇦",ovr:87,av:IMG.av,pl:14,w:9,g:11},
+  db:JSON.parse(localStorage.getItem("ps_ok1"))||DB0};
 
-let S = {
-  scr:"splash", mode:"phone", inp:"", owner:false, otp:["7","4","9","2"], tab:"matches", day:"ALL",
-  voted:null, bkMatch:null, size:1, pay:"fawran", recOk:false, recName:"", edit:false, newM:false, toast:null,
-  user:{ name:"Tariq Al-Mannai", phone:"+974 5589 4321", pos:"MID", age:26, nat:"Qatar", flag:"🇶🇦", ovr:87, pac:86, sho:84, pas:89, dri:88, av:P.av, st:{pl:14,w:9,g:11,motm:3} },
-  db: JSON.parse(localStorage.getItem("ps_dark_v1")) || INIT
-};
+const sv=()=>localStorage.setItem("ps_ok1",JSON.stringify(S.db));
+const say=t=>{S.msg=t;render();setTimeout(()=>{S.msg=null;render()},2400)};
+const go=s=>{S.scr=s;window.scrollTo(0,0);render()};
 
-const save = () => localStorage.setItem("ps_dark_v1", JSON.stringify(S.db));
-const msg = t => { S.toast = t; render(); setTimeout(() => { S.toast = null; render(); }, 2500); };
-const go = s => { S.scr = s; window.scrollTo(0,0); render(); };
-
-function authNext() {
-  const v = S.inp.trim();
-  if (!v) return msg(S.mode==="phone" ? "Enter your phone number" : "Enter your email");
-  if (S.mode==="phone") { S.user.phone = "+974 " + v.replace(/^\+974\s*/,""); S.owner = false; }
-  else { S.owner = v.toLowerCase() === OWNER_EMAIL.toLowerCase(); if (!S.owner) S.user.name = v.split("@")[0].toUpperCase(); }
+function login(){
+  const v=S.inp.trim();
+  if(!v)return say(S.md==="phone"?"Enter phone number":"Enter email");
+  if(S.md==="phone"){S.u.ph="+974 "+v;S.own=false}
+  else{S.own=v.toLowerCase()===OWNER;if(!S.own)S.u.n=v.split("@")[0].toUpperCase()}
   go("otp");
 }
-
-function verifyOtp() {
-  if (S.owner) { go("owner"); msg("Manager Verified — Welcome!"); }
-  else { go("app"); msg("Welcome to PANA SPORT Night Pitch!"); }
+function enter(){S.own?(go("owner"),say("Manager Verified!")):(go("app"),say("Welcome to PANA SPORT!"))}
+function book(id){S.bk=S.db.matches.find(x=>x.id===id)||S.db.matches[0];S.sz=1;S.pay="fawran";S.ok=false;S.fn="";render()}
+function confirm(){
+  const m=S.bk;if(!m)return;
+  if(S.pay==="fawran"&&!S.ok)return say("Upload Fawran receipt first");
+  const qar=(S.sz===6?5:S.sz)*m.price;
+  S.db.bks.unshift({id:"BK-"+Math.floor(1000+Math.random()*9000),mid:m.id,mt:m.title,pl:S.u.n+(S.sz>1?` (+${S.sz-1})`:""),sz:S.sz,qar,m:S.pay==="fawran"?"Fawran":"Cash",st:S.pay==="fawran"?"Pending":"Confirmed"});
+  m.tak=Math.min(m.tot,m.tak+S.sz);
+  m.pl.push({n:S.u.n.split(" ")[0],p:S.u.p,r:S.u.ovr,b:m.pl.length%2===0?"Red":"White",x:40+Math.random()*20,y:40+Math.random()*25});
+  sv();S.bk=null;say(S.pay==="fawran"?"Receipt sent to manager!":"Spot reserved!");
+}
+function act(id,yes){
+  const i=S.db.bks.findIndex(x=>x.id===id);if(i<0)return;
+  const b=S.db.bks[i];
+  if(yes){b.st="Approved";say("Approved "+b.pl)}
+  else{const m=S.db.matches.find(x=>x.id===b.mid);if(m)m.tak=Math.max(0,m.tak-b.sz);S.db.bks.splice(i,1);say("Declined")}
+  sv();
+}
+function bal(id){
+  const m=S.db.matches.find(x=>x.id===id);if(!m)return;
+  m.pl.sort((a,b)=>b.r-a.r).forEach((p,i)=>{p.b=(i%4===0||i%4===3)?"Red":"White";p.y=p.b==="Red"?60+(i*6)%22:16+(i*6)%22});
+  sv();say("Teams balanced!");
+}
+function wa(id){
+  const m=S.db.matches.find(x=>x.id===id)||S.db.matches[0];
+  const r=m.pl.filter(p=>p.b==="Red").map((p,i)=>`${i+1}. ${p.n}`).join("\n")||"1. Open";
+  const w=m.pl.filter(p=>p.b==="White").map((p,i)=>`${i+1}. ${p.n}`).join("\n")||"1. Open";
+  navigator.clipboard?.writeText(`⚽ *PANA SPORT DOHA*\n🏟️ ${m.title} (${m.day} ${m.time})\n🔴 MAROON:\n${r}\n⚪ WHITE:\n${w}\n📲 https://yoyojaye.github.io/Panasport/`);
+  say("WhatsApp lineup copied!");
+}
+function newMatch(e){
+  e.preventDefault();const f=e.target;
+  S.db.matches.unshift({id:"m"+Date.now(),day:f.d.value.toUpperCase()||"FRI 20",title:f.t.value.toUpperCase()||"8V8 NIGHT CLASH",venue:f.v.value||"Al Sadd Complex",area:"Al Sadd",time:f.tm.value||"21:00",price:+f.p.value||35,tot:+f.tot.value||16,tak:1,img:IMG.p1,pl:[{n:"Captain",p:"MID",r:87,b:"Red",x:50,y:50}]});
+  sv();S.nm=false;say("New match live!");
+}
+function saveEd(e){
+  e.preventDefault();const f=e.target;
+  S.u.n=f.fn.value||S.u.n;S.u.p=f.pos.value;S.u.age=+f.age.value||25;S.u.nat=f.nat.value;
+  S.u.fl={Qatar:"🇶🇦",Egypt:"🇪🇬",Jordan:"🇯🇴",Morocco:"🇲🇦",Ethiopia:"🇪🇹",India:"🇮🇳"}[S.u.nat]||"🇶🇦";
+  S.ed=false;say("Card saved!");
 }
 
-function openBk(id) {
-  S.bkMatch = S.db.matches.find(m => m.id===id) || S.db.matches[0];
-  S.size = 1; S.pay = "fawran"; S.recOk = false; S.recName = ""; render();
-}
-
-function confirmBk() {
-  const m = S.bkMatch; if (!m) return;
-  if (m.taken >= m.total) { S.bkMatch = null; return msg("Added to priority waitlist!"); }
-  if (S.pay==="fawran" && !S.recOk) return msg("Upload Fawran receipt first");
-  const qar = (S.size===6 ? 5 : S.size) * m.price;
-  S.db.bookings.unshift({ id:"BK-"+Math.floor(1000+Math.random()*9000), mid:m.id, mTitle:m.title, player:S.user.name+(S.size>1?` (+${S.size-1})`:""), size:S.size, qar, method:S.pay==="fawran"?"Fawran Transfer":"Cash at Pitch", status:S.pay==="fawran"?"Pending Verification":"Confirmed (Cash)" });
-  m.taken = Math.min(m.total, m.taken + S.size);
-  m.players.push({ name:S.user.name.split(" ")[0], pos:S.user.pos, rt:S.user.ovr, bib:m.players.length%2===0?"Red":"White", x:35+Math.random()*30, y:35+Math.random()*35 });
-  save(); S.bkMatch = null; msg(S.pay==="fawran" ? "Receipt sent to organizer!" : "Spot reserved!");
-}
-
-function actBk(id, ok) {
-  const i = S.db.bookings.findIndex(b => b.id===id); if (i<0) return;
-  const b = S.db.bookings[i];
-  if (ok) { b.status = "Approved & Paid"; msg("Approved " + b.player); }
-  else { const m = S.db.matches.find(x => x.id===b.mid); if (m) m.taken = Math.max(0, m.taken - b.size); S.db.bookings.splice(i,1); msg("Declined & reopened"); }
-  save();
-}
-
-function balBibs(id) {
-  const m = S.db.matches.find(x => x.id===id); if (!m) return;
-  m.players.sort((a,b) => b.rt - a.rt).forEach((p,i) => { p.bib = (i%4===0||i%4===3) ? "Red" : "White"; p.y = p.bib==="Red" ? 58 + (i*7)%25 : 15 + (i*7)%25; });
-  save(); msg("Tactical formation balanced!");
-}
-
-function copyWA(id) {
-  const m = S.db.matches.find(x => x.id===id) || S.db.matches[0];
-  const r = m.players.filter(p=>p.bib==="Red").map((p,i)=>`${i+1}. ${p.name}`).join("\n") || "1. Open";
-  const w = m.players.filter(p=>p.bib==="White").map((p,i)=>`${i+1}. ${p.name}`).join("\n") || "1. Open";
-  navigator.clipboard?.writeText(`⚽ *PANA SPORT DOHA*\n🏟️ *${m.title}*\n📍 ${m.venue} | 🕒 ${m.day} ${m.time}\n\n🔴 *MAROON*\n${r}\n\n⚪ *WHITE*\n${w}\n\n📲 https://yoyojaye.github.io/Panasport/`);
-  msg("Lineup copied for WhatsApp!");
-}
-
-function addMatch(e) {
-  e.preventDefault(); const f = e.target;
-  S.db.matches.unshift({ id:"m"+Date.now(), day:f.day.value.toUpperCase()||"FRI 20", title:f.t.value.trim().toUpperCase()||"8V8 NIGHT CLASH", venue:f.v.value.trim()||"Al Sadd Complex", area:f.a.value, time:f.tm.value||"21:00", dur:"90m", price:+f.p.value||35, total:+f.tot.value||16, taken:1, rec:true, tag:"NEW", img:P.m1, players:[{name:"Captain",pos:"MID",rt:87,bib:"Red",x:50,y:50}] });
-  save(); S.newM = false; msg("New match live!");
-}
-
-function saveProf(e) {
-  e.preventDefault(); const f = e.target;
-  S.user.name = f.fn.value.trim() || S.user.name; S.user.pos = f.pos.value; S.user.age = +f.age.value || 25; S.user.nat = f.nat.value;
-  S.user.flag = {Qatar:"🇶🇦",Egypt:"🇪🇬",Jordan:"🇯🇴",Morocco:"🇲🇦",Ethiopia:"🇪🇹",India:"🇮🇳",UK:"🇬🇧",Brazil:"🇧🇷"}[S.user.nat] || "🇶🇦";
-  S.edit = false; msg("Player Card updated!");
-}
-
-function render() {
-  const root = document.getElementById("app");
-  let h = "";
-
-  if (S.scr==="splash") {
-    h = `<div class="relative min-h-screen flex flex-col justify-between bg-black text-white">
-      <img src="${P.hero}" class="absolute inset-0 w-full h-full object-cover brightness-90" />
-      <div class="absolute inset-0 bg-gradient-to-t from-[#0B0F1A] via-black/50 to-black/20"></div>
-      <div class="relative z-10 px-6 pt-12"><div class="inline-flex items-center gap-2.5 bg-black/50 backdrop-blur-md border border-white/15 px-3.5 py-2 rounded-full"><span class="w-7 h-7 rounded-full bg-[#9E1B42] flex items-center justify-center font-extrabold text-xs">PS</span><span class="text-xs font-extrabold tracking-widest">PANA SPORT</span></div></div>
-      <div class="relative z-10 px-6 pb-10 anim-fd">
-        <span class="inline-block bg-[#9E1B42] text-[11px] font-extrabold tracking-widest px-3 py-1 rounded-md mb-4">🇶🇦 DOHA NIGHT FOOTBALL</span>
-        <h1 class="text-[36px] leading-[1.04] font-bold uppercase mb-3">SHOW UP, PLAY,<br/>AND LET US<br/>HANDLE THE<br/>DETAILS</h1>
-        <p class="text-sm text-slate-300 mb-7">Floodlit Doha pickup matches, Fawran instant verification & balanced squads.</p>
-        <button onclick="go('auth')" class="w-full py-4 rounded-2xl bg-[#9E1B42] font-extrabold text-base shadow-xl shadow-[#9E1B42]/40">Continue</button>
+function render(){
+  let h="";
+  if(S.scr==="splash"){
+    h=`<div class="relative min-h-screen flex flex-col justify-between bg-black">
+      <img src="${IMG.hero}" class="absolute inset-0 w-full h-full object-cover opacity-80"/>
+      <div class="absolute inset-0 bg-gradient-to-t from-[#0D1322] via-black/50 to-black/20"></div>
+      <div class="relative z-10 px-6 pt-12"><span class="inline-flex items-center gap-2 bg-black/60 border border-white/15 px-3.5 py-2 rounded-full text-xs font-extrabold"><b class="w-6 h-6 rounded-full bg-[#9E1B42] flex items-center justify-center">PS</b>PANA SPORT</span></div>
+      <div class="relative z-10 px-6 pb-10">
+        <span class="inline-block bg-[#9E1B42] text-[11px] font-extrabold px-3 py-1 rounded mb-3">🇶🇦 DOHA NIGHT FOOTBALL</span>
+        <h1 class="text-3xl font-extrabold leading-tight uppercase mb-3">SHOW UP, PLAY,<br/>AND LET US HANDLE<br/>THE DETAILS</h1>
+        <p class="text-sm text-slate-300 mb-6">Floodlit Doha pickup games, Fawran verification & balanced squads.</p>
+        <button onclick="go('auth')" class="w-full py-4 rounded-2xl bg-[#9E1B42] font-extrabold text-base shadow-xl">Continue</button>
       </div></div>`;
-  } else if (S.scr==="auth") {
-    const ph = S.mode==="phone";
-    h = `<div class="min-h-screen bg-[#0B0F1A] px-6 pt-12 pb-8 anim-fd">
-      <button onclick="go('splash')" class="w-11 h-11 rounded-full bg-white/10 border border-white/10 font-bold">←</button>
-      <div class="text-center mt-8 mb-8"><div class="w-12 h-12 rounded-2xl bg-[#9E1B42] font-extrabold flex items-center justify-center mx-auto mb-4">PS</div><h1 class="text-[28px] leading-tight font-bold uppercase">LET'S GET<br/>STARTED NOW!</h1></div>
+  }else if(S.scr==="auth"){
+    const ph=S.md==="phone";
+    h=`<div class="min-h-screen px-6 pt-12 pb-8">
+      <button onclick="go('splash')" class="w-10 h-10 rounded-full bg-white/10 font-bold">←</button>
+      <div class="text-center my-8"><div class="w-12 h-12 rounded-2xl bg-[#9E1B42] font-extrabold flex items-center justify-center mx-auto mb-3">PS</div><h1 class="text-2xl font-extrabold uppercase">LET'S GET STARTED!</h1></div>
       <div class="flex justify-center gap-8 border-b border-white/10 mb-6">
-        <button onclick="S.mode='phone';S.inp='';render()" class="pb-3 text-xs font-extrabold uppercase ${ph?'text-emerald-400 border-b-2 border-emerald-400':'text-slate-500'}">PHONE NUMBER</button>
-        <button onclick="S.mode='email';S.inp='';render()" class="pb-3 text-xs font-extrabold uppercase ${!ph?'text-emerald-400 border-b-2 border-emerald-400':'text-slate-500'}">EMAIL</button>
+        <button onclick="S.md='phone';S.inp='';render()" class="pb-3 text-xs font-extrabold ${ph?'text-emerald-400 border-b-2 border-emerald-400':'text-slate-400'}">PHONE NUMBER</button>
+        <button onclick="S.md='email';S.inp='';render()" class="pb-3 text-xs font-extrabold ${!ph?'text-emerald-400 border-b-2 border-emerald-400':'text-slate-400'}">EMAIL</button>
       </div>
-      ${ph ? `<div class="flex gap-3"><div class="h-14 px-4 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-2 shrink-0"><span class="text-xl">🇶🇦</span><span class="text-sm font-extrabold">+974</span></div><input type="tel" value="${S.inp}" oninput="S.inp=this.value" placeholder="Enter your phone number" class="w-full h-14 px-4 rounded-2xl bg-white/5 border border-white/10 text-sm font-semibold text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400" /></div>`
-           : `<input type="email" value="${S.inp}" oninput="S.inp=this.value" placeholder="Enter your email address" class="w-full h-14 px-4 rounded-2xl bg-white/5 border border-white/10 text-sm font-semibold text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400" />`}
-      <p class="text-center text-xs text-slate-400 mt-4">We will send a 4-digit code via ${ph?'SMS':'email'} to verify your account</p>
-      <button onclick="authNext()" class="w-full mt-7 py-4 rounded-2xl bg-[#9E1B42] font-extrabold text-base shadow-lg">Continue</button>
+      ${ph?`<div class="flex gap-2"><div class="h-14 px-4 rounded-2xl bg-white/10 flex items-center gap-2 font-extrabold text-sm">🇶🇦 +974</div><input type="tel" value="${S.inp}" oninput="S.inp=this.value" placeholder="Phone number" class="w-full h-14 px-4 rounded-2xl bg-white/10 text-sm font-bold text-white"/></div>`
+          :`<input type="email" value="${S.inp}" oninput="S.inp=this.value" placeholder="Email address" class="w-full h-14 px-4 rounded-2xl bg-white/10 text-sm font-bold text-white"/>`}
+      <button onclick="login()" class="w-full mt-6 py-4 rounded-2xl bg-[#9E1B42] font-extrabold">Continue</button>
     </div>`;
-  } else if (S.scr==="otp") {
-    h = `<div class="min-h-screen bg-[#0B0F1A] px-6 pt-12 pb-8 anim-fd">
-      <button onclick="go('auth')" class="w-11 h-11 rounded-full bg-white/10 font-bold">←</button>
-      <div class="text-center mt-8 mb-8"><h1 class="text-[26px] font-bold uppercase">VERIFY CODE</h1><p class="text-xs text-slate-400 mt-2">Sent to <span class="font-bold text-white">${S.mode==='phone'?S.user.phone:S.inp}</span></p></div>
-      <div class="grid grid-cols-4 gap-3 max-w-[280px] mx-auto mb-6">${S.otp.map((d,i)=>`<input maxlength="1" value="${d}" oninput="S.otp[${i}]=this.value" class="h-16 rounded-2xl bg-white/5 border-2 border-emerald-400/40 text-center text-2xl font-extrabold text-white" />`).join("")}</div>
-      <button onclick="verifyOtp()" class="w-full py-4 rounded-2xl bg-emerald-500 text-slate-950 font-extrabold text-base shadow-lg">Enter Pitch</button>
+  }else if(S.scr==="otp"){
+    h=`<div class="min-h-screen px-6 pt-12 pb-8 text-center">
+      <button onclick="go('auth')" class="w-10 h-10 rounded-full bg-white/10 font-bold float-left">←</button>
+      <h1 class="text-2xl font-extrabold uppercase mt-16 mb-2">VERIFY CODE</h1>
+      <p class="text-xs text-slate-400 mb-6">Sent to ${S.md==='phone'?S.u.ph:S.inp}</p>
+      <div class="grid grid-cols-4 gap-3 max-w-[260px] mx-auto mb-6">${["7","4","9","2"].map(d=>`<input value="${d}" class="h-14 rounded-2xl bg-white/10 border border-emerald-400/50 text-center text-xl font-extrabold"/>`).join("")}</div>
+      <button onclick="enter()" class="w-full py-4 rounded-2xl bg-emerald-400 text-slate-950 font-extrabold">Enter Pitch</button>
     </div>`;
-  } else if (S.scr==="owner") {
-    const pend = S.db.bookings.filter(b=>b.status.includes("Pending")).length, rev = S.db.bookings.reduce((s,b)=>s+b.qar,0);
-    h = `<div class="min-h-screen bg-[#0B0F1A] px-5 pt-10 pb-12 anim-fd">
-      <div class="flex items-center justify-between mb-6">
-        <div><span class="text-[10px] font-extrabold tracking-widest text-emerald-400">MANAGER COMMAND</span><h1 class="text-xl font-bold">PANA SPORT ADMIN</h1></div>
-        <div class="flex gap-2"><button onclick="go('app')" class="px-3 py-2 rounded-xl bg-white/10 text-xs font-extrabold">Player View</button><button onclick="S.owner=false;go('splash')" class="px-3 py-2 rounded-xl bg-rose-500/20 text-rose-300 text-xs font-extrabold">Logout</button></div>
+  }else if(S.scr==="owner"){
+    const rev=S.db.bks.reduce((s,b)=>s+b.qar,0);
+    h=`<div class="min-h-screen px-5 pt-10 pb-12">
+      <div class="flex justify-between items-center mb-5">
+        <div><span class="text-[10px] font-extrabold text-emerald-400">MANAGER ADMIN</span><h1 class="text-xl font-extrabold">PANA SPORT</h1></div>
+        <div class="flex gap-2"><button onclick="go('app')" class="px-3 py-2 rounded-xl bg-white/10 text-xs font-bold">Player View</button><button onclick="S.own=false;go('splash')" class="px-3 py-2 rounded-xl bg-rose-500/20 text-rose-300 text-xs font-bold">Logout</button></div>
       </div>
-      <div class="grid grid-cols-2 gap-3 mb-5">
-        <div class="bg-white/5 border border-white/10 rounded-2xl p-4"><p class="text-xs text-slate-400">Revenue</p><p class="text-2xl font-extrabold text-emerald-400 mt-1">${rev} QR</p></div>
-        <div class="bg-white/5 border border-white/10 rounded-2xl p-4"><p class="text-xs text-slate-400">Pending Fawran</p><p class="text-2xl font-extrabold text-amber-400 mt-1">${pend}</p></div>
+      <div class="grid grid-cols-2 gap-3 mb-4">
+        <div class="bg-white/5 p-4 rounded-2xl"><p class="text-xs text-slate-400">Revenue</p><p class="text-2xl font-extrabold text-emerald-400">${rev} QR</p></div>
+        <div class="bg-white/5 p-4 rounded-2xl"><p class="text-xs text-slate-400">Bookings</p><p class="text-2xl font-extrabold text-amber-400">${S.db.bks.length}</p></div>
       </div>
-      <button onclick="S.newM=true;render()" class="w-full py-3.5 rounded-2xl bg-emerald-500 text-slate-950 font-extrabold text-sm mb-6">+ Create New Doha Pickup Game</button>
-      <h3 class="text-xs font-extrabold uppercase text-slate-400 mb-3">FAWRAN RECEIPTS</h3>
-      <div class="space-y-3 mb-6">${S.db.bookings.map(b=>`<div class="bg-white/5 border border-white/10 rounded-2xl p-4"><div class="flex justify-between mb-1"><span class="text-sm font-extrabold">${b.player}</span><span class="text-sm font-extrabold text-emerald-400">${b.qar} QR</span></div><p class="text-xs text-slate-400">${b.mTitle} • ${b.method}</p><div class="flex items-center justify-between mt-3 pt-3 border-t border-white/10"><span class="text-[11px] font-bold ${b.status.includes('Pending')?'text-amber-400':'text-emerald-400'}">● ${b.status}</span>${b.status.includes('Pending')?`<div class="flex gap-2"><button onclick="actBk('${b.id}',0)" class="px-3 py-1.5 rounded-lg bg-rose-500/20 text-rose-300 text-xs font-extrabold">Decline</button><button onclick="actBk('${b.id}',1)" class="px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-950 text-xs font-extrabold">✓ Approve</button></div>`:''}</div></div>`).join("")}</div>
-      <button onclick="copyWA('m1')" class="w-full py-3.5 rounded-2xl bg-[#9E1B42] font-extrabold text-sm">📲 Copy Lineup for WhatsApp</button>
+      <button onclick="S.nm=true;render()" class="w-full py-3.5 rounded-2xl bg-emerald-400 text-slate-950 font-extrabold text-sm mb-5">+ Create New Match</button>
+      <div class="space-y-3 mb-5">${S.db.bks.map(b=>`<div class="bg-white/5 p-4 rounded-2xl border border-white/10"><div class="flex justify-between font-extrabold text-sm"><span>${b.pl}</span><span class="text-emerald-400">${b.qar} QR</span></div><p class="text-xs text-slate-400">${b.mt} • ${b.m}</p><div class="flex justify-between items-center mt-3 pt-2 border-t border-white/10"><span class="text-xs font-bold ${b.st==='Pending'?'text-amber-400':'text-emerald-400'}">● ${b.st}</span>${b.st==='Pending'?`<div class="flex gap-2"><button onclick="act('${b.id}',0)" class="px-3 py-1 rounded bg-rose-500/20 text-rose-300 text-xs font-bold">Decline</button><button onclick="act('${b.id}',1)" class="px-3 py-1 rounded bg-emerald-400 text-slate-950 text-xs font-bold">✓ Approve</button></div>`:''}</div></div>`).join("")}</div>
+      <button onclick="wa('m1')" class="w-full py-3.5 rounded-2xl bg-[#9E1B42] font-extrabold text-sm">📲 Copy Lineup for WhatsApp</button>
     </div>`;
-    if (S.newM) h += `<div class="fixed inset-0 z-50 bg-black/80 flex items-end justify-center"><form onsubmit="addMatch(event)" class="w-full max-w-[430px] bg-slate-900 rounded-t-3xl p-6 anim-up space-y-3"><div class="flex justify-between"><h3 class="text-lg font-bold">Publish Pickup Match</h3><button type="button" onclick="S.newM=false;render()">✕</button></div><input name="t" placeholder="Title (e.g. 8V8 NIGHT CLASH)" class="w-full p-3 rounded-xl bg-white/5 border border-white/10 text-sm font-bold" /><div class="grid grid-cols-3 gap-2"><input name="day" placeholder="FRI 20" class="p-3 rounded-xl bg-white/5 border border-white/10 text-sm font-bold" /><input name="tm" placeholder="21:00" class="p-3 rounded-xl bg-white/5 border border-white/10 text-sm font-bold" /><select name="a" class="p-3 rounded-xl bg-slate-800 text-sm font-bold"><option>Al Sadd</option><option>Al Waab</option><option>Lusail</option></select></div><input name="v" placeholder="Pitch Venue Name" class="w-full p-3 rounded-xl bg-white/5 border border-white/10 text-sm font-bold" /><div class="grid grid-cols-2 gap-2"><input name="p" type="number" value="35" class="p-3 rounded-xl bg-white/5 border border-white/10 text-sm font-bold" /><input name="tot" type="number" value="16" class="p-3 rounded-xl bg-white/5 border border-white/10 text-sm font-bold" /></div><button type="submit" class="w-full py-3.5 rounded-2xl bg-emerald-500 text-slate-950 font-extrabold text-sm">Publish Match</button></form></div>`;
-  } else {
-    const u = S.user;
-
-    // Top Sticky Doha Stadium Header
-    h += `<div class="px-5 pt-9 pb-4 flex items-center justify-between bg-[#0B0F1A]/90 backdrop-blur-md sticky top-0 z-30 border-b border-white/5">
-      <div class="flex items-center gap-2.5">
-        <div class="w-9 h-9 rounded-xl bg-[#9E1B42] flex items-center justify-center font-extrabold text-xs shadow-lg shadow-[#9E1B42]/40">PS</div>
-        <div><p class="text-[10px] font-extrabold tracking-widest text-emerald-400">DOHA • 24°C CLEAR</p><h2 class="text-sm font-bold tracking-wide">PANA SPORT</h2></div>
-      </div>
-      <div class="flex items-center gap-2">
-        ${S.owner ? `<button onclick="go('owner')" class="px-3 py-1.5 rounded-full bg-[#9E1B42] text-[11px] font-extrabold">Admin</button>` : ''}
-        <button onclick="S.tab='card';render()" class="flex items-center gap-2 bg-white/5 border border-white/10 pl-1.5 pr-3 py-1 rounded-full">
-          <img src="${u.av}" class="w-7 h-7 rounded-full object-cover" />
-          <span class="text-xs font-extrabold text-emerald-400">${u.ovr} OVR</span>
-        </button>
-      </div>
+    if(S.nm)h+=`<div class="fixed inset-0 z-50 bg-black/80 flex items-end"><form onsubmit="newMatch(event)" class="w-full max-w-[430px] mx-auto bg-slate-900 rounded-t-3xl p-5 space-y-3"><div class="flex justify-between font-bold"><h3>New Match</h3><button type="button" onclick="S.nm=false;render()">✕</button></div><input name="t" placeholder="Title (8V8 AL SADD)" class="w-full p-3 rounded-xl bg-white/10 text-sm font-bold"/><div class="grid grid-cols-2 gap-2"><input name="d" placeholder="FRI 20" class="p-3 rounded-xl bg-white/10 text-sm font-bold"/><input name="tm" placeholder="21:00" class="p-3 rounded-xl bg-white/10 text-sm font-bold"/></div><input name="v" placeholder="Venue" class="w-full p-3 rounded-xl bg-white/10 text-sm font-bold"/><div class="grid grid-cols-2 gap-2"><input name="p" type="number" value="35" class="p-3 rounded-xl bg-white/10 text-sm font-bold"/><input name="tot" type="number" value="16" class="p-3 rounded-xl bg-white/10 text-sm font-bold"/></div><button type="submit" class="w-full py-3.5 rounded-2xl bg-emerald-400 text-slate-950 font-extrabold">Publish</button></form></div>`;
+  }else{
+    const u=S.u;
+    h+=`<div class="px-5 pt-8 pb-3 flex justify-between items-center border-b border-white/10">
+      <div class="flex items-center gap-2"><span class="w-8 h-8 rounded-xl bg-[#9E1B42] flex items-center justify-center font-extrabold text-xs">PS</span><div><p class="text-[10px] text-emerald-400 font-bold">DOHA • 24°C</p><h2 class="text-sm font-extrabold">PANA SPORT</h2></div></div>
+      <div class="flex items-center gap-2">${S.own?`<button onclick="go('owner')" class="px-3 py-1.5 rounded-full bg-[#9E1B42] text-xs font-extrabold">Admin</button>`:''}<button onclick="S.tab='card';render()" class="flex items-center gap-1.5 bg-white/10 pl-1.5 pr-3 py-1 rounded-full"><img src="${u.av}" class="w-6 h-6 rounded-full object-cover"/><span class="text-xs font-extrabold text-emerald-400">${u.ovr} OVR</span></button></div>
     </div>`;
 
-    if (S.tab==="matches") {
-      const list = S.day==="ALL" ? S.db.matches : S.db.matches.filter(m=>m.day===S.day);
-      h += `<div class="px-5 pt-4 pb-28 anim-fd">
-        <!-- Next Kickoff Radar Banner -->
-        <div class="rounded-3xl bg-gradient-to-r from-[#9E1B42] via-[#7A1232] to-slate-900 p-4 mb-5 border border-white/10 shadow-xl flex items-center justify-between">
-          <div>
-            <span class="text-[10px] font-extrabold uppercase tracking-wider bg-black/30 px-2.5 py-0.5 rounded-full text-emerald-300">⚡ TONIGHT'S FEATURED</span>
-            <h3 class="text-lg font-bold mt-1.5">8V8 FLOODLIT CLASH</h3>
-            <p class="text-xs text-white/80">Al Sadd • 20:30 • 6-for-5 Promo Active</p>
-          </div>
-          <button onclick="openBk('m1')" class="px-4 py-3 rounded-2xl bg-emerald-400 text-slate-950 font-extrabold text-xs shrink-0 shadow-lg">Join 35 QR</button>
+    if(S.tab==="matches"){
+      const list=S.day==="ALL"?S.db.matches:S.db.matches.filter(m=>m.day===S.day);
+      h+=`<div class="px-5 pt-4 pb-28">
+        <div class="rounded-3xl bg-gradient-to-r from-[#9E1B42] to-slate-900 p-4 mb-4 flex justify-between items-center">
+          <div><span class="text-[10px] font-extrabold text-emerald-300">⚡ TONIGHT • 6-FOR-5 PROMO</span><h3 class="text-base font-extrabold mt-1">8V8 FLOODLIT CLASH</h3><p class="text-xs text-white/80">Al Sadd • 20:30</p></div>
+          <button onclick="book('m1')" class="px-4 py-2.5 rounded-xl bg-emerald-400 text-slate-950 font-extrabold text-xs">Join 35 QR</button>
         </div>
-
-        <!-- Matchday Date Strip -->
-        <div class="flex gap-2 overflow-x-auto no-scrollbar mb-5">
-          ${["ALL","FRI 13","SAT 14","SUN 15"].map(d=>`<button onclick="S.day='${d}';render()" class="px-4 py-2 rounded-2xl text-xs font-extrabold whitespace-nowrap transition ${S.day===d?'bg-emerald-400 text-slate-950':'bg-white/5 text-slate-400 border border-white/10'}">${d==="ALL"?"All Nights":d}</button>`).join("")}
+        <div class="flex gap-2 mb-4">${["ALL","FRI 13","SAT 14"].map(d=>`<button onclick="S.day='${d}';render()" class="px-3.5 py-1.5 rounded-xl text-xs font-extrabold ${S.day===d?'bg-emerald-400 text-slate-950':'bg-white/10 text-slate-300'}">${d==="ALL"?"All Nights":d}</button>`).join("")}</div>
+        <div class="space-y-4">${list.map(m=>`<div onclick="book('${m.id}')" class="rounded-3xl bg-[#151D30] border border-white/10 overflow-hidden cursor-pointer">
+          <div class="relative h-36"><img src="${m.img}" class="w-full h-full object-cover"/><span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-black/75 text-xs font-extrabold text-emerald-400">${m.day} • ${m.time}</span><span class="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-[#9E1B42] text-xs font-extrabold">${m.tot-m.tak} LEFT</span></div>
+          <div class="p-4 flex justify-between items-center"><div><h4 class="font-extrabold text-sm">${m.title}</h4><p class="text-xs text-slate-400 mt-0.5">📍 ${m.venue}</p></div><div class="text-right"><p class="text-base font-extrabold text-emerald-400">${m.price} QR</p><p class="text-[10px] text-slate-400">${m.tak}/${m.tot}</p></div></div>
+        </div>`).join("")}</div>
+      </div>`;
+    }else if(S.tab==="tactics"){
+      const m=S.db.matches[0];
+      h+=`<div class="px-5 pt-4 pb-28">
+        <div class="flex justify-between items-center mb-3"><div><h2 class="text-base font-extrabold">TACTICAL PITCH</h2><p class="text-xs text-slate-400">${m.title}</p></div><button onclick="bal('${m.id}')" class="px-3 py-1.5 rounded-xl bg-emerald-400 text-slate-950 text-xs font-extrabold">⚡ Balance</button></div>
+        <div class="relative w-full h-[330px] rounded-3xl pitch border-2 border-white/25 overflow-hidden mb-4">
+          <div class="absolute inset-x-0 top-1/2 h-0.5 bg-white/30"></div>
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full border-2 border-white/30"></div>
+          ${m.pl.map(p=>`<div style="left:${p.x}%;top:${p.y}%" class="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center"><div class="w-8 h-8 rounded-full ${p.b==='Red'?'bg-[#9E1B42] border-2 border-white':'bg-white text-slate-900 border-2 border-slate-900'} flex items-center justify-center text-[10px] font-extrabold">${p.p}</div><span class="mt-1 px-1.5 rounded bg-black/75 text-[9px] font-bold">${p.n}</span></div>`).join("")}
         </div>
+        <button onclick="wa('${m.id}')" class="w-full py-3.5 rounded-2xl bg-[#9E1B42] font-extrabold text-sm">📲 Copy Lineup for WhatsApp</button>
+      </div>`;
+    }else if(S.tab==="rank"){
+      h+=`<div class="px-5 pt-4 pb-28">
+        <h2 class="text-base font-extrabold mb-3">DOHA LEADERBOARD</h2>
+        <div class="space-y-2.5 mb-5">${S.db.rank.map((l,i)=>`<div class="flex justify-between items-center p-3.5 rounded-2xl bg-white/5 border border-white/10"><div class="flex items-center gap-3"><span class="w-7 h-7 rounded-full ${i===0?'bg-amber-400 text-slate-950':'bg-white/10'} flex items-center justify-center text-xs font-extrabold">#${i+1}</span><div><p class="text-sm font-extrabold">${l.f} ${l.n}</p><p class="text-[11px] text-slate-400">${l.g} Goals</p></div></div><span class="text-sm font-extrabold text-emerald-400">${l.pts} PTS</span></div>`).join("")}</div>
+        <div class="p-4 rounded-2xl bg-white/5 border border-white/10"><p class="text-xs font-extrabold text-emerald-400 mb-2">🏆 VOTE TONIGHT'S MOTM</p><div class="grid grid-cols-2 gap-2">${["Tariq M.","Yousef K.","Omar N.","Hamad T."].map(n=>`<button onclick="S.vot='${n}';say('Voted ${n}!')" class="py-2 rounded-xl text-xs font-extrabold border ${S.vot===n?'bg-emerald-400 text-slate-950 border-emerald-400':'border-white/15'}">${n}</button>`).join("")}</div></div>
+      </div>`;
+    }else{
+      h+=`<div class="px-5 pt-4 pb-28">
+        <div class="flex justify-between items-center mb-4"><h2 class="text-base font-extrabold">PRO PLAYER CARD</h2><button onclick="S.ed=true;render()" class="text-xs font-extrabold text-emerald-400">Edit Card</button></div>
+        <div class="rounded-3xl bg-gradient-to-br from-[#9E1B42] to-slate-900 p-5 border border-amber-400/40 mb-5 flex items-center gap-4">
+          <div class="text-center"><p class="text-3xl font-extrabold text-amber-300">${u.ovr}</p><p class="text-xs font-extrabold">${u.p}</p><p class="text-lg">${u.fl}</p></div>
+          <label class="relative cursor-pointer"><img src="${u.av}" class="w-20 h-24 rounded-2xl object-cover border border-amber-300/50"/><span class="absolute bottom-1 right-1 bg-black/80 text-[10px] px-1.5 rounded">📷</span><input type="file" accept="image/*" onchange="const r=new FileReader();r.onload=e=>{S.u.av=e.target.result;render();say('Photo updated!')};r.readAsDataURL(this.files[0])" class="hidden"/></label>
+          <div><h3 class="font-extrabold text-base uppercase">${u.n}</h3><p class="text-xs text-slate-300">Age ${u.age} • ${u.nat}</p><p class="text-xs text-emerald-300 font-bold mt-2">${u.pl} Games • ${u.g} Goals</p></div>
+        </div>
+        <button onclick="S.own=false;go('splash')" class="w-full py-3.5 rounded-2xl bg-white/10 text-rose-300 font-extrabold text-xs">Sign Out</button>
+      </div>`;
+    }
 
-        <!-- Dark Stadium Match Cards -->
-        <div class="space-y-4">
-          ${list.map(m => {
-            const left = m.total - m.taken, pct = Math.round(m.taken/m.total*100);
-            return `<div onclick="openBk('${m.id}')" class="rounded-3xl bg-[#121827] border border-white/10 overflow-hidden active:scale-[0.99] transition cursor-pointer">
-              <div class="relative h-40">
-                <img src="${m.img}" class="w-full h-full object-cover brightness-90" />
-                <div class="absolute inset-0 bg-gradient-to-t from-[#121827] via-transparent to-black/30"></div>
-                <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-black/70 backdrop-blur-xs text-[11px] font-extrabold text-emerald-400">${m.day} • ${m.time}</span>
-                <span class="absolute top-3 right-3 px-2.5 py-1 rounded-lg ${left===0?'bg-rose-600':'bg-[#9E1B42]'} text-[11px] font-extrabold">${left===0?'FULL':left+' LEFT'}</span>
-              </div>
-              <div class="p-4 pt-2">
-                <div class="flex justify-between items-star
+    h+=`<div class="fixed bottom-3 left-1/2 -translate-x-1/2 w-[94%] max-w-[405px] bg-[#161F33] border border-white/15 rounded-3xl px-2 py-2 flex items-center justify-between z-40 shadow-2xl">
+      <button onclick="S.tab='matches';render()" class="flex-1 flex flex-col items-center text-[10px] font-extrabold ${S.tab==='matches'?'text-emerald-400':'text-slate-400'}"><span class="text-base">🏟️</span>Matches</button>
+      <button onclick="S.tab='tactics';render()" class="flex-1 flex flex-col items-center text-[10px] font-extrabold ${S.tab==='tactics'?'text-emerald-400':'text-slate-400'}"><span class="text-base">📋</span>Tactics</button>
+      <button onclick="book('m1')" class="-mt-6 px-4 py-2.5 rounded-2xl bg-[#9E1B42] font-extrabold text-[10px] shadow-lg border-2 border-[#0D1322]">⚽ BOOK</button>
+      <button onclick="S.tab='rank';render()" class="flex-1 flex flex-col items-center text-[10px] font-extrabold ${S.tab==='rank'?'text-emerald-400':'text-slate-400'}"><span class="text-base">🏆</span
