@@ -25,32 +25,36 @@ const IMG={
 const DB0={
   alias:"PANASPORT",num:"+974 5512 8890",
   matches:[
-    {id:"m1",day:"FRI 13",title:"8V8 FLOODLIT CLASH",venue:"Al Sadd Complex, Doha",area:"Al Sadd",time:"20:30",price:35,tot:16,tak:13,img:IMG.p1,
+    {id:"m1",day:"FRI 13",title:"8V8 FLOODLIT CLASH",venue:"Al Sadd Complex, Doha",time:"20:30",price:35,tot:16,tak:13,img:IMG.p1,
       pl:[{n:"Tariq M.",p:"MID",r:88,b:"Red",x:50,y:48},{n:"Hamad T.",p:"DEF",r:85,b:"Red",x:28,y:72},{n:"Khalid A.",p:"FWD",r:87,b:"Red",x:72,y:68},{n:"Yousef K.",p:"FWD",r:86,b:"White",x:50,y:24},{n:"Omar N.",p:"GK",r:89,b:"White",x:50,y:10}]},
-    {id:"m2",day:"SAT 14",title:"7V7 ASPIRE TURF NIGHT",venue:"Aspire Zone Pitch 4",area:"Al Waab",time:"19:00",price:30,tot:14,tak:10,img:IMG.p2,
+    {id:"m2",day:"SAT 14",title:"7V7 ASPIRE TURF NIGHT",venue:"Aspire Zone Pitch 4",time:"19:00",price:30,tot:14,tak:10,img:IMG.p2,
       pl:[{n:"Nasser A.",p:"FWD",r:87,b:"Red",x:45,y:55},{n:"Sami H.",p:"MID",r:84,b:"White",x:55,y:30}]}
   ],
   rank:[{n:"Omar N.",pts:142,g:14,f:"🇶🇦"},{n:"Tariq Al-Mannai",pts:128,g:11,f:"🇶🇦"},{n:"Yousef K.",pts:115,g:12,f:"🇯🇴"}],
   bks:[{id:"BK-9041",mid:"m1",mt:"8V8 FLOODLIT CLASH",pl:"Jassim Al-Kuwari",sz:1,qar:35,m:"Fawran",st:"Pending"}]
 };
+
+let savedDb=null;
+try{savedDb=JSON.parse(localStorage.getItem("ps_clean_v1"))}catch(e){}
+
 let S={scr:"splash",md:"phone",inp:"",own:false,tab:"matches",day:"ALL",vot:null,bk:null,sz:1,pay:"fawran",ok:false,fn:"",ed:false,nm:false,msg:null,
   u:{n:"Tariq Al-Mannai",ph:"+974 5589 4321",p:"MID",age:26,nat:"Qatar",fl:"🇶🇦",ovr:87,av:IMG.av,pl:14,w:9,g:11},
-  db:JSON.parse(localStorage.getItem("ps_ok1"))||DB0};
+  db:savedDb||DB0};
 
-const sv=()=>localStorage.setItem("ps_ok1",JSON.stringify(S.db));
+const sv=()=>{try{localStorage.setItem("ps_clean_v1",JSON.stringify(S.db))}catch(e){}};
 const say=t=>{S.msg=t;render();setTimeout(()=>{S.msg=null;render()},2400)};
 const go=s=>{S.scr=s;window.scrollTo(0,0);render()};
 
-function login(){
+function doLogin(){
   const v=S.inp.trim();
   if(!v)return say(S.md==="phone"?"Enter phone number":"Enter email");
   if(S.md==="phone"){S.u.ph="+974 "+v;S.own=false}
   else{S.own=v.toLowerCase()===OWNER;if(!S.own)S.u.n=v.split("@")[0].toUpperCase()}
   go("otp");
 }
-function enter(){S.own?(go("owner"),say("Manager Verified!")):(go("app"),say("Welcome to PANA SPORT!"))}
-function book(id){S.bk=S.db.matches.find(x=>x.id===id)||S.db.matches[0];S.sz=1;S.pay="fawran";S.ok=false;S.fn="";render()}
-function confirm(){
+function doEnter(){S.own?(go("owner"),say("Manager Verified!")):(go("app"),say("Welcome to PANA SPORT!"))}
+function openBk(id){S.bk=S.db.matches.find(x=>x.id===id)||S.db.matches[0];S.sz=1;S.pay="fawran";S.ok=false;S.fn="";render()}
+function submitBk(){
   const m=S.bk;if(!m)return;
   if(S.pay==="fawran"&&!S.ok)return say("Upload Fawran receipt first");
   const qar=(S.sz===6?5:S.sz)*m.price;
@@ -59,28 +63,28 @@ function confirm(){
   m.pl.push({n:S.u.n.split(" ")[0],p:S.u.p,r:S.u.ovr,b:m.pl.length%2===0?"Red":"White",x:40+Math.random()*20,y:40+Math.random()*25});
   sv();S.bk=null;say(S.pay==="fawran"?"Receipt sent to manager!":"Spot reserved!");
 }
-function act(id,yes){
+function actBk(id,yes){
   const i=S.db.bks.findIndex(x=>x.id===id);if(i<0)return;
   const b=S.db.bks[i];
   if(yes){b.st="Approved";say("Approved "+b.pl)}
   else{const m=S.db.matches.find(x=>x.id===b.mid);if(m)m.tak=Math.max(0,m.tak-b.sz);S.db.bks.splice(i,1);say("Declined")}
   sv();
 }
-function bal(id){
+function balBibs(id){
   const m=S.db.matches.find(x=>x.id===id);if(!m)return;
   m.pl.sort((a,b)=>b.r-a.r).forEach((p,i)=>{p.b=(i%4===0||i%4===3)?"Red":"White";p.y=p.b==="Red"?60+(i*6)%22:16+(i*6)%22});
   sv();say("Teams balanced!");
 }
-function wa(id){
+function copyWa(id){
   const m=S.db.matches.find(x=>x.id===id)||S.db.matches[0];
-  const r=m.pl.filter(p=>p.b==="Red").map((p,i)=>`${i+1}. ${p.n}`).join("\n")||"1. Open";
-  const w=m.pl.filter(p=>p.b==="White").map((p,i)=>`${i+1}. ${p.n}`).join("\n")||"1. Open";
-  navigator.clipboard?.writeText(`⚽ *PANA SPORT DOHA*\n🏟️ ${m.title} (${m.day} ${m.time})\n🔴 MAROON:\n${r}\n⚪ WHITE:\n${w}\n📲 https://yoyojaye.github.io/Panasport/`);
+  const r=m.pl.filter(p=>p.b==="Red").map((p,i)=>`${i+1}.${p.n}`).join("\n")||"1. Open";
+  const w=m.pl.filter(p=>p.b==="White").map((p,i)=>`${i+1}.${p.n}`).join("\n")||"1. Open";
+  if(navigator.clipboard)navigator.clipboard.writeText(`⚽ *PANA SPORT DOHA*\n🏟️ ${m.title} (${m.day}${m.time})\n🔴 MAROON:\n${r}\n⚪ WHITE:\n${w}\n📲 https://yoyojaye.github.io/Panasport/`);
   say("WhatsApp lineup copied!");
 }
-function newMatch(e){
+function addMatch(e){
   e.preventDefault();const f=e.target;
-  S.db.matches.unshift({id:"m"+Date.now(),day:f.d.value.toUpperCase()||"FRI 20",title:f.t.value.toUpperCase()||"8V8 NIGHT CLASH",venue:f.v.value||"Al Sadd Complex",area:"Al Sadd",time:f.tm.value||"21:00",price:+f.p.value||35,tot:+f.tot.value||16,tak:1,img:IMG.p1,pl:[{n:"Captain",p:"MID",r:87,b:"Red",x:50,y:50}]});
+  S.db.matches.unshift({id:"m"+Date.now(),day:f.d.value.toUpperCase()||"FRI 20",title:f.t.value.toUpperCase()||"8V8 NIGHT CLASH",venue:f.v.value||"Al Sadd Complex",time:f.tm.value||"21:00",price:+f.p.value||35,tot:+f.tot.value||16,tak:1,img:IMG.p1,pl:[{n:"Captain",p:"MID",r:87,b:"Red",x:50,y:50}]});
   sv();S.nm=false;say("New match live!");
 }
 function saveEd(e){
@@ -114,7 +118,7 @@ function render(){
       </div>
       ${ph?`<div class="flex gap-2"><div class="h-14 px-4 rounded-2xl bg-white/10 flex items-center gap-2 font-extrabold text-sm">🇶🇦 +974</div><input type="tel" value="${S.inp}" oninput="S.inp=this.value" placeholder="Phone number" class="w-full h-14 px-4 rounded-2xl bg-white/10 text-sm font-bold text-white"/></div>`
           :`<input type="email" value="${S.inp}" oninput="S.inp=this.value" placeholder="Email address" class="w-full h-14 px-4 rounded-2xl bg-white/10 text-sm font-bold text-white"/>`}
-      <button onclick="login()" class="w-full mt-6 py-4 rounded-2xl bg-[#9E1B42] font-extrabold">Continue</button>
+      <button onclick="doLogin()" class="w-full mt-6 py-4 rounded-2xl bg-[#9E1B42] font-extrabold">Continue</button>
     </div>`;
   }else if(S.scr==="otp"){
     h=`<div class="min-h-screen px-6 pt-12 pb-8 text-center">
@@ -122,7 +126,7 @@ function render(){
       <h1 class="text-2xl font-extrabold uppercase mt-16 mb-2">VERIFY CODE</h1>
       <p class="text-xs text-slate-400 mb-6">Sent to ${S.md==='phone'?S.u.ph:S.inp}</p>
       <div class="grid grid-cols-4 gap-3 max-w-[260px] mx-auto mb-6">${["7","4","9","2"].map(d=>`<input value="${d}" class="h-14 rounded-2xl bg-white/10 border border-emerald-400/50 text-center text-xl font-extrabold"/>`).join("")}</div>
-      <button onclick="enter()" class="w-full py-4 rounded-2xl bg-emerald-400 text-slate-950 font-extrabold">Enter Pitch</button>
+      <button onclick="doEnter()" class="w-full py-4 rounded-2xl bg-emerald-400 text-slate-950 font-extrabold">Enter Pitch</button>
     </div>`;
   }else if(S.scr==="owner"){
     const rev=S.db.bks.reduce((s,b)=>s+b.qar,0);
@@ -136,10 +140,10 @@ function render(){
         <div class="bg-white/5 p-4 rounded-2xl"><p class="text-xs text-slate-400">Bookings</p><p class="text-2xl font-extrabold text-amber-400">${S.db.bks.length}</p></div>
       </div>
       <button onclick="S.nm=true;render()" class="w-full py-3.5 rounded-2xl bg-emerald-400 text-slate-950 font-extrabold text-sm mb-5">+ Create New Match</button>
-      <div class="space-y-3 mb-5">${S.db.bks.map(b=>`<div class="bg-white/5 p-4 rounded-2xl border border-white/10"><div class="flex justify-between font-extrabold text-sm"><span>${b.pl}</span><span class="text-emerald-400">${b.qar} QR</span></div><p class="text-xs text-slate-400">${b.mt} • ${b.m}</p><div class="flex justify-between items-center mt-3 pt-2 border-t border-white/10"><span class="text-xs font-bold ${b.st==='Pending'?'text-amber-400':'text-emerald-400'}">● ${b.st}</span>${b.st==='Pending'?`<div class="flex gap-2"><button onclick="act('${b.id}',0)" class="px-3 py-1 rounded bg-rose-500/20 text-rose-300 text-xs font-bold">Decline</button><button onclick="act('${b.id}',1)" class="px-3 py-1 rounded bg-emerald-400 text-slate-950 text-xs font-bold">✓ Approve</button></div>`:''}</div></div>`).join("")}</div>
-      <button onclick="wa('m1')" class="w-full py-3.5 rounded-2xl bg-[#9E1B42] font-extrabold text-sm">📲 Copy Lineup for WhatsApp</button>
+      <div class="space-y-3 mb-5">${S.db.bks.map(b=>`<div class="bg-white/5 p-4 rounded-2xl border border-white/10"><div class="flex justify-between font-extrabold text-sm"><span>${b.pl}</span><span class="text-emerald-400">${b.qar} QR</span></div><p class="text-xs text-slate-400">${b.mt} • ${b.m}</p><div class="flex justify-between items-center mt-3 pt-2 border-t border-white/10"><span class="text-xs font-bold ${b.st==='Pending'?'text-amber-400':'text-emerald-400'}">● ${b.st}</span>${b.st==='Pending'?`<div class="flex gap-2"><button onclick="actBk('${b.id}',0)" class="px-3 py-1 rounded bg-rose-500/20 text-rose-300 text-xs font-bold">Decline</button><button onclick="actBk('${b.id}',1)" class="px-3 py-1 rounded bg-emerald-400 text-slate-950 text-xs font-bold">✓ Approve</button></div>`:''}</div></div>`).join("")}</div>
+      <button onclick="copyWa('m1')" class="w-full py-3.5 rounded-2xl bg-[#9E1B42] font-extrabold text-sm">📲 Copy Lineup for WhatsApp</button>
     </div>`;
-    if(S.nm)h+=`<div class="fixed inset-0 z-50 bg-black/80 flex items-end"><form onsubmit="newMatch(event)" class="w-full max-w-[430px] mx-auto bg-slate-900 rounded-t-3xl p-5 space-y-3"><div class="flex justify-between font-bold"><h3>New Match</h3><button type="button" onclick="S.nm=false;render()">✕</button></div><input name="t" placeholder="Title (8V8 AL SADD)" class="w-full p-3 rounded-xl bg-white/10 text-sm font-bold"/><div class="grid grid-cols-2 gap-2"><input name="d" placeholder="FRI 20" class="p-3 rounded-xl bg-white/10 text-sm font-bold"/><input name="tm" placeholder="21:00" class="p-3 rounded-xl bg-white/10 text-sm font-bold"/></div><input name="v" placeholder="Venue" class="w-full p-3 rounded-xl bg-white/10 text-sm font-bold"/><div class="grid grid-cols-2 gap-2"><input name="p" type="number" value="35" class="p-3 rounded-xl bg-white/10 text-sm font-bold"/><input name="tot" type="number" value="16" class="p-3 rounded-xl bg-white/10 text-sm font-bold"/></div><button type="submit" class="w-full py-3.5 rounded-2xl bg-emerald-400 text-slate-950 font-extrabold">Publish</button></form></div>`;
+    if(S.nm)h+=`<div class="fixed inset-0 z-50 bg-black/80 flex items-end"><form onsubmit="addMatch(event)" class="w-full max-w-[430px] mx-auto bg-slate-900 rounded-t-3xl p-5 space-y-3"><div class="flex justify-between font-bold"><h3>New Match</h3><button type="button" onclick="S.nm=false;render()">✕</button></div><input name="t" placeholder="Title (8V8 AL SADD)" class="w-full p-3 rounded-xl bg-white/10 text-sm font-bold"/><div class="grid grid-cols-2 gap-2"><input name="d" placeholder="FRI 20" class="p-3 rounded-xl bg-white/10 text-sm font-bold"/><input name="tm" placeholder="21:00" class="p-3 rounded-xl bg-white/10 text-sm font-bold"/></div><input name="v" placeholder="Venue" class="w-full p-3 rounded-xl bg-white/10 text-sm font-bold"/><div class="grid grid-cols-2 gap-2"><input name="p" type="number" value="35" class="p-3 rounded-xl bg-white/10 text-sm font-bold"/><input name="tot" type="number" value="16" class="p-3 rounded-xl bg-white/10 text-sm font-bold"/></div><button type="submit" class="w-full py-3.5 rounded-2xl bg-emerald-400 text-slate-950 font-extrabold">Publish</button></form></div>`;
   }else{
     const u=S.u;
     h+=`<div class="px-5 pt-8 pb-3 flex justify-between items-center border-b border-white/10">
@@ -152,10 +156,10 @@ function render(){
       h+=`<div class="px-5 pt-4 pb-28">
         <div class="rounded-3xl bg-gradient-to-r from-[#9E1B42] to-slate-900 p-4 mb-4 flex justify-between items-center">
           <div><span class="text-[10px] font-extrabold text-emerald-300">⚡ TONIGHT • 6-FOR-5 PROMO</span><h3 class="text-base font-extrabold mt-1">8V8 FLOODLIT CLASH</h3><p class="text-xs text-white/80">Al Sadd • 20:30</p></div>
-          <button onclick="book('m1')" class="px-4 py-2.5 rounded-xl bg-emerald-400 text-slate-950 font-extrabold text-xs">Join 35 QR</button>
+          <button onclick="openBk('m1')" class="px-4 py-2.5 rounded-xl bg-emerald-400 text-slate-950 font-extrabold text-xs">Join 35 QR</button>
         </div>
         <div class="flex gap-2 mb-4">${["ALL","FRI 13","SAT 14"].map(d=>`<button onclick="S.day='${d}';render()" class="px-3.5 py-1.5 rounded-xl text-xs font-extrabold ${S.day===d?'bg-emerald-400 text-slate-950':'bg-white/10 text-slate-300'}">${d==="ALL"?"All Nights":d}</button>`).join("")}</div>
-        <div class="space-y-4">${list.map(m=>`<div onclick="book('${m.id}')" class="rounded-3xl bg-[#151D30] border border-white/10 overflow-hidden cursor-pointer">
+        <div class="space-y-4">${list.map(m=>`<div onclick="openBk('${m.id}')" class="rounded-3xl bg-[#151D30] border border-white/10 overflow-hidden cursor-pointer">
           <div class="relative h-36"><img src="${m.img}" class="w-full h-full object-cover"/><span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-black/75 text-xs font-extrabold text-emerald-400">${m.day} • ${m.time}</span><span class="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-[#9E1B42] text-xs font-extrabold">${m.tot-m.tak} LEFT</span></div>
           <div class="p-4 flex justify-between items-center"><div><h4 class="font-extrabold text-sm">${m.title}</h4><p class="text-xs text-slate-400 mt-0.5">📍 ${m.venue}</p></div><div class="text-right"><p class="text-base font-extrabold text-emerald-400">${m.price} QR</p><p class="text-[10px] text-slate-400">${m.tak}/${m.tot}</p></div></div>
         </div>`).join("")}</div>
@@ -163,13 +167,13 @@ function render(){
     }else if(S.tab==="tactics"){
       const m=S.db.matches[0];
       h+=`<div class="px-5 pt-4 pb-28">
-        <div class="flex justify-between items-center mb-3"><div><h2 class="text-base font-extrabold">TACTICAL PITCH</h2><p class="text-xs text-slate-400">${m.title}</p></div><button onclick="bal('${m.id}')" class="px-3 py-1.5 rounded-xl bg-emerald-400 text-slate-950 text-xs font-extrabold">⚡ Balance</button></div>
+        <div class="flex justify-between items-center mb-3"><div><h2 class="text-base font-extrabold">TACTICAL PITCH</h2><p class="text-xs text-slate-400">${m.title}</p></div><button onclick="balBibs('${m.id}')" class="px-3 py-1.5 rounded-xl bg-emerald-400 text-slate-950 text-xs font-extrabold">⚡ Balance</button></div>
         <div class="relative w-full h-[330px] rounded-3xl pitch border-2 border-white/25 overflow-hidden mb-4">
           <div class="absolute inset-x-0 top-1/2 h-0.5 bg-white/30"></div>
           <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full border-2 border-white/30"></div>
           ${m.pl.map(p=>`<div style="left:${p.x}%;top:${p.y}%" class="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center"><div class="w-8 h-8 rounded-full ${p.b==='Red'?'bg-[#9E1B42] border-2 border-white':'bg-white text-slate-900 border-2 border-slate-900'} flex items-center justify-center text-[10px] font-extrabold">${p.p}</div><span class="mt-1 px-1.5 rounded bg-black/75 text-[9px] font-bold">${p.n}</span></div>`).join("")}
         </div>
-        <button onclick="wa('${m.id}')" class="w-full py-3.5 rounded-2xl bg-[#9E1B42] font-extrabold text-sm">📲 Copy Lineup for WhatsApp</button>
+        <button onclick="copyWa('${m.id}')" class="w-full py-3.5 rounded-2xl bg-[#9E1B42] font-extrabold text-sm">📲 Copy Lineup for WhatsApp</button>
       </div>`;
     }else if(S.tab==="rank"){
       h+=`<div class="px-5 pt-4 pb-28">
@@ -183,14 +187,5 @@ function render(){
         <div class="rounded-3xl bg-gradient-to-br from-[#9E1B42] to-slate-900 p-5 border border-amber-400/40 mb-5 flex items-center gap-4">
           <div class="text-center"><p class="text-3xl font-extrabold text-amber-300">${u.ovr}</p><p class="text-xs font-extrabold">${u.p}</p><p class="text-lg">${u.fl}</p></div>
           <label class="relative cursor-pointer"><img src="${u.av}" class="w-20 h-24 rounded-2xl object-cover border border-amber-300/50"/><span class="absolute bottom-1 right-1 bg-black/80 text-[10px] px-1.5 rounded">📷</span><input type="file" accept="image/*" onchange="const r=new FileReader();r.onload=e=>{S.u.av=e.target.result;render();say('Photo updated!')};r.readAsDataURL(this.files[0])" class="hidden"/></label>
-          <div><h3 class="font-extrabold text-base uppercase">${u.n}</h3><p class="text-xs text-slate-300">Age ${u.age} • ${u.nat}</p><p class="text-xs text-emerald-300 font-bold mt-2">${u.pl} Games • ${u.g} Goals</p></div>
-        </div>
-        <button onclick="S.own=false;go('splash')" class="w-full py-3.5 rounded-2xl bg-white/10 text-rose-300 font-extrabold text-xs">Sign Out</button>
-      </div>`;
-    }
-
-    h+=`<div class="fixed bottom-3 left-1/2 -translate-x-1/2 w-[94%] max-w-[405px] bg-[#161F33] border border-white/15 rounded-3xl px-2 py-2 flex items-center justify-between z-40 shadow-2xl">
-      <button onclick="S.tab='matches';render()" class="flex-1 flex flex-col items-center text-[10px] font-extrabold ${S.tab==='matches'?'text-emerald-400':'text-slate-400'}"><span class="text-base">🏟️</span>Matches</button>
-      <button onclick="S.tab='tactics';render()" class="flex-1 flex flex-col items-center text-[10px] font-extrabold ${S.tab==='tactics'?'text-emerald-400':'text-slate-400'}"><span class="text-base">📋</span>Tactics</button>
-      <button onclick="book('m1')" class="-mt-6 px-4 py-2.5 rounded-2xl bg-[#9E1B42] font-extrabold text-[10px] shadow-lg border-2 border-[#0D1322]">⚽ BOOK</button>
-      <button onclick="S.tab='rank';render()" class="flex-1 flex flex-col items-center text-[10px] font-extrabold ${S.tab==='rank'?'text-emerald-400':'text-slate-400'}"><span class="text-base">🏆</span
+          <div><h3 class="font-extrabold text-base uppercase">${u.n}</h3><p class="text-xs text-slate-300">Age ${u.age} •${u.nat}</p><p class="text-xs text-
+             
