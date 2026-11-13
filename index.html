@@ -3,69 +3,63 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <meta name="theme-color" content="#8A1538" />
-  <title>PANA SPORT — Doha Pickup Football</title>
+  <meta name="theme-color" content="#090D16" />
+  <title>PANA SPORT — Doha Night Football</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
   <style>
     *{font-family:'Plus Jakarta Sans',sans-serif;-webkit-tap-highlight-color:transparent}
-    body{background:#0F172A;margin:0}
+    h1,h2,h3,.disp{font-family:'Space Grotesk',sans-serif}
+    body{background:#05070C;margin:0}
     .no-sb::-webkit-scrollbar{display:none}
+    .pitch-bg{background:repeating-linear-gradient(0deg,#065f46 0px,#065f46 28px,#047857 28px,#047857 56px)}
     @keyframes up{from{transform:translateY(100%)}to{transform:translateY(0)}}
-    @keyframes fd{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fd{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
     .anim-up{animation:up .25s ease-out}.anim-fd{animation:fd .2s ease-out}
   </style>
 </head>
-<body class="flex justify-center min-h-screen bg-slate-950">
-<div id="app" class="w-full max-w-[430px] min-h-screen bg-[#F5F6F8] text-slate-900 relative overflow-x-hidden shadow-2xl flex flex-col"></div>
+<body class="flex justify-center min-h-screen bg-[#05070C]">
+<div id="app" class="w-full max-w-[430px] min-h-screen bg-[#0B0F1A] text-white relative overflow-x-hidden shadow-2xl flex flex-col"></div>
 
 <script>
 const OWNER_EMAIL = "creatbrook@gmail.com";
 const P = {
   hero: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=900&q=80",
-  s1: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=900&q=80",
-  s2: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=900&q=80",
-  s3: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=900&q=80",
   m1: "https://images.unsplash.com/photo-1529900748604-07564a03e7a6?auto=format&fit=crop&w=900&q=80",
   m2: "https://images.unsplash.com/photo-1459865264687-595d652de67e?auto=format&fit=crop&w=900&q=80",
   m3: "https://images.unsplash.com/photo-1551958219-acbc608c6377?auto=format&fit=crop&w=900&q=80",
   av: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=80"
 };
 
-const SLIDES = [
-  { tag: "SQUAD DEAL • 6 FOR 5", t: "BRING YOUR 6,\nPAY FOR 5", sub: "Book 6 spots together & 1 player plays free.", img: P.s1, cta: "Book Squad →", id: "m1" },
-  { tag: "DOHA FLOODLIT NIGHTS", t: "PRO TURF &\nHD HIGHLIGHTS", sub: "Recorded 8v8 & 9v9 games in Al Sadd & Lusail.", img: P.s2, cta: "Join Tonight →", id: "m1" },
-  { tag: "INSTANT QATAR FAWRAN", t: "1-TAP SPOT\nCONFIRMATION", sub: "Send via Fawran, snap receipt & get verified fast.", img: P.s3, cta: "Explore Games →", id: "m2" }
-];
-
 const INIT = {
   alias: "PANASPORT", num: "+974 5512 8890",
   matches: [
-    { id:"m1", title:"8V8 FLOODLIT PICKUP", venue:"Al Sadd Sports Complex, Doha", area:"Al Sadd", date:"Tonight • 20:30", dur:"90 min", price:35, total:16, taken:13, rec:true, lvl:"Competitive", img:P.m1,
-      players:[{name:"Tariq Al-Mannai",pos:"MID",rt:88,bib:"Red"},{name:"Yousef K.",pos:"FWD",rt:86,bib:"White"},{name:"Hamad Al-Thani",pos:"DEF",rt:85,bib:"Red"},{name:"Omar N.",pos:"GK",rt:89,bib:"White"}], wait:["Bader S."] },
-    { id:"m2", title:"7V7 OPEN TURF NIGHT", venue:"Aspire Zone Pitch 4, Al Waab", area:"Al Waab", date:"Tomorrow • 19:00", dur:"60 min", price:30, total:14, taken:10, rec:true, lvl:"All Levels", img:P.m2,
-      players:[{name:"Nasser A.",pos:"FWD",rt:87,bib:"Red"},{name:"Sami H.",pos:"MID",rt:84,bib:"White"}], wait:[] },
-    { id:"m3", title:"9V9 LUSAIL STADIUM TURF", venue:"Lusail Marina Fields, Doha", area:"Lusail", date:"Sun, 15 Nov • 21:00", dur:"90 min", price:40, total:18, taken:18, rec:false, lvl:"High Tempo", img:P.m3,
-      players:[{name:"Rashid K.",pos:"DEF",rt:88,bib:"Red"}], wait:["Zaid M.","Ali H."] }
+    { id:"m1", day:"FRI 13", title:"8V8 FLOODLIT CLASH", venue:"Al Sadd Sports Complex", area:"Al Sadd", time:"20:30", dur:"90m", price:35, total:16, taken:13, rec:true, tag:"HOT", img:P.m1,
+      players:[{name:"Tariq M.",pos:"MID",rt:88,bib:"Red",x:50,y:46},{name:"Hamad T.",pos:"DEF",rt:85,bib:"Red",x:28,y:72},{name:"Khalid A.",pos:"FWD",rt:87,bib:"Red",x:72,y:68},{name:"Yousef K.",pos:"FWD",rt:86,bib:"White",x:50,y:24},{name:"Omar N.",pos:"GK",rt:89,bib:"White",x:50,y:10},{name:"Faisal R.",pos:"DEF",rt:83,bib:"White",x:26,y:34}] },
+    { id:"m2", day:"SAT 14", title:"7V7 ASPIRE TURF NIGHT", venue:"Aspire Zone Pitch 4", area:"Al Waab", time:"19:00", dur:"60m", price:30, total:14, taken:10, rec:true, tag:"OPEN", img:P.m2,
+      players:[{name:"Nasser A.",pos:"FWD",rt:87,bib:"Red",x:45,y:55},{name:"Sami H.",pos:"MID",rt:84,bib:"White",x:55,y:30}] },
+    { id:"m3", day:"SUN 15", title:"9V9 LUSAIL ARENA", venue:"Lusail Marina Fields", area:"Lusail", time:"21:00", dur:"90m", price:40, total:18, taken:18, rec:false, tag:"FULL", img:P.m3,
+      players:[{name:"Rashid K.",pos:"DEF",rt:88,bib:"Red",x:50,y:60}] }
   ],
-  bookings: [{ id:"BK-9041", mid:"m1", mTitle:"8V8 FLOODLIT PICKUP", player:"Jassim Al-Kuwari", size:1, qar:35, method:"Fawran Transfer", status:"Pending Verification" }]
+  leaders: [
+    { name:"Omar N.", pts:142, goals:14, motm:5, flag:"🇶🇦" },
+    { name:"Tariq Al-Mannai", pts:128, goals:11, motm:3, flag:"🇶🇦" },
+    { name:"Yousef K.", pts:115, goals:12, motm:2, flag:"🇯🇴" },
+    { name:"Hamad Al-Thani", pts:104, goals:6, motm:2, flag:"🇶🇦" }
+  ],
+  bookings: [{ id:"BK-9041", mid:"m1", mTitle:"8V8 FLOODLIT CLASH", player:"Jassim Al-Kuwari", size:1, qar:35, method:"Fawran Transfer", status:"Pending Verification" }]
 };
 
 let S = {
-  scr:"splash", mode:"phone", inp:"", owner:false, otp:["7","4","9","2"], tab:"home", slide:0, area:"All",
-  chk:false, bkMatch:null, size:1, pay:"fawran", recOk:false, recName:"", menu:false, edit:false, coach:false, newM:false,
-  cArea:"Al Sadd", toast:null,
-  user:{ name:"Tariq Al-Kuwari", phone:"+974 5589 4321", pos:"Midfielder", age:26, nat:"Qatar", flag:"🇶🇦", debut:"NOV, 2026", av:P.av, bal:70, st:{pl:14,w:9,l:5,motm:3,g:11} },
-  db: JSON.parse(localStorage.getItem("ps_v6")) || INIT
+  scr:"splash", mode:"phone", inp:"", owner:false, otp:["7","4","9","2"], tab:"matches", day:"ALL",
+  voted:null, bkMatch:null, size:1, pay:"fawran", recOk:false, recName:"", edit:false, newM:false, toast:null,
+  user:{ name:"Tariq Al-Mannai", phone:"+974 5589 4321", pos:"MID", age:26, nat:"Qatar", flag:"🇶🇦", ovr:87, pac:86, sho:84, pas:89, dri:88, av:P.av, st:{pl:14,w:9,g:11,motm:3} },
+  db: JSON.parse(localStorage.getItem("ps_dark_v1")) || INIT
 };
 
-const save = () => localStorage.setItem("ps_v6", JSON.stringify(S.db));
+const save = () => localStorage.setItem("ps_dark_v1", JSON.stringify(S.db));
 const msg = t => { S.toast = t; render(); setTimeout(() => { S.toast = null; render(); }, 2500); };
 const go = s => { S.scr = s; window.scrollTo(0,0); render(); };
-
-setInterval(() => {
-  if (S.scr==="app" && S.tab==="home" && !S.bkMatch && !S.menu && !S.coach) { S.slide = (S.slide + 1) % 3; render(); }
-}, 4500);
 
 function authNext() {
   const v = S.inp.trim();
@@ -77,7 +71,7 @@ function authNext() {
 
 function verifyOtp() {
   if (S.owner) { go("owner"); msg("Manager Verified — Welcome!"); }
-  else { go("app"); msg("Welcome to PANA SPORT Doha!"); }
+  else { go("app"); msg("Welcome to PANA SPORT Night Pitch!"); }
 }
 
 function openBk(id) {
@@ -87,13 +81,13 @@ function openBk(id) {
 
 function confirmBk() {
   const m = S.bkMatch; if (!m) return;
-  if (m.taken >= m.total) { m.wait.push(S.user.name); save(); S.bkMatch = null; return msg("Joined priority waitlist!"); }
+  if (m.taken >= m.total) { S.bkMatch = null; return msg("Added to priority waitlist!"); }
   if (S.pay==="fawran" && !S.recOk) return msg("Upload Fawran receipt first");
   const qar = (S.size===6 ? 5 : S.size) * m.price;
   S.db.bookings.unshift({ id:"BK-"+Math.floor(1000+Math.random()*9000), mid:m.id, mTitle:m.title, player:S.user.name+(S.size>1?` (+${S.size-1})`:""), size:S.size, qar, method:S.pay==="fawran"?"Fawran Transfer":"Cash at Pitch", status:S.pay==="fawran"?"Pending Verification":"Confirmed (Cash)" });
   m.taken = Math.min(m.total, m.taken + S.size);
-  m.players.push({ name:S.user.name, pos:S.user.pos.slice(0,3).toUpperCase(), rt:86, bib:m.players.length%2===0?"Red":"White" });
-  save(); S.bkMatch = null; msg(S.pay==="fawran" ? "Receipt sent for approval!" : "Spot reserved!");
+  m.players.push({ name:S.user.name.split(" ")[0], pos:S.user.pos, rt:S.user.ovr, bib:m.players.length%2===0?"Red":"White", x:35+Math.random()*30, y:35+Math.random()*35 });
+  save(); S.bkMatch = null; msg(S.pay==="fawran" ? "Receipt sent to organizer!" : "Spot reserved!");
 }
 
 function actBk(id, ok) {
@@ -106,29 +100,29 @@ function actBk(id, ok) {
 
 function balBibs(id) {
   const m = S.db.matches.find(x => x.id===id); if (!m) return;
-  m.players.sort((a,b) => b.rt - a.rt).forEach((p,i) => p.bib = (i%4===0||i%4===3) ? "Red" : "White");
-  save(); msg("Bibs balanced by rating!");
+  m.players.sort((a,b) => b.rt - a.rt).forEach((p,i) => { p.bib = (i%4===0||i%4===3) ? "Red" : "White"; p.y = p.bib==="Red" ? 58 + (i*7)%25 : 15 + (i*7)%25; });
+  save(); msg("Tactical formation balanced!");
 }
 
 function copyWA(id) {
   const m = S.db.matches.find(x => x.id===id) || S.db.matches[0];
   const r = m.players.filter(p=>p.bib==="Red").map((p,i)=>`${i+1}. ${p.name}`).join("\n") || "1. Open";
   const w = m.players.filter(p=>p.bib==="White").map((p,i)=>`${i+1}. ${p.name}`).join("\n") || "1. Open";
-  navigator.clipboard?.writeText(`⚽ *PANA SPORT QATAR*\n🏟️ *${m.title}*\n📍 ${m.venue} | 🕒 ${m.date}\n\n🔴 *MAROON*\n${r}\n\n⚪ *WHITE*\n${w}\n\n📲 https://yoyojaye.github.io/Panasport/`);
-  msg("WhatsApp lineup copied!");
+  navigator.clipboard?.writeText(`⚽ *PANA SPORT DOHA*\n🏟️ *${m.title}*\n📍 ${m.venue} | 🕒 ${m.day} ${m.time}\n\n🔴 *MAROON*\n${r}\n\n⚪ *WHITE*\n${w}\n\n📲 https://yoyojaye.github.io/Panasport/`);
+  msg("Lineup copied for WhatsApp!");
 }
 
 function addMatch(e) {
   e.preventDefault(); const f = e.target;
-  S.db.matches.unshift({ id:"m"+Date.now(), title:f.t.value.trim().toUpperCase()||"8V8 NIGHT PICKUP", venue:f.v.value.trim()||"Al Sadd Sports Complex", area:f.a.value, date:f.d.value.trim()||"Fri • 21:00", dur:"90 min", price:+f.p.value||35, total:+f.tot.value||16, taken:1, rec:true, lvl:f.l.value, img:P.m1, players:[{name:"PANA Captain",pos:"MID",rt:87,bib:"Red"}], wait:[] });
-  save(); S.newM = false; msg("Match published live!");
+  S.db.matches.unshift({ id:"m"+Date.now(), day:f.day.value.toUpperCase()||"FRI 20", title:f.t.value.trim().toUpperCase()||"8V8 NIGHT CLASH", venue:f.v.value.trim()||"Al Sadd Complex", area:f.a.value, time:f.tm.value||"21:00", dur:"90m", price:+f.p.value||35, total:+f.tot.value||16, taken:1, rec:true, tag:"NEW", img:P.m1, players:[{name:"Captain",pos:"MID",rt:87,bib:"Red",x:50,y:50}] });
+  save(); S.newM = false; msg("New match live!");
 }
 
 function saveProf(e) {
   e.preventDefault(); const f = e.target;
   S.user.name = f.fn.value.trim() || S.user.name; S.user.pos = f.pos.value; S.user.age = +f.age.value || 25; S.user.nat = f.nat.value;
   S.user.flag = {Qatar:"🇶🇦",Egypt:"🇪🇬",Jordan:"🇯🇴",Morocco:"🇲🇦",Ethiopia:"🇪🇹",India:"🇮🇳",UK:"🇬🇧",Brazil:"🇧🇷"}[S.user.nat] || "🇶🇦";
-  S.edit = false; msg("Profile updated!");
+  S.edit = false; msg("Player Card updated!");
 }
 
 function render() {
@@ -136,155 +130,100 @@ function render() {
   let h = "";
 
   if (S.scr==="splash") {
-    h = `<div class="relative min-h-screen flex flex-col justify-between bg-slate-950 text-white">
+    h = `<div class="relative min-h-screen flex flex-col justify-between bg-black text-white">
       <img src="${P.hero}" class="absolute inset-0 w-full h-full object-cover brightness-90" />
-      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/20"></div>
-      <div class="relative z-10 px-6 pt-12"><div class="inline-flex items-center gap-2.5 bg-black/45 backdrop-blur-md border border-white/15 px-3.5 py-2 rounded-full"><span class="w-7 h-7 rounded-full bg-[#8A1538] flex items-center justify-center font-extrabold text-xs">PS</span><span class="text-xs font-extrabold tracking-widest">PANA SPORT</span></div></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-[#0B0F1A] via-black/50 to-black/20"></div>
+      <div class="relative z-10 px-6 pt-12"><div class="inline-flex items-center gap-2.5 bg-black/50 backdrop-blur-md border border-white/15 px-3.5 py-2 rounded-full"><span class="w-7 h-7 rounded-full bg-[#9E1B42] flex items-center justify-center font-extrabold text-xs">PS</span><span class="text-xs font-extrabold tracking-widest">PANA SPORT</span></div></div>
       <div class="relative z-10 px-6 pb-10 anim-fd">
-        <span class="inline-block bg-[#8A1538] text-[11px] font-extrabold tracking-widest px-3 py-1 rounded-md mb-4">🇶🇦 DOHA PICKUP FOOTBALL</span>
-        <h1 class="text-[34px] leading-[1.06] font-extrabold uppercase mb-3">SHOW UP, PLAY,<br/>AND LET US<br/>HANDLE THE<br/>DETAILS</h1>
-        <p class="text-sm text-slate-200 mb-7">Instant pickup slots, verified Fawran payments, and balanced Doha squads.</p>
-        <button onclick="go('auth')" class="w-full py-4 rounded-2xl bg-[#8A1538] font-extrabold text-base shadow-xl">Continue</button>
+        <span class="inline-block bg-[#9E1B42] text-[11px] font-extrabold tracking-widest px-3 py-1 rounded-md mb-4">🇶🇦 DOHA NIGHT FOOTBALL</span>
+        <h1 class="text-[36px] leading-[1.04] font-bold uppercase mb-3">SHOW UP, PLAY,<br/>AND LET US<br/>HANDLE THE<br/>DETAILS</h1>
+        <p class="text-sm text-slate-300 mb-7">Floodlit Doha pickup matches, Fawran instant verification & balanced squads.</p>
+        <button onclick="go('auth')" class="w-full py-4 rounded-2xl bg-[#9E1B42] font-extrabold text-base shadow-xl shadow-[#9E1B42]/40">Continue</button>
       </div></div>`;
   } else if (S.scr==="auth") {
     const ph = S.mode==="phone";
-    h = `<div class="min-h-screen bg-[#F5F6F8] px-6 pt-12 pb-8 anim-fd">
-      <button onclick="go('splash')" class="w-11 h-11 rounded-full bg-white border border-slate-200 font-bold">←</button>
-      <div class="text-center mt-8 mb-8"><div class="w-12 h-12 rounded-2xl bg-[#8A1538] text-white font-extrabold flex items-center justify-center mx-auto mb-4">PS</div><h1 class="text-[28px] leading-tight font-extrabold uppercase">LET'S GET<br/>STARTED NOW!</h1></div>
-      <div class="flex justify-center gap-8 border-b border-slate-200 mb-6">
-        <button onclick="S.mode='phone';S.inp='';render()" class="pb-3 text-xs font-extrabold uppercase ${ph?'text-[#8A1538] border-b-2 border-[#8A1538]':'text-slate-400'}">PHONE NUMBER</button>
-        <button onclick="S.mode='email';S.inp='';render()" class="pb-3 text-xs font-extrabold uppercase ${!ph?'text-[#8A1538] border-b-2 border-[#8A1538]':'text-slate-400'}">EMAIL</button>
+    h = `<div class="min-h-screen bg-[#0B0F1A] px-6 pt-12 pb-8 anim-fd">
+      <button onclick="go('splash')" class="w-11 h-11 rounded-full bg-white/10 border border-white/10 font-bold">←</button>
+      <div class="text-center mt-8 mb-8"><div class="w-12 h-12 rounded-2xl bg-[#9E1B42] font-extrabold flex items-center justify-center mx-auto mb-4">PS</div><h1 class="text-[28px] leading-tight font-bold uppercase">LET'S GET<br/>STARTED NOW!</h1></div>
+      <div class="flex justify-center gap-8 border-b border-white/10 mb-6">
+        <button onclick="S.mode='phone';S.inp='';render()" class="pb-3 text-xs font-extrabold uppercase ${ph?'text-emerald-400 border-b-2 border-emerald-400':'text-slate-500'}">PHONE NUMBER</button>
+        <button onclick="S.mode='email';S.inp='';render()" class="pb-3 text-xs font-extrabold uppercase ${!ph?'text-emerald-400 border-b-2 border-emerald-400':'text-slate-500'}">EMAIL</button>
       </div>
-      ${ph ? `<div class="flex gap-3"><div class="h-14 px-4 rounded-2xl bg-white border border-slate-200 flex items-center gap-2 shrink-0"><span class="text-xl">🇶🇦</span><span class="text-sm font-extrabold">+974</span></div><input type="tel" value="${S.inp}" oninput="S.inp=this.value" placeholder="Enter your phone number" class="w-full h-14 px-4 rounded-2xl bg-white border border-slate-200 text-sm font-semibold focus:outline-none focus:border-[#8A1538]" /></div>`
-           : `<input type="email" value="${S.inp}" oninput="S.inp=this.value" placeholder="Enter your email address" class="w-full h-14 px-4 rounded-2xl bg-white border border-slate-200 text-sm font-semibold focus:outline-none focus:border-[#8A1538]" />`}
-      <p class="text-center text-xs text-slate-500 mt-4">We will send you a one-time code via ${ph?'SMS':'email'} to verify your account</p>
-      <button onclick="authNext()" class="w-full mt-7 py-4 rounded-2xl bg-[#8A1538] text-white font-extrabold text-base shadow-lg">Continue</button>
-      <p class="text-center text-[11px] text-slate-500 mt-4">By clicking continue you agree to our <span class="text-[#8A1538] font-bold">Terms & Conditions</span></p>
+      ${ph ? `<div class="flex gap-3"><div class="h-14 px-4 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-2 shrink-0"><span class="text-xl">🇶🇦</span><span class="text-sm font-extrabold">+974</span></div><input type="tel" value="${S.inp}" oninput="S.inp=this.value" placeholder="Enter your phone number" class="w-full h-14 px-4 rounded-2xl bg-white/5 border border-white/10 text-sm font-semibold text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400" /></div>`
+           : `<input type="email" value="${S.inp}" oninput="S.inp=this.value" placeholder="Enter your email address" class="w-full h-14 px-4 rounded-2xl bg-white/5 border border-white/10 text-sm font-semibold text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400" />`}
+      <p class="text-center text-xs text-slate-400 mt-4">We will send a 4-digit code via ${ph?'SMS':'email'} to verify your account</p>
+      <button onclick="authNext()" class="w-full mt-7 py-4 rounded-2xl bg-[#9E1B42] font-extrabold text-base shadow-lg">Continue</button>
     </div>`;
   } else if (S.scr==="otp") {
-    h = `<div class="min-h-screen bg-[#F5F6F8] px-6 pt-12 pb-8 anim-fd">
-      <button onclick="go('auth')" class="w-11 h-11 rounded-full bg-white border border-slate-200 font-bold">←</button>
-      <div class="text-center mt-8 mb-8"><h1 class="text-[26px] font-extrabold uppercase">VERIFY CODE</h1><p class="text-xs text-slate-500 mt-2">Sent to <span class="font-bold text-slate-800">${S.mode==='phone'?S.user.phone:S.inp}</span></p></div>
-      <div class="grid grid-cols-4 gap-3 max-w-[280px] mx-auto mb-6">${S.otp.map((d,i)=>`<input maxlength="1" value="${d}" oninput="S.otp[${i}]=this.value" class="h-16 rounded-2xl bg-white border-2 border-[#8A1538]/30 text-center text-2xl font-extrabold" />`).join("")}</div>
-      <button onclick="verifyOtp()" class="w-full py-4 rounded-2xl bg-[#8A1538] text-white font-extrabold text-base shadow-lg">Verify & Continue</button>
+    h = `<div class="min-h-screen bg-[#0B0F1A] px-6 pt-12 pb-8 anim-fd">
+      <button onclick="go('auth')" class="w-11 h-11 rounded-full bg-white/10 font-bold">←</button>
+      <div class="text-center mt-8 mb-8"><h1 class="text-[26px] font-bold uppercase">VERIFY CODE</h1><p class="text-xs text-slate-400 mt-2">Sent to <span class="font-bold text-white">${S.mode==='phone'?S.user.phone:S.inp}</span></p></div>
+      <div class="grid grid-cols-4 gap-3 max-w-[280px] mx-auto mb-6">${S.otp.map((d,i)=>`<input maxlength="1" value="${d}" oninput="S.otp[${i}]=this.value" class="h-16 rounded-2xl bg-white/5 border-2 border-emerald-400/40 text-center text-2xl font-extrabold text-white" />`).join("")}</div>
+      <button onclick="verifyOtp()" class="w-full py-4 rounded-2xl bg-emerald-500 text-slate-950 font-extrabold text-base shadow-lg">Enter Pitch</button>
     </div>`;
   } else if (S.scr==="owner") {
-    const pend = S.db.bookings.filter(b=>b.status.includes("Pending")).length;
-    const rev = S.db.bookings.reduce((s,b)=>s+b.qar,0);
-    h = `<div class="min-h-screen bg-slate-950 text-white px-5 pt-10 pb-12 anim-fd">
+    const pend = S.db.bookings.filter(b=>b.status.includes("Pending")).length, rev = S.db.bookings.reduce((s,b)=>s+b.qar,0);
+    h = `<div class="min-h-screen bg-[#0B0F1A] px-5 pt-10 pb-12 anim-fd">
       <div class="flex items-center justify-between mb-6">
-        <div><span class="text-[10px] font-extrabold tracking-widest text-emerald-400">MANAGER COMMAND CENTER</span><h1 class="text-xl font-extrabold">PANA SPORT ADMIN</h1></div>
+        <div><span class="text-[10px] font-extrabold tracking-widest text-emerald-400">MANAGER COMMAND</span><h1 class="text-xl font-bold">PANA SPORT ADMIN</h1></div>
         <div class="flex gap-2"><button onclick="go('app')" class="px-3 py-2 rounded-xl bg-white/10 text-xs font-extrabold">Player View</button><button onclick="S.owner=false;go('splash')" class="px-3 py-2 rounded-xl bg-rose-500/20 text-rose-300 text-xs font-extrabold">Logout</button></div>
       </div>
       <div class="grid grid-cols-2 gap-3 mb-5">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4"><p class="text-xs text-slate-400">Match Revenue</p><p class="text-2xl font-extrabold text-emerald-400 mt-1">${rev} QR</p></div>
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4"><p class="text-xs text-slate-400">Pending Fawran</p><p class="text-2xl font-extrabold text-amber-400 mt-1">${pend}</p></div>
+        <div class="bg-white/5 border border-white/10 rounded-2xl p-4"><p class="text-xs text-slate-400">Revenue</p><p class="text-2xl font-extrabold text-emerald-400 mt-1">${rev} QR</p></div>
+        <div class="bg-white/5 border border-white/10 rounded-2xl p-4"><p class="text-xs text-slate-400">Pending Fawran</p><p class="text-2xl font-extrabold text-amber-400 mt-1">${pend}</p></div>
       </div>
-      <button onclick="S.newM=true;render()" class="w-full py-3.5 rounded-2xl bg-emerald-500 text-slate-950 font-extrabold text-sm mb-6">+ Publish New Pickup Match</button>
-      <h3 class="text-xs font-extrabold uppercase text-slate-400 mb-3">FAWRAN VERIFICATIONS</h3>
-      <div class="space-y-3 mb-6">${S.db.bookings.map(b=>`<div class="bg-slate-900 border border-slate-800 rounded-2xl p-4"><div class="flex justify-between mb-1"><span class="text-sm font-extrabold">${b.player}</span><span class="text-sm font-extrabold text-emerald-400">${b.qar} QR</span></div><p class="text-xs text-slate-400">${b.mTitle} • ${b.method}</p><div class="flex items-center justify-between mt-3 pt-3 border-t border-slate-800"><span class="text-[11px] font-bold ${b.status.includes('Pending')?'text-amber-400':'text-emerald-400'}">● ${b.status}</span>${b.status.includes('Pending')?`<div class="flex gap-2"><button onclick="actBk('${b.id}',0)" class="px-3 py-1.5 rounded-lg bg-rose-500/20 text-rose-300 text-xs font-extrabold">Decline</button><button onclick="actBk('${b.id}',1)" class="px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-950 text-xs font-extrabold">✓ Approve</button></div>`:''}</div></div>`).join("")}</div>
-      <button onclick="balBibs('m1')" class="w-full py-3.5 rounded-2xl bg-slate-800 border border-slate-700 font-extrabold text-sm mb-2.5">⚡ Auto-Balance Tonight's Bibs</button>
-      <button onclick="copyWA('m1')" class="w-full py-3.5 rounded-2xl bg-[#8A1538] font-extrabold text-sm">📲 Copy Lineup for WhatsApp</button>
+      <button onclick="S.newM=true;render()" class="w-full py-3.5 rounded-2xl bg-emerald-500 text-slate-950 font-extrabold text-sm mb-6">+ Create New Doha Pickup Game</button>
+      <h3 class="text-xs font-extrabold uppercase text-slate-400 mb-3">FAWRAN RECEIPTS</h3>
+      <div class="space-y-3 mb-6">${S.db.bookings.map(b=>`<div class="bg-white/5 border border-white/10 rounded-2xl p-4"><div class="flex justify-between mb-1"><span class="text-sm font-extrabold">${b.player}</span><span class="text-sm font-extrabold text-emerald-400">${b.qar} QR</span></div><p class="text-xs text-slate-400">${b.mTitle} • ${b.method}</p><div class="flex items-center justify-between mt-3 pt-3 border-t border-white/10"><span class="text-[11px] font-bold ${b.status.includes('Pending')?'text-amber-400':'text-emerald-400'}">● ${b.status}</span>${b.status.includes('Pending')?`<div class="flex gap-2"><button onclick="actBk('${b.id}',0)" class="px-3 py-1.5 rounded-lg bg-rose-500/20 text-rose-300 text-xs font-extrabold">Decline</button><button onclick="actBk('${b.id}',1)" class="px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-950 text-xs font-extrabold">✓ Approve</button></div>`:''}</div></div>`).join("")}</div>
+      <button onclick="copyWA('m1')" class="w-full py-3.5 rounded-2xl bg-[#9E1B42] font-extrabold text-sm">📲 Copy Lineup for WhatsApp</button>
     </div>`;
-    if (S.newM) h += `<div class="fixed inset-0 z-50 bg-black/75 flex items-end justify-center"><form onsubmit="addMatch(event)" class="w-full max-w-[430px] bg-slate-900 text-white rounded-t-3xl p-6 anim-up space-y-3"><div class="flex justify-between"><h3 class="text-lg font-extrabold">New Pickup Game</h3><button type="button" onclick="S.newM=false;render()">✕</button></div><input name="t" placeholder="Title (e.g. 8V8 AL SADD NIGHT)" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700 text-sm font-bold" /><div class="grid grid-cols-2 gap-2"><select name="a" class="p-3 rounded-xl bg-slate-800 border border-slate-700 text-sm font-bold"><option>Al Sadd</option><option>Al Waab</option><option>Lusail</option></select><input name="d" placeholder="Fri • 21:00" class="p-3 rounded-xl bg-slate-800 border border-slate-700 text-sm font-bold" /></div><input name="v" placeholder="Pitch Venue" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700 text-sm font-bold" /><div class="grid grid-cols-3 gap-2"><input name="p" type="number" value="35" class="p-3 rounded-xl bg-slate-800 border border-slate-700 text-sm font-bold" /><input name="tot" type="number" value="16" class="p-3 rounded-xl bg-slate-800 border border-slate-700 text-sm font-bold" /><select name="l" class="p-3 rounded-xl bg-slate-800 border border-slate-700 text-sm font-bold"><option>Competitive</option><option>All Levels</option></select></div><button type="submit" class="w-full py-3.5 rounded-2xl bg-emerald-500 text-slate-950 font-extrabold text-sm">Publish Live</button></form></div>`;
+    if (S.newM) h += `<div class="fixed inset-0 z-50 bg-black/80 flex items-end justify-center"><form onsubmit="addMatch(event)" class="w-full max-w-[430px] bg-slate-900 rounded-t-3xl p-6 anim-up space-y-3"><div class="flex justify-between"><h3 class="text-lg font-bold">Publish Pickup Match</h3><button type="button" onclick="S.newM=false;render()">✕</button></div><input name="t" placeholder="Title (e.g. 8V8 NIGHT CLASH)" class="w-full p-3 rounded-xl bg-white/5 border border-white/10 text-sm font-bold" /><div class="grid grid-cols-3 gap-2"><input name="day" placeholder="FRI 20" class="p-3 rounded-xl bg-white/5 border border-white/10 text-sm font-bold" /><input name="tm" placeholder="21:00" class="p-3 rounded-xl bg-white/5 border border-white/10 text-sm font-bold" /><select name="a" class="p-3 rounded-xl bg-slate-800 text-sm font-bold"><option>Al Sadd</option><option>Al Waab</option><option>Lusail</option></select></div><input name="v" placeholder="Pitch Venue Name" class="w-full p-3 rounded-xl bg-white/5 border border-white/10 text-sm font-bold" /><div class="grid grid-cols-2 gap-2"><input name="p" type="number" value="35" class="p-3 rounded-xl bg-white/5 border border-white/10 text-sm font-bold" /><input name="tot" type="number" value="16" class="p-3 rounded-xl bg-white/5 border border-white/10 text-sm font-bold" /></div><button type="submit" class="w-full py-3.5 rounded-2xl bg-emerald-500 text-slate-950 font-extrabold text-sm">Publish Match</button></form></div>`;
   } else {
     const u = S.user;
-    if (S.tab==="stats") {
-      h = `<div class="px-5 pt-10 pb-28 anim-fd">
-        <div class="flex justify-between items-center mb-5"><h2 class="text-xl font-extrabold uppercase">MY STATS</h2><button onclick="S.edit=true;render()" class="text-xs font-extrabold text-[#8A1538]">Edit Profile</button></div>
-        <div class="bg-white rounded-3xl p-4 shadow-sm border border-slate-200/70 flex items-center gap-4 mb-6">
-          <label class="relative cursor-pointer shrink-0"><img src="${u.av}" class="w-24 h-28 rounded-2xl object-cover border border-slate-200" /><span class="absolute bottom-1.5 right-1.5 bg-black/75 text-white text-[10px] font-bold px-2 py-0.5 rounded">📷 Edit</span><input type="file" accept="image/*" onchange="const r=new FileReader();r.onload=e=>{S.user.av=e.target.result;render();msg('Photo updated!')};r.readAsDataURL(this.files[0])" class="hidden" /></label>
-          <div class="min-w-0"><h3 class="text-lg font-extrabold uppercase truncate">${u.name}</h3><p class="text-xs font-bold text-emerald-600 mt-0.5">● Verified Doha Player</p><p class="text-xs text-slate-500 mt-1">${u.pos}, Age ${u.age}</p><span class="inline-block bg-slate-100 px-3 py-1.5 rounded-xl mt-3 text-xs font-extrabold text-[#8A1538]">💳 ${u.bal.toFixed(2)} QR</span></div>
-        </div>
-        <h3 class="text-sm font-extrabold uppercase mb-3">PLAYER DETAILS</h3>
-        <div class="grid grid-cols-2 gap-3 mb-3">
-          <div class="bg-white rounded-2xl p-4 shadow-sm"><p class="text-2xl font-extrabold">🏟️ ${u.st.pl}</p><p class="text-xs text-slate-500 mt-1">Matches Played</p></div>
-          <div class="bg-white rounded-2xl p-4 shadow-sm"><p class="text-2xl font-extrabold">🏅 ${u.st.w}</p><p class="text-xs text-slate-500 mt-1">Matches Won</p></div>
-          <div class="bg-white rounded-2xl p-4 shadow-sm"><p class="text-2xl font-extrabold">📉 ${u.st.l}</p><p class="text-xs text-slate-500 mt-1">Matches Lost</p></div>
-          <div class="bg-white rounded-2xl p-4 shadow-sm"><p class="text-2xl font-extrabold">🏆 ${u.st.motm}</p><p class="text-xs text-slate-500 mt-1">Man of Match</p></div>
-          <div class="bg-white rounded-2xl p-4 shadow-sm"><p class="text-[11px] text-slate-400 font-bold">Nationality</p><p class="text-sm font-extrabold mt-1">${u.flag} ${u.nat}</p></div>
-          <div class="bg-white rounded-2xl p-4 shadow-sm"><p class="text-[11px] text-slate-400 font-bold">Debut</p><p class="text-sm font-extrabold mt-1">${u.debut}</p></div>
-        </div>
-        <div class="bg-gradient-to-r from-[#8A1538] to-[#5C0D25] rounded-3xl p-5 text-white flex justify-between items-center"><div><p class="text-3xl font-extrabold">⚽ ${u.st.g}</p><p class="text-xs font-bold text-white/85 mt-1">Total Goals</p></div><span class="text-xs font-extrabold bg-white/15 px-3 py-1.5 rounded-full">Doha League</span></div>
-      </div>`;
-    } else if (S.tab==="squad") {
-      const m = S.db.matches[0], reds = m.players.filter(p=>p.bib==="Red"), whites = m.players.filter(p=>p.bib==="White");
-      h = `<div class="px-5 pt-10 pb-28 anim-fd">
-        <div class="flex justify-between items-center mb-4"><div><h2 class="text-xl font-extrabold uppercase">SQUAD & BIBS</h2><p class="text-xs text-slate-500">${m.title}</p></div><button onclick="balBibs('${m.id}')" class="px-3.5 py-2 rounded-xl bg-[#8A1538] text-white text-xs font-extrabold">⚡ Balance</button></div>
-        <div class="grid grid-cols-2 gap-3 mb-5">
-          <div class="bg-white rounded-2xl p-3.5 border-t-4 border-[#8A1538] shadow-sm"><h4 class="text-xs font-extrabold text-[#8A1538] mb-2">🔴 MAROON (${reds.length})</h4><div class="space-y-2">${reds.map(p=>`<div class="flex justify-between text-xs bg-slate-50 px-2.5 py-2 rounded-xl font-bold"><span class="truncate">${p.name}</span><span class="text-slate-400">${p.pos}</span></div>`).join("")}</div></div>
-          <div class="bg-white rounded-2xl p-3.5 border-t-4 border-slate-400 shadow-sm"><h4 class="text-xs font-extrabold text-slate-700 mb-2">⚪ WHITE (${whites.length})</h4><div class="space-y-2">${whites.map(p=>`<div class="flex justify-between text-xs bg-slate-50 px-2.5 py-2 rounded-xl font-bold"><span class="truncate">${p.name}</span><span class="text-slate-400">${p.pos}</span></div>`).join("")}</div></div>
-        </div>
-        <button onclick="copyWA('${m.id}')" class="w-full py-3.5 rounded-2xl bg-emerald-600 text-white font-extrabold text-sm">📲 Copy Lineup for WhatsApp</button>
-      </div>`;
-    } else {
-      const sl = SLIDES[S.slide], list = S.area==="All" ? S.db.matches : S.db.matches.filter(m=>m.area===S.area);
-      h = `<div class="px-5 pt-10 pb-28 anim-fd">
-        <div class="flex items-center justify-between mb-5">
-          <div class="flex items-center gap-3 cursor-pointer" onclick="S.tab='stats';render()"><img src="${u.av}" class="w-12 h-12 rounded-full object-cover border-2 border-[#8A1538]" /><div><p class="text-[11px] font-bold text-slate-400">HELLO,</p><h2 class="text-lg font-extrabold uppercase">${u.name.split(" ")[0]}</h2></div></div>
-          <div class="flex gap-2">${S.owner?`<button onclick="go('owner')" class="px-3 py-2 rounded-full bg-[#8A1538] text-white text-[11px] font-extrabold">Manager</button>`:''}<button onclick="S.menu=true;render()" class="w-10 h-10 rounded-full bg-white border border-slate-200 font-bold">•••</button></div>
-        </div>
-        <div class="flex items-center justify-between mb-5">
-          <div><p class="text-xs font-bold text-[#8A1538]">Your Balance</p><p class="text-2xl font-extrabold">${u.bal.toFixed(2)} QR</p></div>
-          <button onclick="S.chk=!S.chk;msg(S.chk?'Checked in for Tonight! ⚽':'Check-in paused')" class="px-3.5 py-2 rounded-full border text-xs font-extrabold ${S.chk?'bg-emerald-600 text-white border-emerald-600':'bg-white text-slate-800 border-slate-200'}">${S.chk?'✓ Ready for Kickoff':'📍 Pitch Check-In'}</button>
-        </div>
-        <div onclick="openBk('${sl.id}')" class="relative rounded-3xl overflow-hidden h-48 mb-6 shadow-lg cursor-pointer bg-slate-900">
-          <img src="${sl.img}" class="w-full h-full object-cover brightness-75" />
-          <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/55 to-transparent"></div>
-          <div class="relative z-10 h-full flex flex-col justify-between p-5 text-white">
-            <div><span class="inline-block text-[10px] font-extrabold bg-emerald-500 text-slate-950 px-2.5 py-0.5 rounded-full mb-2">${sl.tag}</span><h3 class="text-xl font-extrabold leading-tight uppercase whitespace-pre-line">${sl.t}</h3><p class="text-xs text-slate-200 mt-1 max-w-[230px]">${sl.sub}</p></div>
-            <div class="flex items-center justify-between"><span class="text-xs font-extrabold text-emerald-400">${sl.cta}</span><div class="flex gap-1.5" onclick="event.stopPropagation()">${SLIDES.map((_,i)=>`<button onclick="S.slide=${i};render()" class="h-2 rounded-full ${S.slide===i?'w-6 bg-white':'w-2 bg-white/40'}"></button>`).join("")}</div></div>
-          </div>
-        </div>
-        <div class="grid grid-cols-4 gap-2 mb-7 text-center">
-          <button onclick="openBk('m1')" class="flex flex-col items-center gap-1.5"><div class="w-14 h-14 rounded-2xl bg-white shadow-sm flex items-center justify-center text-xl">⚽</div><span class="text-[11px] font-bold">Pickup</span></button>
-          <button onclick="S.coach=true;render()" class="flex flex-col items-center gap-1.5"><div class="w-14 h-14 rounded-2xl bg-white shadow-sm flex items-center justify-center text-xl">🧠</div><span class="text-[11px] font-bold">AI Coach</span></button>
-          <button onclick="copyWA('m1')" class="flex flex-col items-center gap-1.5"><div class="w-14 h-14 rounded-2xl bg-white shadow-sm flex items-center justify-center text-xl">📲</div><span class="text-[11px] font-bold">Lineup</span></button>
-          <button onclick="S.tab='squad';render()" class="flex flex-col items-center gap-1.5"><div class="w-14 h-14 rounded-2xl bg-white shadow-sm flex items-center justify-center text-xl">👕</div><span class="text-[11px] font-bold">Bibs</span></button>
-        </div>
-        <div class="flex justify-between items-center mb-3"><h3 class="text-base font-extrabold uppercase">DOHA PICKUP GAMES</h3><span class="text-[11px] font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-full">● ${list.length} Live</span></div>
-        <div class="flex gap-2 overflow-x-auto no-scrollbar pb-3 mb-2">${["All","Al Sadd","Al Waab","Lusail"].map(a=>`<button onclick="S.area='${a}';render()" class="px-3.5 py-1.5 rounded-full text-xs font-extrabold whitespace-nowrap ${S.area===a?'bg-[#8A1538] text-white':'bg-white text-slate-600 border border-slate-200'}">${a}</button>`).join("")}</div>
-        <div class="space-y-4">${list.map(m=>{const pct=Math.min(100,Math.round(m.taken/m.total*100)),left=m.total-m.taken;return`<div onclick="openBk('${m.id}')" class="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-200/70 cursor-pointer"><div class="relative h-44 bg-slate-900"><img src="${m.img}" class="w-full h-full object-cover" /><div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/20"></div><span class="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-extrabold text-white ${left===0?'bg-rose-600':'bg-[#8A1538]'}">👥 ${m.taken} / ${m.total}</span><span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-black/65 text-white">${left===0?'Waitlist':left+' spots left'}</span>${m.rec?`<span class="absolute bottom-3 left-3 bg-slate-900/85 text-white text-[11px] font-bold px-3 py-1 rounded-full">🔴 HD Recorded</span>`:''}</div><div class="p-4"><div class="flex gap-2 mb-2"><span class="text-[10px] font-extrabold bg-[#8A1538] text-white px-2.5 py-0.5 rounded-full">By PANA SPORT</span><span class="text-[10px] font-extrabold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full">${m.lvl}</span></div><div class="flex justify-between items-center gap-3 mb-3"><div><h4 class="text-base font-extrabold uppercase">${m.title}</h4><p class="text-xs text-slate-500 mt-1">🕒 ${m.date}</p><p class="text-xs text-slate-500">📍 ${m.venue}</p></div><div class="bg-slate-100 rounded-2xl px-3.5 py-2.5 text-center shrink-0"><p class="text-base font-extrabold text-[#8A1538]">${m.price} QR</p><p class="text-[11px] font-bold text-slate-500">${m.dur}</p></div></div><div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden"><div class="h-full ${left===0?'bg-rose-500':'bg-emerald-500'}" style="width:${pct}%"></div></div></div></div>`}).join("")}</div>
-      </div>`;
-    }
 
-    h += `<div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-slate-200 px-8 py-2.5 flex justify-between items-center z-40">
-      <button onclick="S.tab='squad';render()" class="flex flex-col items-center gap-1 ${S.tab==='squad'?'text-[#8A1538]':'text-slate-400'}"><span class="text-base">⇄</span><span class="text-[11px] font-bold">Squad</span></button>
-      <button onclick="S.tab='home';render()" class="-mt-7 w-14 h-14 rounded-full ${S.tab==='home'?'bg-[#8A1538] text-white shadow-lg':'bg-slate-400 text-white'} flex items-center justify-center border-4 border-[#F5F6F8] text-lg">🏠</button>
-      <button onclick="S.tab='stats';render()" class="flex flex-col items-center gap-1 ${S.tab==='stats'?'text-[#8A1538]':'text-slate-400'}"><span class="text-base">📊</span><span class="text-[11px] font-bold">My Stats</span></button>
+    // Top Sticky Doha Stadium Header
+    h += `<div class="px-5 pt-9 pb-4 flex items-center justify-between bg-[#0B0F1A]/90 backdrop-blur-md sticky top-0 z-30 border-b border-white/5">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-[#9E1B42] flex items-center justify-center font-extrabold text-xs shadow-lg shadow-[#9E1B42]/40">PS</div>
+        <div><p class="text-[10px] font-extrabold tracking-widest text-emerald-400">DOHA • 24°C CLEAR</p><h2 class="text-sm font-bold tracking-wide">PANA SPORT</h2></div>
+      </div>
+      <div class="flex items-center gap-2">
+        ${S.owner ? `<button onclick="go('owner')" class="px-3 py-1.5 rounded-full bg-[#9E1B42] text-[11px] font-extrabold">Admin</button>` : ''}
+        <button onclick="S.tab='card';render()" class="flex items-center gap-2 bg-white/5 border border-white/10 pl-1.5 pr-3 py-1 rounded-full">
+          <img src="${u.av}" class="w-7 h-7 rounded-full object-cover" />
+          <span class="text-xs font-extrabold text-emerald-400">${u.ovr} OVR</span>
+        </button>
+      </div>
     </div>`;
 
-    if (S.coach) {
-      const rec = S.db.matches.find(m=>m.area===S.cArea && m.taken<m.total) || S.db.matches[0];
-      h += `<div class="fixed inset-0 z-50 bg-black/60 flex items-end justify-center"><div class="w-full max-w-[430px] bg-white rounded-t-3xl p-6 anim-up space-y-4">
-        <div class="flex justify-between items-center"><h3 class="text-lg font-extrabold">🧠 PANA AI Match Coach</h3><button onclick="S.coach=false;render()" class="w-8 h-8 rounded-full bg-slate-100 font-bold">✕</button></div>
-        <div class="grid grid-cols-3 gap-2">${["Al Sadd","Al Waab","Lusail"].map(a=>`<button onclick="S.cArea='${a}';render()" class="py-2 rounded-xl text-xs font-extrabold border ${S.cArea===a?'bg-[#8A1538] text-white border-[#8A1538]':'bg-slate-50 border-slate-200'}">${a}</button>`).join("")}</div>
-        <div class="p-4 rounded-2xl bg-slate-900 text-white"><span class="text-[10px] font-extrabold text-emerald-400">BEST MATCH FOR ${u.pos.toUpperCase()}</span><h4 class="text-base font-extrabold mt-1">${rec.title}</h4><p class="text-xs text-slate-300 mt-1">📍 ${rec.venue} • 🕒 ${rec.date}</p></div>
-        <button onclick="S.coach=false;openBk('${rec.id}')" class="w-full py-3.5 rounded-2xl bg-[#8A1538] text-white font-extrabold text-sm">Book Recommended (${rec.price} QR)</button>
-      </div></div>`;
-    }
+    if (S.tab==="matches") {
+      const list = S.day==="ALL" ? S.db.matches : S.db.matches.filter(m=>m.day===S.day);
+      h += `<div class="px-5 pt-4 pb-28 anim-fd">
+        <!-- Next Kickoff Radar Banner -->
+        <div class="rounded-3xl bg-gradient-to-r from-[#9E1B42] via-[#7A1232] to-slate-900 p-4 mb-5 border border-white/10 shadow-xl flex items-center justify-between">
+          <div>
+            <span class="text-[10px] font-extrabold uppercase tracking-wider bg-black/30 px-2.5 py-0.5 rounded-full text-emerald-300">⚡ TONIGHT'S FEATURED</span>
+            <h3 class="text-lg font-bold mt-1.5">8V8 FLOODLIT CLASH</h3>
+            <p class="text-xs text-white/80">Al Sadd • 20:30 • 6-for-5 Promo Active</p>
+          </div>
+          <button onclick="openBk('m1')" class="px-4 py-3 rounded-2xl bg-emerald-400 text-slate-950 font-extrabold text-xs shrink-0 shadow-lg">Join 35 QR</button>
+        </div>
 
-    if (S.bkMatch) {
-      const m = S.bkMatch, full = m.taken>=m.total, tot = (S.size===6?5:S.size)*m.price;
-      h += `<div class="fixed inset-0 z-50 bg-black/60 flex items-end justify-center"><div class="w-full max-w-[430px] bg-white rounded-t-3xl p-5 max-h-[90vh] overflow-y-auto anim-up">
-        <div class="flex justify-between items-center pb-3 border-b border-slate-100"><div><span class="text-[10px] font-extrabold text-[#8A1538]">${m.area} • ${m.dur}</span><h3 class="text-lg font-extrabold">${m.title}</h3></div><button onclick="S.bkMatch=null;render()" class="w-9 h-9 rounded-full bg-slate-100 font-bold">✕</button></div>
-        ${full ? `<div class="my-5 p-4 rounded-2xl bg-amber-50 border border-amber-200 text-center"><p class="text-sm font-extrabold text-amber-900">Match Full (${m.total}/${m.total})</p></div><button onclick="confirmBk()" class="w-full py-4 rounded-2xl bg-[#8A1538] text-white font-extrabold text-sm">Join Waitlist</button>` : `
-        <div class="mt-4"><div class="flex justify-between mb-2"><span class="text-xs font-extrabold uppercase">Players</span><span class="text-[11px] font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full">6 = Pay for 5!</span></div><div class="grid grid-cols-6 gap-2">${[1,2,3,4,5,6].map(n=>`<button onclick="S.size=${n};render()" class="py-2.5 rounded-xl font-extrabold text-sm border ${S.size===n?'bg-[#8A1538] text-white border-[#8A1538]':'bg-slate-50 border-slate-200'}">${n}</button>`).join("")}</div></div>
-        <div class="mt-5"><span class="text-xs font-extrabold uppercase block mb-2">Payment Method</span><div class="grid grid-cols-2 gap-2.5"><button onclick="S.pay='fawran';render()" class="p-3 rounded-2xl border text-left ${S.pay==='fawran'?'border-[#8A1538] bg-[#8A1538]/5':'border-slate-200'}"><p class="text-xs font-extrabold">⚡ Fawran Instant</p><p class="text-[11px] text-slate-500">Upload receipt</p></button><button onclick="S.pay='cash';render()" class="p-3 rounded-2xl border text-left ${S.pay==='cash'?'border-[#8A1538] bg-[#8A1538]/5':'border-slate-200'}"><p class="text-xs font-extrabold">💵 Cash at Pitch</p><p class="text-[11px] text-slate-500">Pay 15m early</p></button></div></div>
-        ${S.pay==="fawran"?`<div class="mt-4 p-4 rounded-2xl bg-slate-900 text-white"><div class="flex justify-between text-xs mb-1.5"><span class="text-slate-400">Fawran Alias</span><span class="font-extrabold text-emerald-400">${S.db.alias}</span></div><div class="flex justify-between text-xs mb-3"><span class="text-slate-400">Mobile</span><span class="font-extrabold">${S.db.num}</span></div><label class="block w-full py-3 px-4 rounded-xl border border-dashed ${S.recOk?'border-emerald-400 bg-emerald-500/15 text-emerald-300':'border-white/30 bg-white/5'} text-center text-xs font-extrabold cursor-pointer">${S.recOk?`✅ Attached: ${S.recName}`:'📸 Upload Fawran Receipt'}<input type="file" accept="image/*" onchange="if(this.files[0]){S.recOk=true;S.recName=this.files[0].name;render()}" class="hidden" /></label></div>`:''}
-        <div class="mt-5 pt-4 border-t border-slate-100 flex justify-between items-center"><div><p class="text-[11px] font-bold text-slate-400">Total Due</p><p class="text-2xl font-extrabold">${tot} QR</p></div><button onclick="confirmBk()" class="px-6 py-4 rounded-2xl bg-[#8A1538] text-white font-extrabold text-sm shadow-lg">Confirm Spot</button></div>`}
-      </div></div>`;
-    }
+        <!-- Matchday Date Strip -->
+        <div class="flex gap-2 overflow-x-auto no-scrollbar mb-5">
+          ${["ALL","FRI 13","SAT 14","SUN 15"].map(d=>`<button onclick="S.day='${d}';render()" class="px-4 py-2 rounded-2xl text-xs font-extrabold whitespace-nowrap transition ${S.day===d?'bg-emerald-400 text-slate-950':'bg-white/5 text-slate-400 border border-white/10'}">${d==="ALL"?"All Nights":d}</button>`).join("")}
+        </div>
 
-    if (S.menu) h += `<div class="fixed inset-0 z-50 bg-[#F5F6F8] px-6 pt-12 pb-8 overflow-y-auto anim-up"><button onclick="S.menu=false;render()" class="w-10 h-10 rounded-full bg-white border border-slate-200 font-bold mb-5">✕</button><div class="bg-gradient-to-br from-[#8A1538] to-[#5C0D25] rounded-3xl p-6 text-white shadow-lg mb-6"><p class="text-xs text-white/80 font-bold">Your Balance</p><p class="text-3xl font-extrabold mt-1">${u.bal.toFixed(2)} QR</p><button onclick="S.user.bal+=35;S.menu=false;msg('+35 QR Top-Up Added!')" class="w-full mt-5 py-3 rounded-xl bg-white text-[#8A1538] font-extrabold text-xs">+ Top up (Fawran)</button></div><div class="space-y-3"><button onclick="S.menu=false;S.tab='stats';render()" class="w-full bg-white p-4 rounded-2xl border border-slate-200 flex justify-between font-extrabold text-sm"><span>👤 My Profile & Photo</span><span>›</span></button>${S.owner?`<button onclick="S.menu=false;go('owner')" class="w-full bg-white p-4 rounded-2xl border border-slate-200 flex justify-between font-extrabold text-sm text-[#8A1538]"><span>🛡️ Manager Dashboard</span><span>›</span></button>`:''}<button onclick="S.menu=false;S.owner=false;go('splash')" class="w-full bg-white p-4 rounded-2xl border border-slate-200 flex justify-between font-extrabold text-sm text-rose-600"><span>🚪 Sign Out</span><span>›</span></button></div></div>`;
-
-    if (S.edit) h += `<div class="fixed inset-0 z-50 bg-black/60 flex items-end justify-center"><form onsubmit="saveProf(event)" class="w-full max-w-[430px] bg-white rounded-t-3xl p-6 anim-up space-y-4"><div class="flex justify-between"><h3 class="text-lg font-extrabold">Edit Player Card</h3><button type="button" onclick="S.edit=false;render()">✕</button></div><input name="fn" value="${u.name}" class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold" /><div class="grid grid-cols-2 gap-3"><select name="pos" class="p-3 rounded-xl border border-slate-200 text-sm font-bold">${["Goalkeeper","Defender","Midfielder","Forward","Joker"].map(p=>`<option ${u.pos===p?'selected':''}>${p}</option>`).join("")}</select><input name="age" type="number" value="${u.age}" class="p-3 rounded-xl border border-slate-200 text-sm font-bold" /></div><select name="nat" class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold">${["Qatar","Egypt","Jordan","Morocco","Ethiopia","India","UK","Brazil"].map(c=>`<option ${u.nat===c?'selected':''}>${c}</option>`).join("")}</select><button type="submit" class="w-full py-3.5 rounded-2xl bg-[#8A1538] text-white font-extrabold text-sm">Save Profile</button></form></div>`;
-  }
-
-  root.innerHTML = h + (S.toast ? `<div class="fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white text-xs font-extrabold px-4 py-3 rounded-2xl shadow-xl anim-fd">${S.toast}</div>` : "");
-}
-render();
-</script>
-</body>
-</html>
-
+        <!-- Dark Stadium Match Cards -->
+        <div class="space-y-4">
+          ${list.map(m => {
+            const left = m.total - m.taken, pct = Math.round(m.taken/m.total*100);
+            return `<div onclick="openBk('${m.id}')" class="rounded-3xl bg-[#121827] border border-white/10 overflow-hidden active:scale-[0.99] transition cursor-pointer">
+              <div class="relative h-40">
+                <img src="${m.img}" class="w-full h-full object-cover brightness-90" />
+                <div class="absolute inset-0 bg-gradient-to-t from-[#121827] via-transparent to-black/30"></div>
+                <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-black/70 backdrop-blur-xs text-[11px] font-extrabold text-emerald-400">${m.day} • ${m.time}</span>
+                <span class="absolute top-3 right-3 px-2.5 py-1 rounded-lg ${left===0?'bg-rose-600':'bg-[#9E1B42]'} text-[11px] font-extrabold">${left===0?'FULL':left+' LEFT'}</span>
+              </div>
+              <div class="p-4 pt-2">
+                <div class="flex justify-between items-star
