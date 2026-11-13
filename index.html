@@ -7,517 +7,463 @@
   <meta name="theme-color" content="#8A1538" />
   <title>PANA SPORT — Doha Pickup Football</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    * { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background-color: #0F172A; margin: 0; padding: 0; }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    @keyframes slideUp { from { transform: translateY(100%); opacity: 0.6; } to { transform: translateY(0); opacity: 1; } }
+    * { font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: #0F172A; margin: 0; }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-    .animate-sheet { animation: slideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1); }
+    .animate-sheet { animation: slideUp 0.26s ease-out; }
     .animate-fade { animation: fadeIn 0.22s ease-out; }
   </style>
 </head>
 <body class="flex justify-center min-h-screen bg-slate-950">
-
 <div id="app" class="w-full max-w-[430px] min-h-screen bg-[#F7F7F9] text-slate-900 relative overflow-x-hidden shadow-2xl flex flex-col"></div>
 
 <script>
-// ==========================================
-// 1. MANAGER EMAIL CONFIGURATION
-// ==========================================
 const OWNER_EMAIL = "creatbrook@gmail.com";
 
-// ==========================================
-// 2. AUTHENTICATED PITCH & PLAYER PHOTOGRAPHY
-// ==========================================
 const PHOTOS = {
-  splashHero: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=900&q=85",
-  promoBanner: "https://images.unsplash.com/photo-1518605368461-1ee7e33f28c4?auto=format&fit=crop&w=900&q=85",
-  pitchNight1: "https://images.unsplash.com/photo-1529900748604-07564a03e7a6?auto=format&fit=crop&w=900&q=85",
-  pitchNight2: "https://images.unsplash.com/photo-1459865264687-595d652de67e?auto=format&fit=crop&w=900&q=85",
-  pitchNight3: "https://images.unsplash.com/photo-1551958219-acbc608c6377?auto=format&fit=crop&w=900&q=85",
-  defaultAvatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=85"
+  splash: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=900&q=85",
+  promo: "https://images.unsplash.com/photo-1518605368461-1ee7e33f28c4?auto=format&fit=crop&w=900&q=85",
+  p1: "https://images.unsplash.com/photo-1529900748604-07564a03e7a6?auto=format&fit=crop&w=900&q=85",
+  p2: "https://images.unsplash.com/photo-1459865264687-595d652de67e?auto=format&fit=crop&w=900&q=85",
+  p3: "https://images.unsplash.com/photo-1551958219-acbc608c6377?auto=format&fit=crop&w=900&q=85",
+  avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=85"
 };
 
-// ==========================================
-// 3. INITIAL APP DATA (QATAR PICKUP FOCUS)
-// ==========================================
 const DEFAULT_DATA = {
-  organizer: {
-    name: "PANA SPORT QATAR",
-    fawranAlias: "PANASPORT",
-    fawranNumber: "+974 5512 8890",
-    bankName: "QNB (Fawran Instant)"
-  },
+  fawranAlias: "PANASPORT",
+  fawranNumber: "+974 5512 8890",
   matches: [
     {
-      id: "m1",
-      title: "8v8 FLOODLIT PICKUP",
-      venue: "Al Sadd Sports Complex, Doha",
-      area: "Al Sadd",
-      dateLabel: "Tonight • 20:30",
-      duration: "90 min",
-      priceQAR: 35,
-      spotsTotal: 16,
-      spotsTaken: 13,
-      recorded: true,
-      level: "Competitive",
-      image: PHOTOS.pitchNight1,
+      id: "m1", title: "8v8 FLOODLIT PICKUP", venue: "Al Sadd Sports Complex, Doha", area: "Al Sadd",
+      date: "Tonight • 20:30", duration: "90 min", price: 35, total: 16, taken: 13, recorded: true, level: "Competitive", img: PHOTOS.p1,
       players: [
-        { name: "Tariq Al-Mannai", pos: "MID", rating: 88, status: "Confirmed", bib: "Red" },
-        { name: "Yousef K.", pos: "FWD", rating: 86, status: "Confirmed", bib: "White" },
-        { name: "Hamad Al-Thani", pos: "DEF", rating: 85, status: "Confirmed", bib: "Red" },
-        { name: "Omar N.", pos: "GK", rating: 89, status: "Confirmed", bib: "White" },
-        { name: "Khalid M.", pos: "MID", rating: 82, status: "Confirmed", bib: "Red" },
-        { name: "Faisal R.", pos: "DEF", rating: 80, status: "Confirmed", bib: "White" }
+        { name: "Tariq Al-Mannai", pos: "MID", rating: 88, bib: "Red" },
+        { name: "Yousef K.", pos: "FWD", rating: 86, bib: "White" },
+        { name: "Hamad Al-Thani", pos: "DEF", rating: 85, bib: "Red" },
+        { name: "Omar N.", pos: "GK", rating: 89, bib: "White" },
+        { name: "Khalid M.", pos: "MID", rating: 82, bib: "Red" },
+        { name: "Faisal R.", pos: "DEF", rating: 80, bib: "White" }
       ],
       waitlist: ["Bader S."]
     },
     {
-      id: "m2",
-      title: "7v7 OPEN TURF NIGHT",
-      venue: "Aspire Zone Pitch 4, Al Waab",
-      area: "Al Waab",
-      dateLabel: "Tomorrow • 19:00",
-      duration: "60 min",
-      priceQAR: 30,
-      spotsTotal: 14,
-      spotsTaken: 10,
-      recorded: true,
-      level: "All Levels",
-      image: PHOTOS.pitchNight2,
+      id: "m2", title: "7v7 OPEN TURF NIGHT", venue: "Aspire Zone Pitch 4, Al Waab", area: "Al Waab",
+      date: "Tomorrow • 19:00", duration: "60 min", price: 30, total: 14, taken: 10, recorded: true, level: "All Levels", img: PHOTOS.p2,
       players: [
-        { name: "Nasser A.", pos: "FWD", rating: 87, status: "Confirmed", bib: "Red" },
-        { name: "Sami H.", pos: "MID", rating: 84, status: "Confirmed", bib: "White" }
+        { name: "Nasser A.", pos: "FWD", rating: 87, bib: "Red" },
+        { name: "Sami H.", pos: "MID", rating: 84, bib: "White" }
       ],
       waitlist: []
     },
     {
-      id: "m3",
-      title: "9v9 LUSAIL STADIUM TURF",
-      venue: "Lusail Marina Fields, Doha",
-      area: "Lusail",
-      dateLabel: "Sun, 15 Nov • 21:00",
-      duration: "90 min",
-      priceQAR: 40,
-      spotsTotal: 18,
-      spotsTaken: 18,
-      recorded: false,
-      level: "High Tempo",
-      image: PHOTOS.pitchNight3,
-      players: [
-        { name: "Rashid K.", pos: "DEF", rating: 88, status: "Confirmed", bib: "Red" }
-      ],
+      id: "m3", title: "9v9 LUSAIL STADIUM TURF", venue: "Lusail Marina Fields, Doha", area: "Lusail",
+      date: "Sun, 15 Nov • 21:00", duration: "90 min", price: 40, total: 18, taken: 18, recorded: false, level: "High Tempo", img: PHOTOS.p3,
+      players: [{ name: "Rashid K.", pos: "DEF", rating: 88, bib: "Red" }],
       waitlist: ["Zaid M.", "Ali H."]
     }
   ],
   bookings: [
-    {
-      id: "BK-9041",
-      matchId: "m1",
-      matchTitle: "8v8 FLOODLIT PICKUP",
-      playerName: "Jassim Al-Kuwari",
-      phone: "+974 6641 2209",
-      groupSize: 1,
-      totalQAR: 35,
-      method: "Fawran Transfer",
-      status: "Pending Verification",
-      timestamp: "4 mins ago",
-      receiptAttached: true
-    }
+    { id: "BK-9041", matchId: "m1", matchTitle: "8v8 FLOODLIT PICKUP", playerName: "Jassim Al-Kuwari", size: 1, totalQAR: 35, method: "Fawran Transfer", status: "Pending Verification" }
   ]
 };
 
-// ==========================================
-// 4. STATE MANAGEMENT & ROLE DETECTION
-// ==========================================
 let state = {
-  screen: "splash", // splash | auth | otp | app | owner
-  authMode: "phone", // phone | email
-  authInput: "",
-  isOwnerSession: false,
-  otpDigits: ["7", "4", "9", "2"],
-  activeTab: "home", // home | stats | squad
-  bookingSheetMatch: null,
-  groupSize: 1,
-  payMethod: "fawran",
-  receiptUploaded: false,
-  receiptFileName: "",
-  showAccountMenu: false,
-  showEditProfile: false,
-  toast: null,
+  screen: "splash", authMode: "phone", authInput: "", isOwner: false, otp: ["7", "4", "9", "2"],
+  tab: "home", bookingMatch: null, size: 1, pay: "fawran", receiptOk: false, receiptName: "",
+  menuOpen: false, editOpen: false, toast: null,
   user: {
-    name: "Tariq Al-Kuwari",
-    phone: "+974 5589 4321",
-    email: "",
-    position: "Midfielder",
-    age: 26,
-    nationality: "Qatar",
-    flag: "🇶🇦",
-    debut: "NOV, 2026",
-    avatar: PHOTOS.defaultAvatar,
-    walletQAR: 70.00,
-    stats: {
-      played: 14,
-      won: 9,
-      lost: 5,
-      motm: 3,
-      goals: 11
-    }
+    name: "Tariq Al-Kuwari", phone: "+974 5589 4321", pos: "Midfielder", age: 26,
+    nat: "Qatar", flag: "🇶🇦", debut: "NOV, 2026", avatar: PHOTOS.avatar, wallet: 70,
+    stats: { played: 14, won: 9, lost: 5, motm: 3, goals: 11 }
   },
-  data: JSON.parse(localStorage.getItem("panasport_v3_data")) || DEFAULT_DATA
+  data: JSON.parse(localStorage.getItem("panasport_v4")) || DEFAULT_DATA
 };
 
-function saveData() {
-  localStorage.setItem("panasport_v3_data", JSON.stringify(state.data));
-}
+const save = () => localStorage.setItem("panasport_v4", JSON.stringify(state.data));
+const toast = (m) => { state.toast = m; render(); setTimeout(() => { state.toast = null; render(); }, 2600); };
+const go = (s) => { state.screen = s; window.scrollTo(0, 0); render(); };
 
-function showToast(msg) {
-  state.toast = msg;
-  render();
-  setTimeout(() => {
-    state.toast = null;
-    render();
-  }, 2800);
-}
-
-function isManagerEmail(email) {
-  const clean = (email || "").trim().toLowerCase();
-  const target = (OWNER_EMAIL || "").trim().toLowerCase();
-  return clean.length > 0 && clean === target;
-}
-
-// ==========================================
-// 5. ACTIONS
-// ==========================================
-function goScreen(s) {
-  state.screen = s;
-  window.scrollTo(0, 0);
-  render();
-}
-
-function handleAuthContinue() {
-  const val = state.authInput.trim();
-  if (!val) {
-    showToast(state.authMode === "phone" ? "Please enter your Qatar phone number" : "Please enter your email address");
-    return;
-  }
-
+function handleAuth() {
+  const v = state.authInput.trim();
+  if (!v) return toast(state.authMode === "phone" ? "Enter your phone number" : "Enter your email");
   if (state.authMode === "phone") {
-    state.user.phone = "+974 " + val.replace(/^\+974\s*/, "");
-    state.isOwnerSession = false;
+    state.user.phone = "+974 " + v.replace(/^\+974\s*/, "");
+    state.isOwner = false;
   } else {
-    state.user.email = val;
-    state.isOwnerSession = isManagerEmail(val);
-    if (!state.isOwnerSession) {
-      const prefix = val.split("@")[0];
-      state.user.name = prefix.charAt(0).toUpperCase() + prefix.slice(1);
-    }
+    state.isOwner = v.toLowerCase() === OWNER_EMAIL.toLowerCase();
+    if (!state.isOwner) state.user.name = v.split("@")[0].toUpperCase();
   }
-  goScreen("otp");
+  go("otp");
 }
 
-function verifyOtpAndEnter() {
-  if (state.isOwnerSession) {
-    goScreen("owner");
-    showToast("Manager Verified — Welcome to PANA SPORT Admin!");
-  } else {
-    goScreen("app");
-    showToast("Welcome to PANA SPORT Doha!");
-  }
+function verifyOtp() {
+  if (state.isOwner) { go("owner"); toast("Manager Verified — Welcome!"); }
+  else { go("app"); toast("Welcome to PANA SPORT Doha!"); }
 }
 
-function openBooking(matchId) {
-  const m = state.data.matches.find(x => x.id === matchId);
-  if (!m) return;
-  state.bookingSheetMatch = m;
-  state.groupSize = 1;
-  state.payMethod = "fawran";
-  state.receiptUploaded = false;
-  state.receiptFileName = "";
+function openBook(id) {
+  state.bookingMatch = state.data.matches.find(m => m.id === id);
+  state.size = 1; state.pay = "fawran"; state.receiptOk = false; state.receiptName = "";
   render();
-}
-
-function setGroupSize(sz) {
-  state.groupSize = sz;
-  render();
-}
-
-function calcTotal(price, size) {
-  const payable = size === 6 ? 5 : size;
-  return payable * price;
-}
-
-function handleReceiptPick(e) {
-  const file = e.target.files[0];
-  if (file) {
-    state.receiptUploaded = true;
-    state.receiptFileName = file.name;
-    render();
-  }
-}
-
-function handleAvatarPick(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(ev) {
-    state.user.avatar = ev.target.result;
-    render();
-    showToast("Player photo updated!");
-  };
-  reader.readAsDataURL(file);
 }
 
 function submitBooking() {
-  const m = state.bookingSheetMatch;
+  const m = state.bookingMatch;
   if (!m) return;
-  const isFull = m.spotsTaken >= m.spotsTotal;
-  if (isFull) {
-    m.waitlist.push(state.user.name);
-    saveData();
-    state.bookingSheetMatch = null;
-    showToast("Added to priority waitlist!");
-    return;
+  if (m.taken >= m.total) {
+    m.waitlist.push(state.user.name); save(); state.bookingMatch = null;
+    return toast("Joined priority waitlist!");
   }
-  if (state.payMethod === "fawran" && !state.receiptUploaded) {
-    showToast("Please upload your Fawran receipt screenshot first");
-    return;
-  }
-
-  const total = calcTotal(m.priceQAR, state.groupSize);
-  const newBk = {
-    id: "BK-" + Math.floor(1000 + Math.random() * 9000),
-    matchId: m.id,
-    matchTitle: m.title,
-    playerName: state.user.name + (state.groupSize > 1 ? ` (+${state.groupSize - 1} Friends)` : ""),
-    phone: state.user.phone,
-    groupSize: state.groupSize,
-    totalQAR: total,
-    method: state.payMethod === "fawran" ? "Fawran Transfer" : "Cash at Pitch",
-    status: state.payMethod === "fawran" ? "Pending Verification" : "Confirmed (Cash)",
-    timestamp: "Just now",
-    receiptAttached: state.receiptUploaded
-  };
-
-  state.data.bookings.unshift(newBk);
-  m.spotsTaken = Math.min(m.spotsTotal, m.spotsTaken + state.groupSize);
-  m.players.push({
-    name: state.user.name,
-    pos: state.user.position.slice(0, 3).toUpperCase(),
-    rating: 86,
-    status: newBk.status,
-    bib: m.players.length % 2 === 0 ? "Red" : "White"
+  if (state.pay === "fawran" && !state.receiptOk) return toast("Upload Fawran receipt screenshot first");
+  const totalQAR = (state.size === 6 ? 5 : state.size) * m.price;
+  state.data.bookings.unshift({
+    id: "BK-" + Math.floor(1000 + Math.random() * 9000), matchId: m.id, matchTitle: m.title,
+    playerName: state.user.name + (state.size > 1 ? ` (+${state.size - 1})` : ""),
+    size: state.size, totalQAR, method: state.pay === "fawran" ? "Fawran Transfer" : "Cash at Pitch",
+    status: state.pay === "fawran" ? "Pending Verification" : "Confirmed (Cash)"
   });
-
-  saveData();
-  state.bookingSheetMatch = null;
-  showToast(state.payMethod === "fawran" ? "Receipt sent to organizer!" : "Spot reserved! Pay cash at pitch.");
+  m.taken = Math.min(m.total, m.taken + state.size);
+  m.players.push({ name: state.user.name, pos: state.user.pos.slice(0, 3).toUpperCase(), rating: 86, bib: m.players.length % 2 === 0 ? "Red" : "White" });
+  save(); state.bookingMatch = null;
+  toast(state.pay === "fawran" ? "Receipt sent for approval!" : "Spot reserved! Pay cash at pitch.");
 }
 
-function approveBooking(id) {
-  const bk = state.data.bookings.find(b => b.id === id);
-  if (bk) {
-    bk.status = "Approved & Paid";
-    saveData();
-    showToast(`Approved ${bk.playerName}`);
+function approveBk(id) {
+  const b = state.data.bookings.find(x => x.id === id);
+  if (b) { b.status = "Approved & Paid"; save(); toast(`Approved ${b.playerName}`); }
+}
+
+function rejectBk(id) {
+  const i = state.data.bookings.findIndex(x => x.id === id);
+  if (i > -1) {
+    const b = state.data.bookings[i];
+    const m = state.data.matches.find(x => x.id === b.matchId);
+    if (m) m.taken = Math.max(0, m.taken - b.size);
+    state.data.bookings.splice(i, 1); save(); toast("Declined & spot reopened");
   }
 }
 
-function rejectBooking(id) {
-  const idx = state.data.bookings.findIndex(b => b.id === id);
-  if (idx > -1) {
-    const bk = state.data.bookings[idx];
-    const m = state.data.matches.find(x => x.id === bk.matchId);
-    if (m) m.spotsTaken = Math.max(0, m.spotsTaken - bk.groupSize);
-    state.data.bookings.splice(idx, 1);
-    saveData();
-    showToast("Booking declined & spot reopened");
-  }
-}
-
-function autoBalanceBibs(matchId) {
-  const m = state.data.matches.find(x => x.id === matchId);
+function balanceBibs(id) {
+  const m = state.data.matches.find(x => x.id === id);
   if (!m) return;
-  const sorted = [...m.players].sort((a, b) => b.rating - a.rating);
-  sorted.forEach((p, idx) => {
-    p.bib = (idx % 4 === 0 || idx % 4 === 3) ? "Red" : "White";
-  });
-  m.players = sorted;
-  saveData();
-  showToast("Teams balanced by rating (Red vs White)!");
+  m.players.sort((a, b) => b.rating - a.rating).forEach((p, i) => p.bib = (i % 4 === 0 || i % 4 === 3) ? "Red" : "White");
+  save(); toast("Bibs auto-balanced by rating!");
 }
 
-function generateWhatsAppLineup(matchId) {
-  const m = state.data.matches.find(x => x.id === matchId) || state.data.matches[0];
-  const reds = m.players.filter(p => p.bib === "Red").map((p, i) => `${i + 1}. ${p.name}`).join("\n") || "1. Open Spot";
-  const whites = m.players.filter(p => p.bib === "White").map((p, i) => `${i + 1}. ${p.name}`).join("\n") || "1. Open Spot";
-  return `⚽ *PANA SPORT QATAR — MATCH LINEUP*\n🏟️ *${m.title}*\n📍 ${m.venue}\n🕒 ${m.dateLabel} | 💰 ${m.priceQAR} QAR\n\n🔴 *TEAM MAROON / RED*\n${reds}\n\n⚪ *TEAM WHITE*\n${whites}\n\n📲 Book remaining spots: https://yoyojaye.github.io/Panasport/`;
+function copyLineup(id) {
+  const m = state.data.matches.find(x => x.id === id) || state.data.matches[0];
+  const r = m.players.filter(p => p.bib === "Red").map((p, i) => `${i + 1}. ${p.name}`).join("\n") || "1. Open";
+  const w = m.players.filter(p => p.bib === "White").map((p, i) => `${i + 1}. ${p.name}`).join("\n") || "1. Open";
+  navigator.clipboard?.writeText(`⚽ *PANA SPORT QATAR*\n🏟️ *${m.title}*\n📍 ${m.venue} | 🕒 ${m.date}\n\n🔴 *TEAM MAROON*\n${r}\n\n⚪ *TEAM WHITE*\n${w}\n\n📲 Join: https://yoyojaye.github.io/Panasport/`);
+  toast("WhatsApp lineup copied!");
 }
 
-function copyWhatsAppText(matchId) {
-  const txt = generateWhatsAppLineup(matchId);
-  navigator.clipboard?.writeText(txt);
-  showToast("WhatsApp lineup copied to clipboard!");
-}
-
-function saveProfileChanges(e) {
+function saveProfile(e) {
   e.preventDefault();
-  const form = e.target;
-  state.user.name = form.fullname.value.trim() || state.user.name;
-  state.user.position = form.position.value;
-  state.user.age = parseInt(form.age.value) || 25;
-  state.user.nationality = form.nationality.value;
-  const flags = { "Qatar": "🇶🇦", "Egypt": "🇪🇬", "Jordan": "🇯🇴", "Morocco": "🇲🇦", "Ethiopia": "🇪🇹", "India": "🇮🇳", "UK": "🇬🇧", "Brazil": "🇧🇷" };
-  state.user.flag = flags[state.user.nationality] || "🇶🇦";
-  state.showEditProfile = false;
-  showToast("Player card saved!");
+  const f = e.target;
+  state.user.name = f.fn.value.trim() || state.user.name;
+  state.user.pos = f.pos.value;
+  state.user.age = parseInt(f.age.value) || 25;
+  state.user.nat = f.nat.value;
+  const fl = { Qatar: "🇶🇦", Egypt: "🇪🇬", Jordan: "🇯🇴", Morocco: "🇲🇦", Ethiopia: "🇪🇹", India: "🇮🇳", UK: "🇬🇧", Brazil: "🇧🇷" };
+  state.user.flag = fl[state.user.nat] || "🇶🇦";
+  state.editOpen = false; toast("Player card updated!");
 }
 
-// ==========================================
-// 6. VIEWS
-// ==========================================
-function renderSplash() {
-  return `
-    <div class="relative min-h-screen w-full flex flex-col justify-between overflow-hidden bg-slate-950 text-white">
-      <img src="${PHOTOS.splashHero}" alt="Doha Night Football" class="absolute inset-0 w-full h-full object-cover object-center scale-105 brightness-90" />
-      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/20"></div>
+function render() {
+  const root = document.getElementById("app");
+  let html = "";
 
-      <!-- Top Brand Pill -->
-      <div class="relative z-10 flex items-center justify-between px-6 pt-12">
-        <div class="flex items-center gap-2.5 bg-black/40 backdrop-blur-md border border-white/15 px-3.5 py-2 rounded-full">
-          <div class="w-7 h-7 rounded-full bg-[#8A1538] flex items-center justify-center font-extrabold text-xs tracking-tighter text-white shadow">PS</div>
-          <span class="text-xs font-extrabold tracking-widest uppercase">PANA SPORT</span>
-        </div>
-      </div>
-
-      <!-- Bottom Hero Copy & Continue CTA -->
-      <div class="relative z-10 px-6 pb-10 pt-20 animate-fade">
-        <div class="inline-flex items-center gap-2 bg-[#8A1538] text-white text-[11px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-md mb-4 shadow-lg">
-          <span>🇶🇦 DOHA PICKUP FOOTBALL</span>
-        </div>
-
-        <h1 class="text-[34px] leading-[1.06] font-extrabold tracking-tight uppercase mb-3 drop-shadow">
-          SHOW UP, PLAY,<br/>AND LET US<br/>HANDLE THE<br/>DETAILS
-        </h1>
-
-        <p class="text-sm text-slate-200/90 font-medium mb-7 max-w-[320px]">
-          Instant pickup match slots, verified Fawran payments, and balanced Doha squads.
-        </p>
-
-        <button onclick="goScreen('auth')" class="w-full py-4 rounded-2xl bg-[#8A1538] hover:bg-[#70102D] active:scale-[0.99] transition text-white font-extrabold text-base tracking-wide shadow-xl shadow-[#8A1538]/40">
-          Continue
-        </button>
-      </div>
-    </div>
-  `;
-}
-
-function renderAuth() {
-  const isPhone = state.authMode === "phone";
-  return `
-    <div class="min-h-screen bg-[#F7F7F9] flex flex-col justify-between px-6 pt-12 pb-8 animate-fade">
-      <div>
-        <button onclick="goScreen('splash')" class="w-11 h-11 rounded-full bg-white shadow-sm border border-slate-200/80 flex items-center justify-center text-slate-800 active:scale-95">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-        </button>
-
-        <div class="text-center mt-8 mb-8">
-          <div class="w-12 h-12 rounded-2xl bg-[#8A1538] text-white font-extrabold text-base flex items-center justify-center mx-auto mb-4 shadow-md">PS</div>
-          <h1 class="text-[28px] leading-tight font-extrabold tracking-tight text-slate-900 uppercase">
-            LET'S GET<br/>STARTED NOW!
-          </h1>
-        </div>
-
-        <!-- Tabs -->
-        <div class="flex justify-center gap-8 border-b border-slate-200 mb-6">
-          <button onclick="state.authMode='phone'; state.authInput=''; render();" class="pb-3 text-xs font-extrabold tracking-wider uppercase transition ${isPhone ? 'text-[#8A1538] border-b-2 border-[#8A1538]' : 'text-slate-400'}">
-            PHONE NUMBER
-          </button>
-          <button onclick="state.authMode='email'; state.authInput=''; render();" class="pb-3 text-xs font-extrabold tracking-wider uppercase transition ${!isPhone ? 'text-[#8A1538] border-b-2 border-[#8A1538]' : 'text-slate-400'}">
-            EMAIL
-          </button>
-        </div>
-
-        <!-- Input Row -->
-        ${isPhone ? `
-          <div class="flex items-center gap-3">
-            <div class="h-14 px-4 rounded-2xl bg-white border border-slate-200/90 shadow-sm flex items-center gap-2 shrink-0">
-              <span class="text-xl">🇶🇦</span>
-              <span class="text-sm font-extrabold text-slate-800">+974</span>
-            </div>
-            <input
-              type="tel"
-              value="${state.authInput}"
-              oninput="state.authInput=this.value"
-              placeholder="Enter your phone number"
-              class="w-full h-14 px-4 rounded-2xl bg-white border border-slate-200/90 shadow-sm text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#8A1538]"
-            />
+  if (state.screen === "splash") {
+    html = `
+      <div class="relative min-h-screen flex flex-col justify-between bg-slate-950 text-white">
+        <img src="${PHOTOS.splash}" class="absolute inset-0 w-full h-full object-cover brightness-90" />
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/20"></div>
+        <div class="relative z-10 px-6 pt-12">
+          <div class="inline-flex items-center gap-2.5 bg-black/45 backdrop-blur-md border border-white/15 px-3.5 py-2 rounded-full">
+            <span class="w-7 h-7 rounded-full bg-[#8A1538] flex items-center justify-center font-extrabold text-xs">PS</span>
+            <span class="text-xs font-extrabold tracking-widest">PANA SPORT</span>
           </div>
-        ` : `
-          <input
-            type="email"
-            value="${state.authInput}"
-            oninput="state.authInput=this.value"
-            placeholder="Enter your email address"
-            class="w-full h-14 px-4 rounded-2xl bg-white border border-slate-200/90 shadow-sm text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#8A1538]"
-          />
-        `}
-
-        <p class="text-center text-xs text-slate-500 mt-4 leading-relaxed px-4">
-          We will send you a one-time code via ${isPhone ? 'SMS' : 'email'} to verify your account
-        </p>
-
-        <button onclick="handleAuthContinue()" class="w-full mt-7 py-4 rounded-2xl bg-[#8A1538] hover:bg-[#70102D] active:scale-[0.99] transition text-white font-extrabold text-base shadow-lg shadow-[#8A1538]/25">
-          Continue
-        </button>
-
-        <p class="text-center text-[11px] text-slate-500 mt-4">
-          By clicking continue you agree to our <span class="text-[#8A1538] font-bold">Terms & Conditions</span>
-        </p>
-      </div>
-    </div>
-  `;
-}
-
-function renderOtp() {
-  return `
-    <div class="min-h-screen bg-[#F7F7F9] flex flex-col justify-between px-6 pt-12 pb-8 animate-fade">
-      <div>
-        <button onclick="goScreen('auth')" class="w-11 h-11 rounded-full bg-white shadow-sm border border-slate-200/80 flex items-center justify-center text-slate-800">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-        </button>
-
+        </div>
+        <div class="relative z-10 px-6 pb-10 animate-fade">
+          <span class="inline-block bg-[#8A1538] text-[11px] font-extrabold tracking-widest px-3 py-1 rounded-md mb-4">🇶🇦 DOHA PICKUP FOOTBALL</span>
+          <h1 class="text-[34px] leading-[1.06] font-extrabold uppercase mb-3">SHOW UP, PLAY,<br/>AND LET US<br/>HANDLE THE<br/>DETAILS</h1>
+          <p class="text-sm text-slate-200 mb-7">Instant pickup slots, verified Fawran payments, and balanced Doha squads.</p>
+          <button onclick="go('auth')" class="w-full py-4 rounded-2xl bg-[#8A1538] font-extrabold text-base shadow-xl">Continue</button>
+        </div>
+      </div>`;
+  } else if (state.screen === "auth") {
+    const ph = state.authMode === "phone";
+    html = `
+      <div class="min-h-screen bg-[#F7F7F9] px-6 pt-12 pb-8 animate-fade">
+        <button onclick="go('splash')" class="w-11 h-11 rounded-full bg-white border border-slate-200 font-bold">←</button>
         <div class="text-center mt-8 mb-8">
-          <h1 class="text-[26px] font-extrabold tracking-tight text-slate-900 uppercase">VERIFY CODE</h1>
-          <p class="text-xs text-slate-500 mt-2">
-            Sent to <span class="font-bold text-slate-800">${state.authMode === 'phone' ? state.user.phone : state.authInput}</span>
-          </p>
+          <div class="w-12 h-12 rounded-2xl bg-[#8A1538] text-white font-extrabold flex items-center justify-center mx-auto mb-4">PS</div>
+          <h1 class="text-[28px] leading-tight font-extrabold uppercase">LET'S GET<br/>STARTED NOW!</h1>
         </div>
-
+        <div class="flex justify-center gap-8 border-b border-slate-200 mb-6">
+          <button onclick="state.authMode='phone'; state.authInput=''; render();" class="pb-3 text-xs font-extrabold uppercase ${ph ? 'text-[#8A1538] border-b-2 border-[#8A1538]' : 'text-slate-400'}">PHONE NUMBER</button>
+          <button onclick="state.authMode='email'; state.authInput=''; render();" class="pb-3 text-xs font-extrabold uppercase ${!ph ? 'text-[#8A1538] border-b-2 border-[#8A1538]' : 'text-slate-400'}">EMAIL</button>
+        </div>
+        ${ph ? `
+          <div class="flex gap-3">
+            <div class="h-14 px-4 rounded-2xl bg-white border border-slate-200 flex items-center gap-2 shrink-0"><span class="text-xl">🇶🇦</span><span class="text-sm font-extrabold">+974</span></div>
+            <input type="tel" value="${state.authInput}" oninput="state.authInput=this.value" placeholder="Enter your phone number" class="w-full h-14 px-4 rounded-2xl bg-white border border-slate-200 text-sm font-semibold focus:outline-none focus:border-[#8A1538]" />
+          </div>` : `
+          <input type="email" value="${state.authInput}" oninput="state.authInput=this.value" placeholder="Enter your email address" class="w-full h-14 px-4 rounded-2xl bg-white border border-slate-200 text-sm font-semibold focus:outline-none focus:border-[#8A1538]" />`}
+        <p class="text-center text-xs text-slate-500 mt-4">We will send you a one-time code via ${ph ? 'SMS' : 'email'} to verify your account</p>
+        <button onclick="handleAuth()" class="w-full mt-7 py-4 rounded-2xl bg-[#8A1538] text-white font-extrabold text-base shadow-lg">Continue</button>
+        <p class="text-center text-[11px] text-slate-500 mt-4">By clicking continue you agree to our <span class="text-[#8A1538] font-bold">Terms & Conditions</span></p>
+      </div>`;
+  } else if (state.screen === "otp") {
+    html = `
+      <div class="min-h-screen bg-[#F7F7F9] px-6 pt-12 pb-8 animate-fade">
+        <button onclick="go('auth')" class="w-11 h-11 rounded-full bg-white border border-slate-200 font-bold">←</button>
+        <div class="text-center mt-8 mb-8">
+          <h1 class="text-[26px] font-extrabold uppercase">VERIFY CODE</h1>
+          <p class="text-xs text-slate-500 mt-2">Sent to <span class="font-bold text-slate-800">${state.authMode === 'phone' ? state.user.phone : state.authInput}</span></p>
+        </div>
         <div class="grid grid-cols-4 gap-3 max-w-[280px] mx-auto mb-6">
-          ${state.otpDigits.map((d, i) => `
-            <input type="text" maxlength="1" value="${d}" oninput="state.otpDigits[${i}]=this.value"
-              class="h-16 rounded-2xl bg-white border-2 border-[#8A1538]/30 focus:border-[#8A1538] text-center text-2xl font-extrabold text-slate-900 shadow-sm focus:outline-none" />
-          `).join("")}
+          ${state.otp.map((d, i) => `<input maxlength="1" value="${d}" oninput="state.otp[${i}]=this.value" class="h-16 rounded-2xl bg-white border-2 border-[#8A1538]/30 text-center text-2xl font-extrabold" />`).join("")}
         </div>
+        <button onclick="verifyOtp()" class="w-full py-4 rounded-2xl bg-[#8A1538] text-white font-extrabold text-base shadow-lg">Verify & Continue</button>
+      </div>`;
+  } else if (state.screen === "owner") {
+    const pend = state.data.bookings.filter(b => b.status.includes("Pending")).length;
+    const rev = state.data.bookings.reduce((s, b) => s + b.totalQAR, 0);
+    html = `
+      <div class="min-h-screen bg-slate-950 text-white px-5 pt-10 pb-12 animate-fade">
+        <div class="flex items-center justify-between mb-6">
+          <div><span class="text-[10px] font-extrabold tracking-widest text-emerald-400">MANAGER COMMAND CENTER</span><h1 class="text-xl font-extrabold">PANA SPORT ADMIN</h1></div>
+          <div class="flex gap-2">
+            <button onclick="go('app')" class="px-3 py-2 rounded-xl bg-white/10 text-xs font-extrabold">Player View</button>
+            <button onclick="state.isOwner=false; go('splash');" class="px-3 py-2 rounded-xl bg-rose-500/20 text-rose-300 text-xs font-extrabold">Logout</button>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3 mb-6">
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4"><p class="text-xs text-slate-400">Match Revenue</p><p class="text-2xl font-extrabold text-emerald-400 mt-1">${rev} QR</p></div>
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4"><p class="text-xs text-slate-400">Pending Fawran</p><p class="text-2xl font-extrabold text-amber-400 mt-1">${pend}</p></div>
+        </div>
+        <h3 class="text-xs font-extrabold uppercase text-slate-400 mb-3">FAWRAN VERIFICATIONS</h3>
+        <div class="space-y-3 mb-6">
+          ${state.data.bookings.map(b => `
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+              <div class="flex justify-between mb-1"><span class="text-sm font-extrabold">${b.playerName}</span><span class="text-sm font-extrabold text-emerald-400">${b.totalQAR} QR</span></div>
+              <p class="text-xs text-slate-400">${b.matchTitle} • ${b.method}</p>
+              <div class="flex items-center justify-between mt-3 pt-3 border-t border-slate-800">
+                <span class="text-[11px] font-bold ${b.status.includes('Pending') ? 'text-amber-400' : 'text-emerald-400'}">● ${b.status}</span>
+                ${b.status.includes('Pending') ? `<div class="flex gap-2"><button onclick="rejectBk('${b.id}')" class="px-3 py-1.5 rounded-lg bg-rose-500/20 text-rose-300 text-xs font-extrabold">Decline</button><button onclick="approveBk('${b.id}')" class="px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-950 text-xs font-extrabold">✓ Approve</button></div>` : ''}
+              </div>
+            </div>`).join("")}
+        </div>
+        <button onclick="balanceBibs('m1')" class="w-full py-3.5 rounded-2xl bg-slate-800 border border-slate-700 font-extrabold text-sm mb-2.5">⚡ Auto-Balance Tonight's Bibs</button>
+        <button onclick="copyLineup('m1')" class="w-full py-3.5 rounded-2xl bg-[#8A1538] font-extrabold text-sm">📲 Copy Lineup for WhatsApp</button>
+      </div>`;
+  } else {
+    const u = state.user;
+    if (state.tab === "stats") {
+      html = `
+        <div class="px-5 pt-10 pb-28 animate-fade">
+          <div class="flex justify-between items-center mb-5"><h2 class="text-xl font-extrabold uppercase">MY STATS</h2><button onclick="state.editOpen=true; render();" class="text-xs font-extrabold text-[#8A1538]">Edit Profile</button></div>
+          <div class="bg-white rounded-3xl p-4 shadow-sm border border-slate-200/70 flex items-center gap-4 mb-6">
+            <label class="relative cursor-pointer shrink-0">
+              <img src="${u.avatar}" class="w-24 h-28 rounded-2xl object-cover border border-slate-200" />
+              <span class="absolute bottom-1.5 right-1.5 bg-black/75 text-white text-[10px] font-bold px-2 py-0.5 rounded">📷 Edit</span>
+              <input type="file" accept="image/*" onchange="const r=new FileReader(); r.onload=e=>{state.user.avatar=e.target.result; render(); toast('Photo updated!');}; r.readAsDataURL(this.files[0]);" class="hidden" />
+            </label>
+            <div class="min-w-0">
+              <h3 class="text-lg font-extrabold uppercase truncate">${u.name}</h3>
+              <p class="text-xs font-bold text-emerald-600 mt-0.5">● Verified Doha Player</p>
+              <p class="text-xs font-semibold text-slate-500 mt-1">${u.pos}, Age ${u.age}</p>
+              <span class="inline-block bg-slate-100 px-3 py-1.5 rounded-xl mt-3 text-xs font-extrabold text-[#8A1538]">💳 ${u.wallet.toFixed(2)} QR</span>
+            </div>
+          </div>
+          <h3 class="text-sm font-extrabold uppercase mb-3">PLAYER DETAILS</h3>
+          <div class="grid grid-cols-2 gap-3 mb-3">
+            <div class="bg-white rounded-2xl p-4 shadow-sm"><p class="text-2xl font-extrabold">🏟️ ${u.stats.played}</p><p class="text-xs text-slate-500 mt-1">Matches Played</p></div>
+            <div class="bg-white rounded-2xl p-4 shadow-sm"><p class="text-2xl font-extrabold">🏅 ${u.stats.won}</p><p class="text-xs text-slate-500 mt-1">Matches Won</p></div>
+            <div class="bg-white rounded-2xl p-4 shadow-sm"><p class="text-2xl font-extrabold">📉 ${u.stats.lost}</p><p class="text-xs text-slate-500 mt-1">Matches Lost</p></div>
+            <div class="bg-white rounded-2xl p-4 shadow-sm"><p class="text-2xl font-extrabold">🏆 ${u.stats.motm}</p><p class="text-xs text-slate-500 mt-1">Man of Match</p></div>
+            <div class="bg-white rounded-2xl p-4 shadow-sm"><p class="text-[11px] text-slate-400 font-bold">Nationality</p><p class="text-sm font-extrabold mt-1">${u.flag} ${u.nat}</p></div>
+            <div class="bg-white rounded-2xl p-4 shadow-sm"><p class="text-[11px] text-slate-400 font-bold">Debut</p><p class="text-sm font-extrabold mt-1">${u.debut}</p></div>
+          </div>
+          <div class="bg-gradient-to-r from-[#8A1538] to-[#5C0D25] rounded-3xl p-5 text-white flex justify-between items-center">
+            <div><p class="text-3xl font-extrabold">⚽ ${u.stats.goals}</p><p class="text-xs font-bold text-white/85 mt-1">Total Goals</p></div>
+            <span class="text-xs font-extrabold bg-white/15 px-3 py-1.5 rounded-full">Doha League</span>
+          </div>
+        </div>`;
+    } else if (state.tab === "squad") {
+      const m = state.data.matches[0];
+      const reds = m.players.filter(p => p.bib === "Red"), whites = m.players.filter(p => p.bib === "White");
+      html = `
+        <div class="px-5 pt-10 pb-28 animate-fade">
+          <div class="flex justify-between items-center mb-4">
+            <div><h2 class="text-xl font-extrabold uppercase">SQUAD & BIBS</h2><p class="text-xs text-slate-500">${m.title}</p></div>
+            ${state.isOwner ? `<button onclick="balanceBibs('${m.id}')" class="px-3.5 py-2 rounded-xl bg-[#8A1538] text-white text-xs font-extrabold">⚡ Balance</button>` : ''}
+          </div>
+          <div class="grid grid-cols-2 gap-3 mb-5">
+            <div class="bg-white rounded-2xl p-3.5 border-t-4 border-[#8A1538] shadow-sm">
+              <h4 class="text-xs font-extrabold text-[#8A1538] mb-2">🔴 MAROON (${reds.length})</h4>
+              <div class="space-y-2">${reds.map(p => `<div class="flex justify-between text-xs bg-slate-50 px-2.5 py-2 rounded-xl font-bold"><span class="truncate">${p.name}</span><span class="text-slate-400">${p.pos}</span></div>`).join("")}</div>
+            </div>
+            <div class="bg-white rounded-2xl p-3.5 border-t-4 border-slate-400 shadow-sm">
+              <h4 class="text-xs font-extrabold text-slate-700 mb-2">⚪ WHITE (${whites.length})</h4>
+              <div class="space-y-2">${whites.map(p => `<div class="flex justify-between text-xs bg-slate-50 px-2.5 py-2 rounded-xl font-bold"><span class="truncate">${p.name}</span><span class="text-slate-400">${p.pos}</span></div>`).join("")}</div>
+            </div>
+          </div>
+          <button onclick="copyLineup('${m.id}')" class="w-full py-3.5 rounded-2xl bg-emerald-600 text-white font-extrabold text-sm">📲 Copy Lineup for WhatsApp</button>
+        </div>`;
+    } else {
+      html = `
+        <div class="px-5 pt-10 pb-28 animate-fade">
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="state.tab='stats'; render();">
+              <img src="${u.avatar}" class="w-12 h-12 rounded-full object-cover border-2 border-[#8A1538]" />
+              <div><p class="text-[11px] font-bold text-slate-400">HELLO,</p><h2 class="text-lg font-extrabold uppercase">${u.name.split(" ")[0]}</h2></div>
+            </div>
+            <div class="flex gap-2">
+              ${state.isOwner ? `<button onclick="go('owner')" class="px-3 py-2 rounded-full bg-[#8A1538] text-white text-[11px] font-extrabold">Manager</button>` : ''}
+              <button onclick="state.menuOpen=true; render();" class="w-10 h-10 rounded-full bg-white border border-slate-200 font-bold">•••</button>
+            </div>
+          </div>
+          <div class="flex items-center justify-between mb-5">
+            <div><p class="text-xs font-bold text-[#8A1538]">Your Balance</p><p class="text-2xl font-extrabold">${u.wallet.toFixed(2)} QR</p></div>
+            <button onclick="state.menuOpen=true; render();" class="px-4 py-2 rounded-full bg-white border border-slate-200 text-xs font-extrabold">Manage</button>
+          </div>
+          <div class="relative rounded-3xl overflow-hidden h-44 mb-6 shadow-md">
+            <img src="${PHOTOS.promo}" class="w-full h-full object-cover brightness-75" />
+            <div class="absolute inset-0 bg-gradient-to-r from-black/85 via-black/50 to-transparent"></div>
+            <div class="relative z-10 h-full flex flex-col justify-center px-5 max-w-[260px] text-white">
+              <span class="w-fit text-[10px] font-extrabold bg-emerald-500 text-slate-950 px-2.5 py-0.5 rounded-full mb-2">SQUAD DEAL • 6 FOR 5</span>
+              <h3 class="text-xl font-extrabold leading-tight uppercase">BRING YOUR 6,<br/>PAY FOR 5</h3>
+              <p class="text-xs text-slate-200 mt-1">Instant Fawran verification & balanced bibs.</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-3 gap-3 mb-7 text-center">
+            <button onclick="openBook('m1')" class="flex flex-col items-center gap-1.5"><div class="w-14 h-14 rounded-2xl bg-white shadow-sm flex items-center justify-center text-xl">⚽</div><span class="text-[11px] font-bold">Find Match</span></button>
+            <button onclick="copyLineup('m1')" class="flex flex-col items-center gap-1.5"><div class="w-14 h-14 rounded-2xl bg-white shadow-sm flex items-center justify-center text-xl">📲</div><span class="text-[11px] font-bold">Share Lineup</span></button>
+            <button onclick="state.tab='squad'; render();" class="flex flex-col items-center gap-1.5"><div class="w-14 h-14 rounded-2xl bg-white shadow-sm flex items-center justify-center text-xl">👕</div><span class="text-[11px] font-bold">Team Bibs</span></button>
+          </div>
+          <div class="flex justify-between items-center mb-3.5">
+            <h3 class="text-base font-extrabold uppercase">FRIENDLY AND<br/>COMPETITIVE GAMES</h3>
+            <span class="text-xs font-bold text-[#8A1538] bg-[#8A1538]/10 px-3 py-1 rounded-full">Doha Live</span>
+          </div>
+          <div class="space-y-4">
+            ${state.data.matches.map(m => `
+              <div onclick="openBook('${m.id}')" class="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-200/70 cursor-pointer">
+                <div class="relative h-44">
+                  <img src="${m.img}" class="w-full h-full object-cover" />
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20"></div>
+                  <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-extrabold text-white ${m.taken >= m.total ? 'bg-rose-600' : 'bg-[#8A1538]'}">👥 ${m.taken} / ${m.total}</span>
+                  ${m.recorded ? `<span class="absolute bottom-3 left-3 bg-slate-900/85 text-white text-[11px] font-bold px-3 py-1 rounded-full">🔴 Recorded</span>` : ''}
+                </div>
+                <div class="p-4">
+                  <div class="flex gap-2 mb-2">
+                    <span class="text-[10px] font-extrabold bg-[#8A1538] text-white px-2.5 py-0.5 rounded-full">By PANA SPORT</span>
+                    <span class="text-[10px] font-extrabold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full">${m.level}</span>
+                  </div>
+                  <div class="flex justify-between items-center gap-3">
+                    <div><h4 class="text-base font-extrabold uppercase">${m.title}</h4><p class="text-xs text-slate-500 mt-1">🕒 ${m.date}</p><p class="text-xs text-slate-500">📍 ${m.venue}</p></div>
+                    <div class="bg-slate-100 rounded-2xl px-3.5 py-2.5 text-center shrink-0"><p class="text-base font-extrabold text-[#8A1538]">${m.price} QR</p><p class="text-[11px] font-bold text-slate-500">${m.duration}</p></div>
+                  </div>
+                </div>
+              </div>`).join("")}
+          </div>
+        </div>`;
+    }
 
-        <button onclick="verifyOtpAndEnter()" class="w-full py-4 rounded-2xl bg-[#8A1538] text-white font-extrabold text-base shadow-lg shadow-[#8A1538]/25 active:scale-[0.99]">
-          Verify & Continue
-        </button>
-      </div>
-    </div>
-  `;
+    // Bottom Navigation
+    html += `
+      <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-slate-200 px-8 py-2.5 flex justify-between items-center z-40">
+        <button onclick="state.tab='squad'; render();" class="flex flex-col items-center gap-1 ${state.tab === 'squad' ? 'text-[#8A1538]' : 'text-slate-400'}"><span class="text-base">⇄</span><span class="text-[11px] font-bold">Squad</span></button>
+        <button onclick="state.tab='home'; render();" class="-mt-7 w-14 h-14 rounded-full ${state.tab === 'home' ? 'bg-[#8A1538] text-white shadow-lg' : 'bg-slate-400 text-white'} flex items-center justify-center border-4 border-[#F7F7F9] text-lg">🏠</button>
+        <button onclick="state.tab='stats'; render();" class="flex flex-col items-center gap-1 ${state.tab === 'stats' ? 'text-[#8A1538]' : 'text-slate-400'}"><span class="text-base">📊</span><span class="text-[11px] font-bold">My Stats</span></button>
+      </div>`;
+
+    // Booking Bottom Sheet
+    if (state.bookingMatch) {
+      const m = state.bookingMatch, full = m.taken >= m.total, tot = (state.size === 6 ? 5 : state.size) * m.price;
+      html += `
+        <div class="fixed inset-0 z-50 bg-black/60 flex items-end justify-center">
+          <div class="w-full max-w-[430px] bg-white rounded-t-3xl p-5 max-h-[90vh] overflow-y-auto animate-sheet">
+            <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+              <div><span class="text-[10px] font-extrabold text-[#8A1538] uppercase">${m.area} • ${m.duration}</span><h3 class="text-lg font-extrabold uppercase">${m.title}</h3></div>
+              <button onclick="state.bookingMatch=null; render();" class="w-9 h-9 rounded-full bg-slate-100 font-bold">✕</button>
+            </div>
+            ${full ? `
+              <div class="my-5 p-4 rounded-2xl bg-amber-50 border border-amber-200 text-center"><p class="text-sm font-extrabold text-amber-900">Match Full (${m.total}/${m.total})</p><p class="text-xs text-amber-700 mt-1">Join the priority waitlist for instant alerts.</p></div>
+              <button onclick="submitBooking()" class="w-full py-4 rounded-2xl bg-[#8A1538] text-white font-extrabold text-sm">Join Waitlist</button>` : `
+              <div class="mt-4">
+                <div class="flex justify-between mb-2"><span class="text-xs font-extrabold uppercase">Players</span><span class="text-[11px] font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full">6 = Pay for 5!</span></div>
+                <div class="grid grid-cols-6 gap-2">${[1,2,3,4,5,6].map(n => `<button onclick="state.size=${n}; render();" class="py-2.5 rounded-xl font-extrabold text-sm border ${state.size===n?'bg-[#8A1538] text-white border-[#8A1538]':'bg-slate-50 border-slate-200'}">${n}</button>`).join("")}</div>
+              </div>
+              <div class="mt-5">
+                <span class="text-xs font-extrabold uppercase block mb-2">Payment Method</span>
+                <div class="grid grid-cols-2 gap-2.5">
+                  <button onclick="state.pay='fawran'; render();" class="p-3 rounded-2xl border text-left ${state.pay==='fawran'?'border-[#8A1538] bg-[#8A1538]/5':'border-slate-200'}"><p class="text-xs font-extrabold">⚡ Fawran Instant</p><p class="text-[11px] text-slate-500">Upload receipt</p></button>
+                  <button onclick="state.pay='cash'; render();" class="p-3 rounded-2xl border text-left ${state.pay==='cash'?'border-[#8A1538] bg-[#8A1538]/5':'border-slate-200'}"><p class="text-xs font-extrabold">💵 Cash at Pitch</p><p class="text-[11px] text-slate-500">Pay 15m early</p></button>
+                </div>
+              </div>
+              ${state.pay === "fawran" ? `
+                <div class="mt-4 p-4 rounded-2xl bg-slate-900 text-white">
+                  <div class="flex justify-between text-xs mb-1.5"><span class="text-slate-400">Fawran Alias</span><span class="font-extrabold text-emerald-400">${state.data.fawranAlias}</span></div>
+                  <div class="flex justify-between text-xs mb-3"><span class="text-slate-400">Mobile</span><span class="font-extrabold">${state.data.fawranNumber}</span></div>
+                  <label class="block w-full py-3 px-4 rounded-xl border border-dashed ${state.receiptOk?'border-emerald-400 bg-emerald-500/15 text-emerald-300':'border-white/30 bg-white/5'} text-center text-xs font-extrabold cursor-pointer">
+                    ${state.receiptOk ? `✅ Attached: ${state.receiptName}` : '📸 Upload Fawran Receipt Screenshot'}
+                    <input type="file" accept="image/*" onchange="if(this.files[0]){state.receiptOk=true; state.receiptName=this.files[0].name; render();}" class="hidden" />
+                  </label>
+                </div>` : ''}
+              <div class="mt-5 pt-4 border-t border-slate-100 flex justify-between items-center">
+                <div><p class="text-[11px] font-bold text-slate-400">Total Due</p><p class="text-2xl font-extrabold">${tot} QR</p></div>
+                <button onclick="submitBooking()" class="px-6 py-4 rounded-2xl bg-[#8A1538] text-white font-extrabold text-sm shadow-lg">Confirm Spot</button>
+              </div>`}
+          </div>
+        </div>`;
+    }
+
+    // Account Drawer
+    if (state.menuOpen) {
+      html += `
+        <div class="fixed inset-0 z-50 bg-[#F7F7F9] px-6 pt-12 pb-8 overflow-y-auto animate-sheet">
+          <button onclick="state.menuOpen=false; render();" class="w-10 h-10 rounded-full bg-white border border-slate-200 font-bold mb-5">✕</button>
+          <div class="bg-gradient-to-br from-[#8A1538] to-[#5C0D25] rounded-3xl p-6 text-white shadow-lg mb-6">
+            <p class="text-xs text-white/80 font-bold">Your Balance</p><p class="text-3xl font-extrabold mt-1">${u.wallet.toFixed(2)} QR</p>
+            <button onclick="state.user.wallet+=35; state.menuOpen=false; toast('+35 QR Top-Up Added!');" class="w-full mt-5 py-3 rounded-xl bg-white text-[#8A1538] font-extrabold text-xs">+ Top up (Fawran)</button>
+          </div>
+          <div class="space-y-3">
+            <button onclick="state.menuOpen=false; state.tab='stats'; render();" class="w-full bg-white p-4 rounded-2xl border border-slate-200 flex justify-between font-extrabold text-sm"><span>👤 My Profile & Photo</span><span>›</span></button>
+            ${state.isOwner ? `<button onclick="state.menuOpen=false; go('owner');" class="w-full bg-white p-4 rounded-2xl border border-slate-200 flex justify-between font-extrabold text-sm text-[#8A1538]"><span>🛡️ Manager Dashboard</span><span>›</span></button>` : ''}
+            <button onclick="state.menuOpen=false; state.isOwner=false; go('splash');" class="w-full bg-white p-4 rounded-2xl border border-slate-200 flex justify-between font-extrabold text-sm text-rose-600"><span>🚪 Sign Out</span><span>›</span></button>
+          </div>
+        </div>`;
+    }
+
+    // Edit Profile Modal
+    if (state.editOpen) {
+      html += `
+        <div class="fixed inset-0 z-50 bg-black/60 flex items-end justify-center">
+          <form onsubmit="saveProfile(event)" class="w-full max-w-[430px] bg-white rounded-t-3xl p-6 animate-sheet space-y-4">
+            <div class="flex justify-between items-center"><h3 class="text-lg font-extrabold">Edit Player Card</h3><button type="button" onclick="state.editOpen=false; render();" class="font-bold">✕</button></div>
+            <div><label class="text-xs font-bold text-slate-500">Name</label><input name="fn" value="${u.name}" class="w-full mt-1 p-3 rounded-xl border border-slate-200 text-sm font-bold" /></div>
+            <div class="grid grid-cols-2 gap-3">
+              <div><label class="text-xs font-bold text-slate-500">Position</label><select name="pos" class="w-full mt-1 p-3 rounded-xl border border-slate-200 text-sm font-bold">${["Goalkeeper","Defender","Midfielder","Forward","Joker"].map(p=>`<option ${u.pos===p?'selected':''}>${p}</option>`).join("")}</select></div>
+              <div><label class="text-xs font-bold text-slate-500">Age</label><input name="age" type="number" value="${u.age}" class="w-full mt-1 p-3 rounded-xl border border-slate-200 text-sm font-bold" /></div>
+            </div>
+            <div><label class="text-xs font-bold text-slate-500">Nationality</label><select name="nat" class="w-full mt-1 p-3 rounded-xl border border-slate-200 text-sm font-bold">${["Qatar","Egypt","Jordan","Morocco","Ethiopia","India","UK","Brazil"].map(c=>`<option ${u.nat===c?'selected':''}>${c}</option>`).join("")}</select></div>
+            <button type="submit" class="w-full py-3.5 rounded-2xl bg-[#8A1538] text-white font-extrabold text-sm">Save Profile</button>
+          </form>
+        </div>`;
+    }
+  }
+
+  root.innerHTML = html + (state.toast ? `<div class="fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white text-xs font-extrabold px-4 py-3 rounded-2xl shadow-xl animate-fade">${state.toast}</div>` : "");
 }
 
-function renderHomeTab() {
-  return `
-    <div class="px-5 pt-10 pb-28 animate-fade">
-      <!-- Top Header -->
-      <div class="flex items-center justify-between mb-6">
-        <div class="flex items-center gap-3 cursor-pointer" onclick="state.activeTab='stats'; render();">
-          <img src="${state.user.avatar}" alt="Player" class="w-12 h-12 rounded-full object-cover border-2 border-[#8A1538] shadow-sm" />
-          <div>
-            <p class="text-[11px] font-bold uppercase tra
+render();
+</script>
+</body>
+</html>
+
