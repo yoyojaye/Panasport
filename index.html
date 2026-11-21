@@ -7,13 +7,16 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     *{font-family:system-ui,-apple-system,sans-serif;-webkit-tap-highlight-color:transparent}
-    body{background:#CBD5E1;margin:0;color:#0F172A}
+    body{background:#060B19;margin:0;color:#0F172A}
     .no-sb::-webkit-scrollbar{display:none}
     .ucl-bg{
-      background-color:#F8FAFC;
-      background-image:radial-gradient(circle at 20% 15%,rgba(138,21,56,0.06) 0%,transparent 45%),
-      radial-gradient(circle at 85% 75%,rgba(16,185,129,0.07) 0%,transparent 45%),
-      url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%238A1538' stroke-opacity='0.065' stroke-width='1.2'%3E%3Ccircle cx='60' cy='60' r='44'/%3E%3Cpolygon points='60,18 68,42 93,42 73,57 80,81 60,66 40,81 47,57 27,42 52,42'/%3E%3Cline x1='60' y1='16' x2='60' y2='2'/%3E%3Cline x1='60' y1='104' x2='60' y2='118'/%3E%3Cline x1='16' y1='60' x2='2' y2='60'/%3E%3Cline x1='104' y1='60' x2='118' y2='60'/%3E%3C/g%3E%3C/svg%3E");
+      background-image:
+        linear-gradient(180deg,rgba(248,250,252,0.82) 0%,rgba(241,245,249,0.86) 55%,rgba(226,232,240,0.90) 100%),
+        url('./people-soccer-stadium_23-2151548540.avif'),
+        url('https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=1000&q=85');
+      background-size:cover;
+      background-position:center top;
+      background-attachment:fixed;
     }
     .pitch{background:repeating-linear-gradient(0deg,#10B981 0,#10B981 26px,#059669 26px,#059669 52px)}
     .fut-shield{clip-path:polygon(8% 0%,92% 0%,100% 12%,100% 76%,50% 100%,0% 76%,0% 12%)}
@@ -21,7 +24,7 @@
 </head>
 <body class="flex justify-center min-h-screen">
   <div id="app" class="w-full max-w-[430px] min-h-screen ucl-bg relative overflow-x-hidden shadow-2xl flex flex-col">
-    <div class="p-10 text-center text-xs font-bold text-slate-500">Loading PANA SPORT Doha...</div>
+    <div class="p-10 text-center text-xs font-bold text-slate-700">Loading PANA SPORT Doha...</div>
   </div>
   <script src="./app.js"></script>
 </body>
