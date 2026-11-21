@@ -1,11 +1,16 @@
 const OWNER = "creatbrook@gmail.com";
+const LOGO_FALLBACK = "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="100" cy="100" r="94" fill="#fff" stroke="#081236" stroke-width="8"/><polygon points="100,42 122,58 114,84 86,84 78,58" fill="#081236"/><polygon points="62,64 78,58 84,82 64,94 52,78" fill="#6D12D9"/><polygon points="138,64 122,58 116,82 136,94 148,78" fill="#6D12D9"/><path d="M52,88 Q75,112 100,115 Q128,112 148,88 Q135,126 100,136 Q65,126 52,88 Z" fill="#081236"/><text x="100" y="164" text-anchor="middle" font-family="Arial Black,sans-serif" font-weight="900" font-size="30" fill="#081236">PANA</text><text x="100" y="180" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="11" letter-spacing="4" fill="#081236">FOOTBALL</text></svg>`);
+
 const IMG = {
+  logo: "./PANA_FOOTBALL_Original_Logo.png",
   hero: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80",
   p1: "https://images.unsplash.com/photo-1529900748604-07564a03e7a6?auto=format&fit=crop&w=800&q=80",
   p2: "https://images.unsplash.com/photo-1459865264687-595d652de67e?auto=format&fit=crop&w=800&q=80",
   p3: "https://images.unsplash.com/photo-1551958219-acbc608c6377?auto=format&fit=crop&w=800&q=80",
   av: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80"
 };
+
+const logoTag = (cls) => `<img src="${IMG.logo}" onerror="this.onerror=null;this.src='${LOGO_FALLBACK}'" alt="PANA FOOTBALL" class="${cls} rounded-full bg-white object-contain shadow"/>`;
 
 const DB0 = {
   alias: "PANASPORT", num: "+974 5512 8890",
@@ -31,7 +36,7 @@ const DB0 = {
 };
 
 let saved = null;
-try { saved = JSON.parse(localStorage.getItem("ps_ucl_night1")); } catch(e) {}
+try { saved = JSON.parse(localStorage.getItem("ps_gm_v1")); } catch(e) {}
 
 let S = {
   scr:"splash", md:"phone", inp:"", own:false, tab:"matches", area:"All", chk:false,
@@ -41,7 +46,7 @@ let S = {
   db: saved || DB0
 };
 
-const sv = () => { try { localStorage.setItem("ps_ucl_night1", JSON.stringify(S.db)); } catch(e) {} };
+const sv = () => { try { localStorage.setItem("ps_gm_v1", JSON.stringify(S.db)); } catch(e) {} };
 const say = t => { S.msg = t; render(); setTimeout(() => { S.msg = null; render(); }, 2800); };
 const go = s => { S.scr = s; S.detail = null; window.scrollTo(0,0); render(); };
 
@@ -60,7 +65,7 @@ function doLogin() {
 function doEnter() {
   if (S.userOtp.trim() !== S.genOtp) return say(`Invalid code! Enter ${S.genOtp}`);
   if (S.own) { go("owner"); say("Manager Verified!"); }
-  else { go("app"); say("Welcome to PANA SPORT Night Pitch!"); }
+  else { go("app"); say("Welcome to PANA FOOTBALL!"); }
 }
 
 function openDetail(id) { S.detail = S.db.matches.find(x => x.id === id) || S.db.matches[0]; window.scrollTo(0,0); render(); }
@@ -109,7 +114,7 @@ function copyWa(id) {
   const m = S.db.matches.find(x => x.id === id) || S.db.matches[0];
   const r = m.pl.filter(p=>p.b==="Red").map((p,i)=>`${i+1}. ${p.n}`).join("\n") || "1. Open";
   const w = m.pl.filter(p=>p.b==="White").map((p,i)=>`${i+1}. ${p.n}`).join("\n") || "1. Open";
-  if (navigator.clipboard) navigator.clipboard.writeText(`🏆 *PANA SPORT QATAR — MATCHDAY*\n🏟️ *${m.title}*\n📍 ${m.venue} | 🕒 ${m.day} (${m.time})\n🎁 *6-for-5 Squad Deal + Winner Trophy!*\n\n🔴 *TEAM MAROON*\n${r}\n\n⚪ *TEAM WHITE*\n${w}\n\n📲 Claim last spots: https://yoyojaye.github.io/Panasport/`);
+  if (navigator.clipboard) navigator.clipboard.writeText(`🏆 *PANA FOOTBALL QATAR*\n_By Golden Moments & Events_\n🏟️ *${m.title}*\n📍 ${m.venue} | 🕒 ${m.day} (${m.time})\n🎁 *6-for-5 Squad Deal + Winner Trophy!*\n\n🔴 *TEAM MAROON*\n${r}\n\n⚪ *TEAM WHITE*\n${w}\n\n📲 Claim last spots: https://yoyojaye.github.io/Panasport/`);
   say("WhatsApp Match Poster copied!");
 }
 
@@ -129,23 +134,32 @@ function render() {
   let h = "";
   if (S.scr === "splash") {
     h = `<div class="relative min-h-screen flex flex-col justify-between bg-slate-950 text-white"><img src="${IMG.hero}" class="absolute inset-0 w-full h-full object-cover opacity-85"/><div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-transparent"></div>
-      <div class="relative z-10 px-6 pt-12 flex justify-between items-center"><span class="inline-flex items-center gap-2 bg-slate-950/80 border border-white/20 text-white px-3.5 py-2 rounded-full text-xs font-extrabold shadow"><b class="w-6 h-6 rounded-full bg-[#8A1538] text-white flex items-center justify-center">PS</b>PANA SPORT</span><span class="px-3 py-1 rounded-full bg-amber-400 text-slate-950 text-[11px] font-extrabold">🏆 WINNER TROPHIES</span></div>
-      <div class="relative z-10 px-6 pb-10"><span class="inline-block bg-emerald-400 text-slate-950 text-[11px] font-extrabold px-3 py-1 rounded-md mb-3">🇶🇦 DOHA NIGHT LEAGUE</span><h1 class="text-3xl font-extrabold leading-tight uppercase mb-3">SHOW UP, BALL OUT,<br/>AND LIFT THE<br/>MATCHDAY TROPHY</h1><p class="text-sm text-slate-200 mb-6">1v1 rival challenges, winner trophies, HD match highlights & Pro FIFA cards.</p><button onclick="go('auth')" class="w-full py-4 rounded-2xl bg-[#8A1538] text-white font-extrabold text-base shadow-xl">Enter Stadium</button></div></div>`;
+      <div class="relative z-10 px-6 pt-12 flex justify-between items-center"><span class="inline-flex items-center gap-2.5 bg-slate-950/85 border border-white/20 text-white pl-1.5 pr-3.5 py-1.5 rounded-full text-xs font-extrabold shadow">${logoTag("w-8 h-8 p-0.5")}PANA FOOTBALL</span><span class="px-3 py-1 rounded-full bg-amber-400 text-slate-950 text-[11px] font-extrabold">🏆 WINNER TROPHIES</span></div>
+      <div class="relative z-10 px-6 pb-8">
+        <span class="inline-block bg-emerald-400 text-slate-950 text-[11px] font-extrabold px-3 py-1 rounded-md mb-3">🇶🇦 DOHA NIGHT LEAGUE</span>
+        <h1 class="text-3xl font-extrabold leading-tight uppercase mb-3">SHOW UP, BALL OUT,<br/>AND LIFT THE<br/>MATCHDAY TROPHY</h1>
+        <p class="text-sm text-slate-200 mb-6">1v1 rival challenges, winner trophies, HD match highlights & Pro FIFA cards.</p>
+        <button onclick="go('auth')" class="w-full py-4 rounded-2xl bg-[#8A1538] text-white font-extrabold text-base shadow-xl">Enter Stadium</button>
+        <p class="text-center text-[11px] font-bold tracking-wider uppercase text-amber-300/90 mt-4">By Golden Moments & Events</p>
+      </div></div>`;
   } else if (S.scr === "auth") {
     const ph = S.md === "phone";
-    h = `<div class="min-h-screen ucl-bg px-6 pt-12 pb-8 text-white"><button onclick="go('splash')" class="w-10 h-10 rounded-full bg-slate-950/70 border border-white/20 font-bold">←</button><div class="text-center my-8"><div class="w-12 h-12 rounded-2xl bg-[#8A1538] text-white font-extrabold flex items-center justify-center mx-auto mb-3 shadow-lg">PS</div><h1 class="text-2xl font-extrabold uppercase">PLAYER LOGIN</h1></div>
+    h = `<div class="min-h-screen ucl-bg px-6 pt-12 pb-8 text-white flex flex-col justify-between"><div>
+      <button onclick="go('splash')" class="w-10 h-10 rounded-full bg-slate-950/70 border border-white/20 font-bold">←</button>
+      <div class="text-center my-7">${logoTag("w-20 h-20 p-1 mx-auto mb-3 border-2 border-amber-400")}<h1 class="text-2xl font-extrabold uppercase">PANA FOOTBALL</h1><p class="text-[11px] font-bold text-amber-300 tracking-wider uppercase mt-0.5">Golden Moments & Events</p></div>
       <div class="flex justify-center gap-8 border-b border-white/15 mb-6"><button onclick="S.md='phone';S.inp='';render()" class="pb-3 text-xs font-extrabold ${ph?'text-emerald-400 border-b-2 border-emerald-400':'text-slate-300'}">PHONE NUMBER</button><button onclick="S.md='email';S.inp='';render()" class="pb-3 text-xs font-extrabold ${!ph?'text-emerald-400 border-b-2 border-emerald-400':'text-slate-300'}">EMAIL</button></div>
       ${ph?`<div class="flex gap-2"><div class="h-14 px-4 rounded-2xl bg-slate-950/75 border border-white/20 flex items-center gap-2 font-extrabold text-sm">🇶🇦 +974</div><input type="tel" value="${S.inp}" oninput="S.inp=this.value" placeholder="Enter mobile number" class="w-full h-14 px-4 rounded-2xl bg-slate-950/75 border border-white/20 text-sm font-bold text-white placeholder-slate-400"/></div>`:`<input type="email" value="${S.inp}" oninput="S.inp=this.value" placeholder="Enter your email address" class="w-full h-14 px-4 rounded-2xl bg-slate-950/75 border border-white/20 text-sm font-bold text-white placeholder-slate-400"/>`}
-      <button onclick="doLogin()" class="w-full mt-6 py-4 rounded-2xl bg-[#8A1538] text-white font-extrabold shadow-lg">Send Verification Code</button></div>`;
+      <button onclick="doLogin()" class="w-full mt-6 py-4 rounded-2xl bg-[#8A1538] text-white font-extrabold shadow-lg">Send Verification Code</button>
+    </div><p class="text-center text-[10px] font-bold uppercase tracking-widest text-white/60">A Golden Moments & Events Experience</p></div>`;
   } else if (S.scr === "otp") {
-    h = `<div class="min-h-screen ucl-bg px-6 pt-12 pb-8 text-center text-white"><button onclick="go('auth')" class="w-10 h-10 rounded-full bg-slate-950/70 border border-white/20 font-bold float-left">←</button><h1 class="text-2xl font-extrabold uppercase mt-16 mb-2">ENTER 4-DIGIT CODE</h1><p class="text-xs text-sky-200 mb-2">Sent to <b>${S.md==='phone'?S.u.ph:S.inp}</b></p>
+    h = `<div class="min-h-screen ucl-bg px-6 pt-12 pb-8 text-center text-white"><button onclick="go('auth')" class="w-10 h-10 rounded-full bg-slate-950/70 border border-white/20 font-bold float-left">←</button>${logoTag("w-16 h-16 p-1 mx-auto mt-10 mb-3 border-2 border-emerald-400")}<h1 class="text-2xl font-extrabold uppercase mb-2">ENTER 4-DIGIT CODE</h1><p class="text-xs text-sky-200 mb-2">Sent to <b>${S.md==='phone'?S.u.ph:S.inp}</b></p>
       <div class="inline-block px-3.5 py-1 rounded-full bg-emerald-400 text-slate-950 text-xs font-extrabold mb-5 shadow">Your Verification Code: ${S.genOtp}</div>
       <input type="tel" maxlength="4" value="${S.userOtp}" oninput="S.userOtp=this.value" placeholder="••••" class="block w-48 mx-auto h-16 rounded-2xl bg-slate-950/80 border-2 border-emerald-400 text-center text-3xl tracking-[0.4em] font-extrabold text-white mb-5"/>
       <button onclick="doEnter()" class="w-full py-4 rounded-2xl bg-emerald-400 text-slate-950 font-extrabold shadow-lg">Verify & Kick Off</button>
       <button onclick="S.genOtp=String(Math.floor(1000+Math.random()*9000));say('New code: '+S.genOtp)" class="mt-4 text-xs font-bold text-sky-300">Resend New Code</button></div>`;
   } else if (S.scr === "owner") {
     const rev = S.db.bks.reduce((s,b)=>s+b.qar,0);
-    h = `<div class="min-h-screen ucl-bg text-white px-5 pt-10 pb-12"><div class="flex justify-between items-center mb-5"><div><span class="text-[10px] font-extrabold text-emerald-400">MANAGER COMMAND</span><h1 class="text-xl font-extrabold">PANA SPORT ADMIN</h1></div><div class="flex gap-2"><button onclick="go('app')" class="px-3 py-2 rounded-xl bg-slate-950/75 border border-white/15 text-xs font-bold">Player View</button><button onclick="S.own=false;go('splash')" class="px-3 py-2 rounded-xl bg-rose-500/30 text-rose-200 text-xs font-bold">Logout</button></div></div>
+    h = `<div class="min-h-screen ucl-bg text-white px-5 pt-10 pb-12"><div class="flex justify-between items-center mb-5"><div class="flex items-center gap-2.5">${logoTag("w-10 h-10 p-0.5")}<div><span class="text-[10px] font-extrabold text-amber-300">GOLDEN MOMENTS & EVENTS</span><h1 class="text-lg font-extrabold leading-tight">PANA FOOTBALL ADMIN</h1></div></div><div class="flex gap-2"><button onclick="go('app')" class="px-3 py-2 rounded-xl bg-slate-950/75 border border-white/15 text-xs font-bold">Player View</button><button onclick="S.own=false;go('splash')" class="px-3 py-2 rounded-xl bg-rose-500/30 text-rose-200 text-xs font-bold">Logout</button></div></div>
       <div class="grid grid-cols-2 gap-3 mb-4"><div class="bg-slate-950/75 backdrop-blur-md border border-white/15 p-4 rounded-2xl"><p class="text-xs text-slate-300">Revenue</p><p class="text-2xl font-extrabold text-emerald-400">${rev} QR</p></div><div class="bg-slate-950/75 backdrop-blur-md border border-white/15 p-4 rounded-2xl"><p class="text-xs text-slate-300">Bookings</p><p class="text-2xl font-extrabold text-amber-400">${S.db.bks.length}</p></div></div>
       <button onclick="S.nm=true;render()" class="w-full py-3.5 rounded-2xl bg-emerald-400 text-slate-950 font-extrabold text-sm mb-5 shadow-lg">+ Publish New Match</button>
       <div class="space-y-3 mb-5">${S.db.bks.map(b=>`<div class="bg-slate-950/75 backdrop-blur-md p-4 rounded-2xl border border-white/15"><div class="flex justify-between font-extrabold text-sm"><span>${b.pl}</span><span class="text-emerald-400">${b.qar} QR</span></div><p class="text-xs text-slate-300">${b.mt} • ${b.m}</p><div class="flex justify-between items-center mt-3 pt-2 border-t border-white/10"><span class="text-xs font-bold ${b.st==='Pending'?'text-amber-400':'text-emerald-400'}">● ${b.st}</span>${b.st==='Pending'?`<div class="flex gap-2"><button onclick="actBk('${b.id}',0)" class="px-3 py-1 rounded bg-rose-500/25 text-rose-200 text-xs font-bold">Decline</button><button onclick="actBk('${b.id}',1)" class="px-3 py-1 rounded bg-emerald-400 text-slate-950 text-xs font-bold">✓ Approve</button></div>`:''}</div></div>`).join("")}</div>
@@ -158,8 +172,8 @@ function render() {
       <div class="px-5 pt-4">
         <div class="flex justify-between items-start"><div><span class="px-2.5 py-0.5 rounded-full bg-[#8A1538] text-white text-[10px] font-extrabold">${m.lvl}</span><h1 class="text-xl font-extrabold mt-1.5">${m.title}</h1><p class="text-xs font-bold text-emerald-300">${m.day} • ${m.time} | 📍 ${m.venue}</p></div><div class="bg-slate-950/75 backdrop-blur-md px-3 py-2 rounded-2xl border border-white/15 text-center"><p class="text-base font-extrabold text-emerald-400">${m.price} QR</p><p class="text-[10px] text-slate-300">${m.dur}</p></div></div>
         <div class="mt-4 bg-slate-950/75 backdrop-blur-md rounded-2xl p-4 border border-white/15 shadow-lg space-y-2 text-xs text-slate-200">
-          <h3 class="font-extrabold uppercase text-amber-300">🏆 MATCHDAY TROPHY & RULES</h3>
-          <p>🏆 Winning squad lifts the PANA Matchday Cup & earns +15 Rank PTS.</p>
+          <div class="flex items-center justify-between"><h3 class="font-extrabold uppercase text-amber-300">🏆 MATCHDAY TROPHY & RULES</h3><span class="text-[10px] text-white/60 font-bold">Golden Moments</span></div>
+          <p>🏆 Winning squad lifts the PANA Football Cup & earns +15 Rank PTS.</p>
           <p>🎥 Full HD match highlights & MOTM photos uploaded after final whistle.</p>
           <p>🎁 Bring 6 squadmates & pay for only 5 spots!</p>
         </div>
@@ -172,32 +186,35 @@ function render() {
     const u = S.u;
     if (S.tab === "matches") {
       const list = S.area === "All" ? S.db.matches : S.db.matches.filter(m => m.area === S.area);
-      h = `<div class="px-5 pt-9 pb-28 text-white">
-        <div class="flex justify-between items-center mb-4">
-          <div class="flex items-center gap-3" onclick="S.tab='card';render()"><img src="${u.av}" class="w-11 h-11 rounded-full object-cover border-2 border-emerald-400 shadow"/><div class="leading-tight"><p class="text-[10px] text-emerald-300 font-extrabold">🏆 ${u.cups} TROPHIES • DOHA 24°C</p><h2 class="text-base font-extrabold uppercase drop-shadow">HI, ${u.n.split(" ")[0]} #${u.num}</h2></div></div>
-          <div class="flex gap-2">${S.own?`<button onclick="go('owner')" class="px-3 py-1.5 rounded-full bg-[#8A1538] text-white text-xs font-extrabold shadow">Admin</button>`:''}<button onclick="S.chk=!S.chk;say(S.chk?'Checked in for Tonight! ⚽':'Check-in paused')" class="px-3 py-1.5 rounded-full text-xs font-extrabold border backdrop-blur-md ${S.chk?'bg-emerald-400 text-slate-950 border-emerald-400':'bg-slate-950/70 border-white/20 text-white'}">${S.chk?'✓ On Way':'📍 Check-In'}</button></div>
+      h = `<div class="px-5 pt-8 pb-28 text-white">
+        <!-- Official Brand Header -->
+        <div class="flex justify-between items-center mb-3 bg-slate-950/65 backdrop-blur-md border border-white/15 px-3.5 py-2.5 rounded-2xl">
+          <div class="flex items-center gap-2.5">${logoTag("w-10 h-10 p-0.5")}<div class="leading-tight"><h2 class="text-sm font-extrabold tracking-wide">PANA FOOTBALL</h2><p class="text-[10px] font-bold text-amber-300">By Golden Moments & Events</p></div></div>
+          <div class="flex items-center gap-1.5">${S.own?`<button onclick="go('owner')" class="px-2.5 py-1.5 rounded-xl bg-[#8A1538] text-white text-[11px] font-extrabold">Admin</button>`:''}<button onclick="S.tab='card';render()" class="flex items-center gap-1.5 bg-white/10 pl-1 pr-2.5 py-1 rounded-full"><img src="${u.av}" class="w-6 h-6 rounded-full object-cover"/><span class="text-[11px] font-extrabold text-emerald-300">#${u.num}</span></button></div>
         </div>
-        <div onclick="openDetail('m1')" class="rounded-3xl bg-gradient-to-r from-[#8A1538]/95 via-[#6D102C]/90 to-slate-950/90 backdrop-blur-md p-5 text-white shadow-xl border border-white/15 mb-4 cursor-pointer">
-          <div class="flex justify-between items-start"><span class="px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-extrabold">🏆 WINNER TROPHY NIGHT</span><span class="text-xs font-extrabold text-emerald-300">6 FOR 5 DEAL</span></div>
-          <h3 class="text-xl font-extrabold uppercase mt-2">BRING 6, PAY FOR 5</h3>
+        <!-- Promo Banner -->
+        <div onclick="openDetail('m1')" class="rounded-3xl bg-gradient-to-r from-[#8A1538]/95 via-[#6D102C]/90 to-slate-950/90 backdrop-blur-md p-4 text-white shadow-xl border border-white/15 mb-4 cursor-pointer">
+          <div class="flex justify-between items-center"><span class="px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-extrabold">🏆 WINNER TROPHY NIGHT</span><button onclick="event.stopPropagation();S.chk=!S.chk;say(S.chk?'Checked in for Tonight! ⚽':'Check-in paused')" class="px-2.5 py-1 rounded-full text-[10px] font-extrabold ${S.chk?'bg-emerald-400 text-slate-950':'bg-white/15 text-white'}">${S.chk?'✓ On Way':'📍 Check-In'}</button></div>
+          <h3 class="text-lg font-extrabold uppercase mt-2">BRING 6, PAY FOR 5</h3>
           <p class="text-xs text-white/85 mt-0.5">Swipe sideways below to pick your Doha pitch →</p>
         </div>
         <div class="flex gap-2 overflow-x-auto no-sb mb-3">${["All","Al Sadd","Al Waab","Lusail"].map(a=>`<button onclick="S.area='${a}';render()" class="px-4 py-1.5 rounded-2xl text-xs font-extrabold whitespace-nowrap backdrop-blur-md ${S.area===a?'bg-emerald-400 text-slate-950 shadow':'bg-slate-950/70 text-white border border-white/20'}">${a}</button>`).join("")}</div>
         <!-- Sideways Horizontal Swipeable Match Cards -->
-        <div class="flex gap-3.5 overflow-x-auto no-sb pb-3 mb-5">${list.map(m=>`<div onclick="openDetail('${m.id}')" class="w-[275px] shrink-0 rounded-3xl bg-slate-950/75 backdrop-blur-md border border-white/15 shadow-xl overflow-hidden cursor-pointer">
+        <div class="flex gap-3.5 overflow-x-auto no-sb pb-3 mb-4">${list.map(m=>`<div onclick="openDetail('${m.id}')" class="w-[275px] shrink-0 rounded-3xl bg-slate-950/75 backdrop-blur-md border border-white/15 shadow-xl overflow-hidden cursor-pointer">
           <div class="relative h-36"><img src="${m.img}" class="w-full h-full object-cover"/><span class="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-[#8A1538] text-white text-[11px] font-extrabold">👥 ${m.tak}/${m.tot}</span><span class="absolute bottom-2.5 left-3 px-2.5 py-0.5 rounded-full bg-black/75 text-emerald-300 text-[10px] font-bold">🎥 HD Highlights</span></div>
           <div class="p-3.5 flex justify-between items-center gap-2"><div class="min-w-0"><span class="text-[10px] font-extrabold text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full">${m.lvl}</span><h4 class="font-extrabold text-sm mt-1 truncate">${m.title}</h4><p class="text-[11px] text-slate-300">🕒 ${m.day} • ${m.time}</p><p class="text-[11px] text-slate-300 truncate">📍 ${m.venue}</p></div><div class="bg-white/10 px-3 py-2 rounded-2xl text-center shrink-0"><p class="text-sm font-extrabold text-emerald-400">${m.price} QR</p><p class="text-[10px] font-bold text-slate-300">${m.dur}</p></div></div>
         </div>`).join("")}</div>
         <!-- Trophies & Previous Match Highlight Videos -->
-        <div class="flex justify-between items-center mb-2.5"><h3 class="text-sm font-extrabold uppercase drop-shadow">🎬 PREVIOUS MATCH HIGHLIGHTS</h3><button onclick="S.tab='media';render()" class="text-xs font-extrabold text-emerald-300">All Trophies →</button></div>
-        <div class="flex gap-3 overflow-x-auto no-sb">${S.db.highlights.map(v=>`<div onclick="S.activeVideo=v;render()" class="w-44 shrink-0 rounded-2xl bg-slate-950/75 backdrop-blur-md border border-white/15 overflow-hidden shadow-lg cursor-pointer">
+        <div class="flex justify-between items-center mb-2"><h3 class="text-sm font-extrabold uppercase drop-shadow">🎬 PREVIOUS MATCH HIGHLIGHTS</h3><button onclick="S.tab='media';render()" class="text-xs font-extrabold text-emerald-300">All Trophies →</button></div>
+        <div class="flex gap-3 overflow-x-auto no-sb mb-4">${S.db.highlights.map(v=>`<div onclick="S.activeVideo=v;render()" class="w-44 shrink-0 rounded-2xl bg-slate-950/75 backdrop-blur-md border border-white/15 overflow-hidden shadow-lg cursor-pointer">
           <div class="relative h-24"><img src="${v.img}" class="w-full h-full object-cover brightness-90"/><span class="absolute inset-0 flex items-center justify-center"><b class="w-8 h-8 rounded-full bg-white text-[#8A1538] flex items-center justify-center text-xs shadow">▶</b></span><span class="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/80 text-white text-[9px] font-bold">${v.dur}</span></div>
           <div class="p-2.5"><p class="text-xs font-extrabold line-clamp-1">${v.title}</p><p class="text-[10px] text-amber-300 font-bold mt-0.5">🏆 ${v.trophy}</p></div>
         </div>`).join("")}</div>
+        <p class="text-center text-[10px] font-bold tracking-widest uppercase text-white/60">PANA FOOTBALL • Under Golden Moments & Events</p>
       </div>`;
     } else if (S.tab === "tactics") {
       const m = S.db.matches[0];
-      h = `<div class="px-5 pt-9 pb-28 text-white"><div class="flex justify-between items-center mb-3"><div><h2 class="text-base font-extrabold drop-shadow">DRAG & DROP LINEUP</h2><p class="text-xs text-sky-200">Drag players anywhere on pitch (Top=White, Bottom=Maroon)</p></div></div>
+      h = `<div class="px-5 pt-9 pb-28 text-white"><div class="flex justify-between items-center mb-3"><div><h2 class="text-base font-extrabold drop-shadow">DRAG & DROP LINEUP</h2><p class="text-xs text-sky-200">Drag players anywhere on pitch (Top=White, Bottom=Maroon)</p></div>${logoTag("w-9 h-9 p-0.5")}</div>
         <div id="pitchBox" onmousemove="moveDrag(event)" onmouseup="endDrag()" ontouchmove="moveDrag(event)" ontouchend="endDrag()" class="relative w-full h-[350px] rounded-3xl pitch border-4 border-white/80 shadow-2xl overflow-hidden mb-4 touch-none">
           <div class="absolute inset-x-0 top-1/2 h-0.5 bg-white/50"></div>
           <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full border-2 border-white/50"></div>
@@ -206,8 +223,7 @@ function render() {
         <button onclick="copyWa('${m.id}')" class="w-full py-3.5 rounded-2xl bg-[#8A1538] text-white font-extrabold text-sm shadow-lg">📲 Share Lineup Poster to WhatsApp</button></div>`;
     } else if (S.tab === "media") {
       h = `<div class="px-5 pt-9 pb-28 text-white">
-        <h2 class="text-lg font-extrabold uppercase mb-1 drop-shadow">🏆 TROPHIES & HIGHLIGHTS</h2>
-        <p class="text-xs text-sky-200 mb-4">Previous matchday champions, photos & goal reels</p>
+        <div class="flex justify-between items-center mb-3"><div><h2 class="text-lg font-extrabold uppercase drop-shadow">🏆 TROPHIES & HIGHLIGHTS</h2><p class="text-xs text-amber-300 font-bold">Golden Moments & Events Archive</p></div>${logoTag("w-10 h-10 p-0.5")}</div>
         <div class="grid grid-cols-3 gap-2 mb-5 text-center">
           <div class="bg-slate-950/75 backdrop-blur-md p-3 rounded-2xl border border-white/15 shadow"><p class="text-2xl">🏆</p><p class="text-xs font-extrabold mt-1">Doha Cup</p><p class="text-[10px] text-emerald-400 font-bold">2x Winner</p></div>
           <div class="bg-slate-950/75 backdrop-blur-md p-3 rounded-2xl border border-white/15 shadow"><p class="text-2xl">🥇</p><p class="text-xs font-extrabold mt-1">Golden Boot</p><p class="text-[10px] text-amber-300 font-bold">11 Goals</p></div>
@@ -219,7 +235,8 @@ function render() {
         </div>`).join("")}</div>
       </div>`;
     } else if (S.tab === "rank") {
-      h = `<div class="px-5 pt-9 pb-28 text-white"><h2 class="text-base font-extrabold mb-1 drop-shadow">DOHA KING OF THE PITCH</h2><p class="text-xs text-sky-200 mb-3">Challenge a rival for a pre-match 1v1 duel</p><div class="space-y-2.5 mb-5">${S.db.rank.map((l,i)=>`<div class="flex justify-between items-center p-3.5 rounded-2xl bg-slate-950/75 backdrop-blur-md border border-white/15 shadow"><div class="flex items-center gap-3"><span class="w-7 h-7 rounded-full ${i===0?'bg-amber-400 text-slate-950':'bg-white/15 text-white'} flex items-center justify-center text-xs font-extrabold">#${i+1}</span><div><p class="text-sm font-extrabold">${l.f} ${l.n}</p><p class="text-[11px] text-slate-300">${l.g} Goals • 🏆 ${l.cups} Cups</p></div></div><button onclick="S.duel='${l.n}';say('⚔️ Challenged ${l.n} to a 1v1 Duel!')" class="px-3 py-1.5 rounded-xl text-xs font-extrabold ${S.duel===l.n?'bg-emerald-400 text-slate-950':'bg-[#8A1538] text-white'}">${S.duel===l.n?'✓ Challenged':'⚔️ 1v1 Duel'}</button></div>`).join("")}</div>
+      h = `<div class="px-5 pt-9 pb-28 text-white"><div class="flex justify-between items-center mb-3"><div><h2 class="text-base font-extrabold drop-shadow">DOHA KING OF THE PITCH</h2><p class="text-xs text-sky-200">Challenge a rival for a pre-match 1v1 duel</p></div>${logoTag("w-9 h-9 p-0.5")}</div>
+        <div class="space-y-2.5 mb-5">${S.db.rank.map((l,i)=>`<div class="flex justify-between items-center p-3.5 rounded-2xl bg-slate-950/75 backdrop-blur-md border border-white/15 shadow"><div class="flex items-center gap-3"><span class="w-7 h-7 rounded-full ${i===0?'bg-amber-400 text-slate-950':'bg-white/15 text-white'} flex items-center justify-center text-xs font-extrabold">#${i+1}</span><div><p class="text-sm font-extrabold">${l.f} ${l.n}</p><p class="text-[11px] text-slate-300">${l.g} Goals • 🏆 ${l.cups} Cups</p></div></div><button onclick="S.duel='${l.n}';say('⚔️ Challenged ${l.n} to a 1v1 Duel!')" class="px-3 py-1.5 rounded-xl text-xs font-extrabold ${S.duel===l.n?'bg-emerald-400 text-slate-950':'bg-[#8A1538] text-white'}">${S.duel===l.n?'✓ Challenged':'⚔️ 1v1 Duel'}</button></div>`).join("")}</div>
         <div class="p-4 rounded-2xl bg-slate-950/75 backdrop-blur-md border border-white/15 shadow"><p class="text-xs font-extrabold text-emerald-300 mb-2">🏆 VOTE TONIGHT'S MAN OF THE MATCH</p><div class="grid grid-cols-2 gap-2">${["Tariq M.","Yousef K.","Omar N.","Hamad T."].map(n=>`<button onclick="S.vot='${n}';say('Voted ${n} for MOTM!')" class="py-2.5 rounded-xl text-xs font-extrabold border ${S.vot===n?'bg-emerald-400 text-slate-950 border-emerald-400':'bg-white/10 border-white/15 text-white'}">${n}</button>`).join("")}</div></div></div>`;
     } else {
       h = `<div class="px-5 pt-9 pb-28 text-white">
@@ -230,8 +247,8 @@ function render() {
               <div class="text-center leading-none">
                 <p class="text-4xl font-extrabold text-amber-300">${u.ovr}</p>
                 <p class="text-xs font-extrabold tracking-widest mt-1">${u.p}</p>
-                <p class="text-xl mt-1.5">${u.fl}</p>
-                <span class="inline-block mt-1 px-1.5 py-0.5 rounded bg-white/15 text-[9px] font-extrabold">PS</span>
+                <p class="text-lg mt-1">${u.fl}</p>
+                ${logoTag("w-8 h-8 p-0.5 mx-auto mt-1.5 border border-amber-300")}
               </div>
               <label class="relative cursor-pointer">
                 <img src="${u.av}" class="w-28 h-32 rounded-2xl object-cover border-2 border-amber-300/80 shadow-lg"/>
@@ -281,7 +298,7 @@ function render() {
   if (S.bk) {
     const m = S.bk, tot = (S.sz === 6 ? 5 : S.sz) * m.price;
     h += `<div class="fixed inset-0 z-50 bg-black/75 flex items-end"><div class="w-full max-w-[430px] mx-auto bg-slate-900 text-white border-t border-white/15 rounded-t-3xl p-5 space-y-4">
-      <div class="flex justify-between items-center border-b border-white/10 pb-3"><div><p class="text-[10px] text-emerald-400 font-extrabold">${m.day} • ${m.time}</p><h3 class="font-extrabold">${m.title}</h3></div><button onclick="S.bk=null;render()" class="w-8 h-8 rounded-full bg-white/10 font-bold">✕</button></div>
+      <div class="flex justify-between items-center border-b border-white/10 pb-3"><div class="flex items-center gap-2.5">${logoTag("w-9 h-9 p-0.5")}<div><p class="text-[10px] text-emerald-400 font-extrabold">${m.day} • ${m.time}</p><h3 class="font-extrabold">${m.title}</h3></div></div><button onclick="S.bk=null;render()" class="w-8 h-8 rounded-full bg-white/10 font-bold">✕</button></div>
       <div><div class="flex justify-between text-xs mb-2"><span class="font-bold">Players</span><span class="bg-emerald-400 text-slate-950 font-extrabold px-2.5 py-0.5 rounded-full">6 = Pay for 5!</span></div><div class="grid grid-cols-6 gap-2">${[1,2,3,4,5,6].map(n=>`<button onclick="S.sz=${n};render()" class="py-2 rounded-xl font-extrabold text-sm ${S.sz===n?'bg-[#8A1538] text-white':'bg-white/10'}">${n}</button>`).join("")}</div></div>
       <div class="grid grid-cols-2 gap-2"><button onclick="S.pay='fawran';render()" class="p-3 rounded-xl border text-left text-xs font-extrabold ${S.pay==='fawran'?'border-emerald-400 bg-emerald-400/15':'border-white/15'}">⚡ Fawran Transfer</button><button onclick="S.pay='cash';render()" class="p-3 rounded-xl border text-left text-xs font-extrabold ${S.pay==='cash'?'border-emerald-400 bg-emerald-400/15':'border-white/15'}">💵 Cash at Pitch</button></div>
       ${S.pay==="fawran"?`<div class="p-3.5 rounded-xl bg-black/50 border border-white/10 text-xs space-y-2"><div class="flex justify-between"><span class="text-slate-300">Fawran Alias</span><b class="text-emerald-400">${S.db.alias} (${S.db.num})</b></div><label class="block py-2.5 rounded-lg border border-dashed border-white/30 text-center font-bold cursor-pointer">${S.ok?'✅ '+S.fn:'📸 Upload Fawran Receipt'}<input type="file" accept="image/*" onchange="if(this.files[0]){S.ok=true;S.fn=this.files[0].name;render()}" class="hidden"/></label></div>`:''}
